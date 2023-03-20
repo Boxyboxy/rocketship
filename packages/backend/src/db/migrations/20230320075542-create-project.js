@@ -14,15 +14,27 @@ module.exports = {
       },
       category_id: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "categories",
+          key: "id",
+        },
       },
       owner_user_id: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "users",
+          key: "id",
+        },
       },
       description: {
         type: Sequelize.TEXT,
       },
       bank_account_id: {
         type: Sequelize.INTEGER,
+        references: {
+          model: "bank_accounts",
+          key: "id",
+        },
       },
       status: {
         type: Sequelize.ENUM("active", "completed", "cancelled"),
@@ -32,6 +44,9 @@ module.exports = {
       },
       github_repo_url: {
         type: Sequelize.STRING,
+        validate: {
+          isUrl: true,
+        },
       },
       created_at: {
         allowNull: false,

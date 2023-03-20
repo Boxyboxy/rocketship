@@ -2,21 +2,32 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("project_pitch_decks", {
+    await queryInterface.createTable("users", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      project_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "projects",
-          key: "id",
+      name: {
+        type: Sequelize.STRING,
+      },
+      mobile: {
+        type: Sequelize.STRING,
+      },
+      email: {
+        type: Sequelize.STRING,
+        validate: {
+          isEmail: true,
         },
       },
-      url_string: {
+      linkedin_url: {
+        type: Sequelize.STRING,
+        validate: {
+          isUrl: true,
+        },
+      },
+      github_url: {
         type: Sequelize.STRING,
         validate: {
           isUrl: true,
@@ -33,6 +44,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("project_pitch_decks");
+    await queryInterface.dropTable("users");
   },
 };
