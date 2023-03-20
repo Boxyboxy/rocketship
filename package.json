@@ -1,0 +1,26 @@
+{
+  "name": "rocketship",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Boxyboxy/rocketship.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Boxyboxy/rocketship/issues"
+  },
+  "homepage": "https://github.com/Boxyboxy/rocketship#readme",
+  "dependencies": {
+    "lerna": "^6.5.1"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
