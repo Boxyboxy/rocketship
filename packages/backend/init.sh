@@ -8,6 +8,9 @@ npm install date-fns express-async-errors express-oauth2-jwt-bearer cloudinary c
 
 
 npx sequelize model:generate --name project --attributes name:string,category_id:integer,owner_user_id:integer,description:text,bank_account_id:integer,status:enum:'{active,completed,cancelled}',location:string,github_repo_url:string --underscored
+npx sequelize model:generate --name project_pitch_deck --attributes project_id:integer,url_string:string --underscored
+npx sequelize model:generate --name categories --attributes name:string --underscored
+npx sequelize model:generate --name bank_accounts --attributes bank_account_number:string,bank:text --underscored
 
 ##ubuntu pg admin commands
 sudo service postgresql start
