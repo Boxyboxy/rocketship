@@ -21,6 +21,9 @@ npx sequelize db:seed --seed 20230322142443-seed-categories.js
 
 npx sequelize seed:generate --name seed-bank-accounts
 npx sequelize db:seed --seed 20230322145218-seed-bank-accounts.js
+
+npx sequelize seed:generate --name seed-users
+npx sequelize db:seed --seed 20230322151915-seed-users.js
 ##ubuntu pg admin commands
 sudo service postgresql start
 sudo su postgres
