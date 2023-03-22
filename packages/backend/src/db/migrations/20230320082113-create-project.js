@@ -26,7 +26,10 @@ module.exports = {
           key: "id",
         },
       },
-      description: {
+      summary: {
+        type: Sequelize.TEXT,
+      },
+      details: {
         type: Sequelize.TEXT,
       },
       bank_account_id: {

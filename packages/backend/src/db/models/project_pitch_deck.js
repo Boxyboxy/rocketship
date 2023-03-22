@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.projects);
+      this.belongsTo(models.project);
     }
   }
   project_pitch_deck.init(

@@ -7,11 +7,14 @@ npx sequelize db:create
 npm install date-fns express-async-errors express-oauth2-jwt-bearer cloudinary cors
 
 
-npx sequelize model:generate --name project --attributes name:string,category_id:integer,owner_user_id:integer,description:text,bank_account_id:integer,status:enum:'{active,completed,cancelled}',location:string,github_repo_url:string --underscored
+npx sequelize model:generate --name project --attributes name:string,category_id:integer,owner_user_id:integer,summary:text,details:text,bank_account_id:integer,status:enum:'{active,completed,cancelled}',location:string,github_repo_url:string --underscored
 npx sequelize model:generate --name project_pitch_deck --attributes project_id:integer,url_string:string --underscored
 npx sequelize model:generate --name category --attributes name:string --underscored
 npx sequelize model:generate --name bank_account --attributes bank_account_number:string,bank:text --underscored
-
+npx sequelize model:generate --name user --attributes name:string,mobile:string,email:string,linkedin_url:string,github_url:string --underscored
+npx sequelize model:generate --name skill --attributes skill:string --underscored
+npx sequelize model:generate --name required_skill --attributes skill_id:integer,project_id:integer --underscored
+npx sequelize model:generate --name user_skill --attributes skill_id:integer,user_id:integer --underscored
 ##ubuntu pg admin commands
 sudo service postgresql start
 sudo su postgres

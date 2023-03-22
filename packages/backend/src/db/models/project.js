@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.belongsTo(models.category);
-      this.hasMany(models.project_pitch_decks);
+      this.hasMany(models.project_pitch_deck);
       this.belongsTo(models.bank_account);
       this.belongsTo(models.user);
     }
@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
       category_id: DataTypes.INTEGER,
       owner_user_id: DataTypes.INTEGER,
-      description: DataTypes.STRING,
+      summary: DataTypes.STRING,
+      details: DataTypes.STRING,
       bank_account_id: DataTypes.INTEGER,
       status: DataTypes.ENUM("active", "completed", "cancelled"),
       location: DataTypes.STRING,
