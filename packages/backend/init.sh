@@ -11,7 +11,7 @@ npx sequelize model:generate --name project --attributes name:string,category_id
 npx sequelize model:generate --name project_pitch_deck --attributes project_id:integer,url_string:string --underscored
 npx sequelize model:generate --name category --attributes name:string --underscored
 npx sequelize model:generate --name bank_account --attributes bank_account_number:string,bank:text --underscored
-
+npx sequelize model:generate --name user --attributes name:string,mobile:string,email:string,linkedin_url:string,github_url:string --underscored
 ##ubuntu pg admin commands
 sudo service postgresql start
 sudo su postgres
