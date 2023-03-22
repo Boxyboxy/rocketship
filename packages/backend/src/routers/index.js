@@ -2,7 +2,7 @@ require("express-async-errors");
 const express = require("express");
 
 const categoriesRouter = require("./categoriesRouter");
-// const productsRouter = require("./productsRouter");
+const bankAccountsRouter = require("./bankAccountsRouter");
 // const productImagesRouter = require("./productImagesRouter");
 // const usersRouter = require("./usersRouter");
 // const userAddressesRouter = require("./userAddressesRouter");
@@ -11,7 +11,7 @@ const categoriesRouter = require("./categoriesRouter");
 const appRouter = express.Router();
 
 appRouter.use("/categories", categoriesRouter);
-// appRouter.use("/products", productsRouter);
+appRouter.use("/bankAccounts", bankAccountsRouter);
 // appRouter.use("/images", productImagesRouter);
 // appRouter.use("/users", usersRouter);
 // appRouter.use("/addresses", userAddressesRouter);

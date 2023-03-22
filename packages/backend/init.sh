@@ -15,6 +15,12 @@ npx sequelize model:generate --name user --attributes name:string,mobile:string,
 npx sequelize model:generate --name skill --attributes skill:string --underscored
 npx sequelize model:generate --name required_skill --attributes skill_id:integer,project_id:integer --underscored
 npx sequelize model:generate --name user_skill --attributes skill_id:integer,user_id:integer --underscored
+
+npx sequelize seed:generate --name seed-categories
+npx sequelize db:seed --seed 20230322142443-seed-categories.js
+
+npx sequelize seed:generate --name seed-bank-accounts
+npx sequelize db:seed --seed 20230322145218-seed-bank-accounts.js
 ##ubuntu pg admin commands
 sudo service postgresql start
 sudo su postgres
