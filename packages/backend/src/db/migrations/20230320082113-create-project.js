@@ -19,7 +19,7 @@ module.exports = {
           key: "id",
         },
       },
-      owner_user_id: {
+      user_id: {
         type: Sequelize.INTEGER,
         references: {
           model: "users",
@@ -46,6 +46,12 @@ module.exports = {
         type: Sequelize.STRING,
       },
       github_repo_url: {
+        type: Sequelize.STRING,
+        validate: {
+          isUrl: true,
+        },
+      },
+      cover_image: {
         type: Sequelize.STRING,
         validate: {
           isUrl: true,
