@@ -4,17 +4,15 @@ const express = require("express");
 const categoriesRouter = require("./categoriesRouter");
 const bankAccountsRouter = require("./bankAccountsRouter");
 const usersRouter = require("./usersRouter");
+const pitchSlidesRouter = require("./pitchSlidesRouter");
+const projectsRouter = require("./projectsRouter");
 
-// const userAddressesRouter = require("./userAddressesRouter");
-// const ordersRouter = require("./ordersRouter");
-// const orderItemsRouter = require("./orderItemsRouter");
 const appRouter = express.Router();
 
 appRouter.use("/categories", categoriesRouter);
 appRouter.use("/bankAccounts", bankAccountsRouter);
 appRouter.use("/users", usersRouter);
+appRouter.use("/pitchSlides", pitchSlidesRouter);
+appRouter.use("/projects", projectsRouter);
 
-// appRouter.use("/addresses", userAddressesRouter);
-// appRouter.use("/orders", ordersRouter);
-// appRouter.use("/orderItems", orderItemsRouter);
 module.exports = appRouter;

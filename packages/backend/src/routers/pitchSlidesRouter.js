@@ -4,9 +4,9 @@ const pitchSlidesController = require("../controllers/pitchSlidesController");
 
 const pitchSlidesRouter = express.Router();
 
-pitchSlidesRouter.get("/", pitchSlidesController.getAllPitchSlides);
+pitchSlidesRouter.post("/:productId", pitchSlidesController.createPitchSlide);
 
-pitchSlidesRouter.get("/:id", pitchSlidesController.getPitchSlideById);
-pitchSlidesRouter.post("/", pitchSlidesController.createPitchSlide);
 pitchSlidesRouter.delete("/:id", pitchSlidesController.deletePitchSlide);
+
+pitchSlidesRouter.patch("/:id", pitchSlidesController.updatePitchSlide);
 module.exports = pitchSlidesRouter;

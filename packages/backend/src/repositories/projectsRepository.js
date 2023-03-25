@@ -1,6 +1,6 @@
 const { project } = require("../db/models");
 const logger = require("../middleware/logger");
-
+const { pitchSlide } = require("../db/models");
 module.exports = {
   getAllProjects() {
     return project.findAll();
@@ -14,22 +14,31 @@ module.exports = {
 
   async createProject(payload) {
     const currentDate = new Date();
-    const { urlString, ...rest } = payload;
+    const { url_strings, ...rest } = payload;
+    console.log(rest);
 
     const newProject = await project.create({
       ...rest,
       created_at: currentDate,
       updated_at: currentDate,
     });
-    const newProjectJson = newProject.toJSON();
-    const newProjectImage = await projectImage.create({
-      urlString: urlString,
-      projectId: newProjectJson.id,
-      created_at: currentDate,
-      updated_at: currentDate,
-    });
 
-    const response = { ...newProjectJson, projectImages: [newProjectImage] };
+    const newProjectJson = newProject.toJSON();
+    console.log(newProjectJson);
+    const pitchSlides = [];
+
+    for (const url of url_strings) {
+      console.log(url);
+      const newPitchSlide = await pitchSlide.create({
+        urlString: url,
+        projectId: newProjectJson.id,
+        createdAt: currentDate,
+        updatedAt: currentDate,
+      });
+      pitchSlides.push(newPitchSlide);
+    }
+
+    const response = { ...newProjectJson, pitchSlides: pitchSlides };
 
     return response;
   },

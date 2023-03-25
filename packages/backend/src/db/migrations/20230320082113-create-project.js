@@ -19,7 +19,7 @@ module.exports = {
           key: "id",
         },
       },
-      owner_user_id: {
+      user_id: {
         type: Sequelize.INTEGER,
         references: {
           model: "users",

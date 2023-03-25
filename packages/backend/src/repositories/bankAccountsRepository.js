@@ -1,4 +1,4 @@
-const { bank_account } = require("../db/models");
+const { bankAccount } = require("../db/models");
 const logger = require("../middleware/logger");
 
 module.exports = {

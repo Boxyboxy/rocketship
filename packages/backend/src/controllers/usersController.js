@@ -3,8 +3,8 @@ const { userAddress, order } = require("../db/models");
 const {
   getAllUsers,
   getUserById,
-  // updateUserById,
-  // createUser,
+  updateUserById,
+  createUser,
 } = require("../repositories/usersRepository");
 const { Sequelize } = require("sequelize");
 module.exports = {
@@ -50,19 +50,19 @@ module.exports = {
 
     return res.json(user);
   },
-  // async updateUserById(req, res) {
-  //   const { id } = req.params;
-  //   if (isNaN(id) || +id > Number.MAX_SAFE_INTEGER || +id < 0) {
-  //     const error = new Error("id  must be a valid number");
-  //     error.status = 400;
-  //     throw error;
-  //   }
-  //   const updatedUser = await updateUserById(id, req.body);
-  //   return res.json(updatedUser);
-  // },
-  // async createUser(req, res) {
-  //   const newUser = await createUser({ ...req.body });
+  async updateUserById(req, res) {
+    const { id } = req.params;
+    if (isNaN(id) || +id > Number.MAX_SAFE_INTEGER || +id < 0) {
+      const error = new Error("id  must be a valid number");
+      error.status = 400;
+      throw error;
+    }
+    const updatedUser = await updateUserById(id, req.body);
+    return res.json(updatedUser);
+  },
+  async createUser(req, res) {
+    const newUser = await createUser({ ...req.body });
 
-  //   return res.json(newUser);
-  // },
+    return res.json(newUser);
+  },
 };
