@@ -16,6 +16,7 @@ npx sequelize model:generate --name skill --attributes skill:string --underscore
 npx sequelize model:generate --name requiredSkill --attributes skillId:integer,projectId:integer --underscored
 npx sequelize model:generate --name userSkill --attributes skillId:integer,userId:integer --underscored
 #NOTE: Make sure to change migration files to snakecase and leave camel case in model files
+#NOTE: data attributes in seeder config file requires snake case
 
 
 npx sequelize seed:generate --name seed-categories
@@ -30,12 +31,16 @@ npx sequelize db:seed --seed 20230322151915-seed-users.js
 npx sequelize db:migrate:undo --name 20230320083057-create-project-pitch-deck.js
 npx sequelize model:generate --name pitchSlide --attributes projectId:integer,urlString:string --underscored
 
+npx sequelize seed:generate --name seed-skills
+npx sequelize db:seed --seed 20230325073106-seed-skills.js
+
 #RESET CODE:
 npx sequelize db:migrate:undo:all
 npx sequelize db:migrate
 npx sequelize db:seed --seed 20230322142443-seed-categories.js
 npx sequelize db:seed --seed 20230322145218-seed-bank-accounts.js
 npx sequelize db:seed --seed 20230322151915-seed-users.js
+npx sequelize db:seed --seed 20230325073106-seed-skills.js
 npm start
 
 ##ubuntu pg admin commands
@@ -48,4 +53,3 @@ psql boxybox
 
 
 
-npx sequelize model:generate --name pitchSlide1 --attributes projectId:integer,urlString:string --underscored
