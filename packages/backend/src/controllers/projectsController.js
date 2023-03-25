@@ -1,4 +1,4 @@
-const { pitchSlide, category } = require("../db/models");
+const { pitchSlide, category, skill } = require("../db/models");
 const {
   getAllProjects,
   getProjectById,
@@ -10,7 +10,11 @@ module.exports = {
   async getAllProjects({ query }, res) {
     const { projectName, categoryName } = query;
     const options = {
-      include: [{ model: pitchSlide }, { model: category, where: {} }],
+      include: [
+        { model: pitchSlide },
+        { model: category, where: {} },
+        { model: skill },
+      ],
       where: {},
     };
 

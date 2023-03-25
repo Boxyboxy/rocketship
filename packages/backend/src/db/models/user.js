@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.hasMany(models.project);
       this.hasMany(models.userSkill);
+      this.belongsToMany(models.skill, { through: models.userSkill });
     }
   }
   user.init(

@@ -1,4 +1,4 @@
-const { user } = require("../db/models");
+const { user, skill, project } = require("../db/models");
 
 const logger = require("../middleware/logger");
 module.exports = {
@@ -9,11 +9,10 @@ module.exports = {
   getUserById(id) {
     const options = {
       include: [
-        // { model: userAddress },
-        // {
-        //   model: order,
-        //   include: { model: orderItem, include: { model: product } },
-        // },
+        { model: skill },
+        {
+          model: project,
+        },
       ],
       where: {},
     };

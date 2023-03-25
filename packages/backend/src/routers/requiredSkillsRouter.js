@@ -4,9 +4,8 @@ const requiredSkillsController = require("../controllers/requiredSkillsControlle
 
 const requiredSkillsRouter = express.Router();
 
-requiredSkillsRouter.get(
-  "/:id",
-  requiredSkillsController.getAllRequiredSkillsByProjectId
-);
+requiredSkillsRouter.get("/", requiredSkillsController.getAllRequiredSkills);
+
+requiredSkillsRouter.post("/", requiredSkillsController.createRequiredSkill);
 
 module.exports = requiredSkillsRouter;

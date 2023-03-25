@@ -13,6 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.pitchSlide);
       this.belongsTo(models.bankAccount);
       this.belongsTo(models.user);
+      this.belongsToMany(models.skill, {
+        through: models.requiredSkill,
+      });
     }
   }
   project.init(

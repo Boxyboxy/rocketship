@@ -1,5 +1,3 @@
-const { userAddress, order } = require("../db/models");
-
 const {
   getAllUsers,
   getUserById,
@@ -12,7 +10,6 @@ module.exports = {
     const { email, name } = query;
 
     const options = {
-      // include: [{ model: userAddress }, { model: order }],
       where: {},
     };
 

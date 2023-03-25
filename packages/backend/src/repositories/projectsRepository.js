@@ -14,7 +14,7 @@ module.exports = {
 
   async createProject(payload) {
     const currentDate = new Date();
-    const { url_strings, ...rest } = payload;
+    const { pitchSlidesUrlStrings, ...rest } = payload;
     console.log(rest);
 
     const newProject = await project.create({
@@ -27,7 +27,7 @@ module.exports = {
     console.log(newProjectJson);
     const pitchSlides = [];
 
-    for (const url of url_strings) {
+    for (const url of pitchSlidesUrlStrings) {
       console.log(url);
       const newPitchSlide = await pitchSlide.create({
         urlString: url,
