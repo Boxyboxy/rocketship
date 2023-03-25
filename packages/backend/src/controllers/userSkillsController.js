@@ -5,15 +5,18 @@ module.exports = {
   async getAllUserSkills({ query }, res) {
     const { skillId, userId } = query;
     const options = {
-      include: [{ model: skill }, { model: user, where: {} }],
+      include: [
+        { model: skill, where: {} },
+        { model: user, where: {} },
+      ],
       where: {},
     };
     if (skillId) {
-      options.include[0].id = skillId;
+      options.include[0].where.id = skillId;
     }
 
     if (userId) {
-      options.include[1].id = userId;
+      options.include[1].where.id = userId;
     }
     const userSkills = await getAllUserSkills(options);
     return res.json(userSkills);
