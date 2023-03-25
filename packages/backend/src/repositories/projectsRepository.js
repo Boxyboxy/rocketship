@@ -2,8 +2,8 @@ const { project } = require("../db/models");
 const logger = require("../middleware/logger");
 const { pitchSlide } = require("../db/models");
 module.exports = {
-  getAllProjects() {
-    return project.findAll();
+  getAllProjects(options) {
+    return project.findAll(options);
   },
 
   getProjectById(id) {

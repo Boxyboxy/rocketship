@@ -1,13 +1,32 @@
+const { pitchSlide, category } = require("../db/models");
 const {
   getAllProjects,
   getProjectById,
   createProject,
   deleteProject,
 } = require("../repositories/projectsRepository");
-
+const { Sequelize } = require("sequelize");
 module.exports = {
-  async getAllProjects(req, res) {
-    const projects = await getAllProjects();
+  async getAllProjects({ query }, res) {
+    const { projectName, categoryName } = query;
+    const options = {
+      include: [{ model: pitchSlide }, { model: category, where: {} }],
+      where: {},
+    };
+
+    if (projectName) {
+      options.where.name = Sequelize.where(
+        Sequelize.fn("LOWER", Sequelize.col("project.name")),
+        "LIKE",
+        `%${projectName.toLowerCase()}%`
+      );
+    }
+
+    if (categoryName) {
+      options.include[1].name = categoryName;
+    }
+
+    const projects = await getAllProjects(options);
 
     return res.json(projects);
   },
