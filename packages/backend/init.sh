@@ -7,7 +7,7 @@ npx sequelize db:create
 npm install date-fns express-async-errors express-oauth2-jwt-bearer cloudinary cors
 
 
-npx sequelize model:generate --name project --attributes name:string,categoryId:integer,userId:integer,summary:text,details:text,bankAccountId:integer,status:enum:'{active,completed,cancelled}',location:string,githubRepoUrl:string --underscored
+npx sequelize model:generate --name project --attributes name:string,categoryId:integer,userId:integer,summary:text,details:text,bankAccountId:integer,status:enum:'{active,completed,cancelled}',location:string,githubRepoUrl:string,coverImage:string --underscored
 npx sequelize model:generate --name pitchSlide --attributes projectId:integer,urlString:string --underscored
 npx sequelize model:generate --name category --attributes name:string --underscored
 npx sequelize model:generate --name bankAccount --attributes bankAccountNumber:string,bank:text --underscored
@@ -36,7 +36,7 @@ npx sequelize db:migrate
 npx sequelize db:seed --seed 20230322142443-seed-categories.js
 npx sequelize db:seed --seed 20230322145218-seed-bank-accounts.js
 npx sequelize db:seed --seed 20230322151915-seed-users.js
-
+npm start
 
 ##ubuntu pg admin commands
 sudo service postgresql start

@@ -51,6 +51,12 @@ module.exports = {
           isUrl: true,
         },
       },
+      cover_image: {
+        type: Sequelize.STRING,
+        validate: {
+          isUrl: true,
+        },
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
