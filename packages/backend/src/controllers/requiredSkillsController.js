@@ -1,5 +1,5 @@
-const { project, skill } = require("../db/models");
-const { requiredSkill } = require("../db/models");
+const { project, skill, requiredSkill } = require("../db/models");
+
 const {
   getAllRequiredSkills,
   createRequiredSkill,
@@ -44,5 +44,27 @@ module.exports = {
     const newRequiredSkill = await createRequiredSkill({ ...req.body });
 
     return res.json(newRequiredSkill);
+  },
+  //TODO:  can you do a post with a query param?
+  async createRequiredSkills(req, res) {
+    const { projectId } = req.params;
+    console.log();
+    const { skillIdArray } = { ...req.body };
+    // +projectId converts a string to number
+    if (
+      isNaN(projectId) ||
+      +projectId > Number.MAX_SAFE_INTEGER ||
+      +projectId < 0
+    ) {
+      const error = new Error("Project Id must be a valid number");
+      error.status = 400;
+      throw error;
+    }
+
+    const requiredSkills = await requiredSkill.findAll({
+      where: { projectId: projectId },
+    });
+    console.log(requiredSkills);
+    return res.json(requiredSkills);
   },
 };

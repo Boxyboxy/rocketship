@@ -1,6 +1,6 @@
 const { project } = require("../db/models");
 const logger = require("../middleware/logger");
-const { pitchSlide } = require("../db/models");
+const { pitchSlide, requiredSkill } = require("../db/models");
 module.exports = {
   getAllProjects(options) {
     return project.findAll(options);
@@ -14,7 +14,7 @@ module.exports = {
 
   async createProject(payload) {
     const currentDate = new Date();
-    const { pitchSlidesUrlStrings, ...rest } = payload;
+    const { pitchSlidesUrlStrings, requiredSkills, ...rest } = payload;
     console.log(rest);
 
     const newProject = await project.create({
@@ -37,8 +37,21 @@ module.exports = {
       });
       pitchSlides.push(newPitchSlide);
     }
-
-    const response = { ...newProjectJson, pitchSlides: pitchSlides };
+    const skills = [];
+    for (skillId of requiredSkills) {
+      const newRequiredSkill = await requiredSkill.create({
+        skillId: skillId,
+        projectId: newProjectJson.id,
+        createdAt: currentDate,
+        updatedAt: currentDate,
+      });
+      skills.push(newRequiredSkill);
+    }
+    const response = {
+      ...newProjectJson,
+      pitchSlides: pitchSlides,
+      skills: skills,
+    };
 
     return response;
   },
