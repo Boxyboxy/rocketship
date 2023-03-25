@@ -34,6 +34,8 @@ npx sequelize model:generate --name pitchSlide --attributes projectId:integer,ur
 npx sequelize seed:generate --name seed-skills
 npx sequelize db:seed --seed 20230325073106-seed-skills.js
 
+npx sequelize seed:generate --name seed-user-skills
+npx sequelize db:seed --seed 20230325083101-seed-user-skills.js
 #RESET CODE:
 npx sequelize db:migrate:undo:all
 npx sequelize db:migrate
@@ -41,6 +43,7 @@ npx sequelize db:seed --seed 20230322142443-seed-categories.js
 npx sequelize db:seed --seed 20230322145218-seed-bank-accounts.js
 npx sequelize db:seed --seed 20230322151915-seed-users.js
 npx sequelize db:seed --seed 20230325073106-seed-skills.js
+npx sequelize db:seed --seed 20230325083101-seed-user-skills.js
 npm start
 
 ##ubuntu pg admin commands
