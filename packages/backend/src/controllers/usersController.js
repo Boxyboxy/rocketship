@@ -4,7 +4,9 @@ const {
   updateUserById,
   createUser,
 } = require("../repositories/usersRepository");
+const { skillsIdMap } = require("../configs/data.js");
 const { Sequelize } = require("sequelize");
+const skill = require("../db/models/skill");
 module.exports = {
   async getAllUsers({ query }, res) {
     const { email, name } = query;
@@ -58,7 +60,12 @@ module.exports = {
     return res.json(updatedUser);
   },
   async createUser(req, res) {
-    const newUser = await createUser({ ...req.body });
+    const { skills, ...payload } = { ...req.body };
+
+    const skillIdArray = skills.map((skill) => skillsIdMap[skill]);
+    console.log(skillIdArray);
+
+    const newUser = await createUser({ ...payload, userSkills: skillIdArray });
 
     return res.json(newUser);
   },

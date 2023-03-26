@@ -24,7 +24,7 @@ module.exports = {
     });
 
     const newProjectJson = newProject.toJSON();
-    console.log(newProjectJson);
+
     const pitchSlides = [];
 
     for (const url of pitchSlidesUrlStrings) {
