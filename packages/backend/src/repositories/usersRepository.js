@@ -1,4 +1,4 @@
-const { user, skill, project } = require("../db/models");
+const { user, skill, project, userSkill } = require("../db/models");
 
 const logger = require("../middleware/logger");
 module.exports = {
@@ -30,12 +30,29 @@ module.exports = {
     return updatedUser;
   },
   async createUser(payload) {
+    const { userSkills, ...rest } = payload;
     const currentDate = new Date();
     const newUser = await user.create({
       ...payload,
       created_at: currentDate,
       updated_at: currentDate,
     });
-    return newUser;
+    const newUserJson = newUser.toJSON();
+    const skills = [];
+    for (const skillId of userSkills) {
+      const newUserSkill = await userSkill.create({
+        skillId: skillId,
+        userId: newUserJson.id,
+        created_at: currentDate,
+        updated_at: currentDate,
+      });
+      skills.push(newUserSkill);
+    }
+    const response = {
+      ...newUserJson,
+      skills: skills,
+    };
+
+    return response;
   },
 };
