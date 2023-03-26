@@ -3,3 +3,4 @@ packages/backend/node_modules
 packages/backend/.env
 packages/frontend/node_modules
 packages/frontend/.env
+.next
