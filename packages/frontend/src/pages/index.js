@@ -22,6 +22,9 @@ export default function App() {
         <header>
           <Image src="/logo.svg" alt="Logo" width={100} height={100} />
           <p>This is the welcome page.</p>
+          <a href="/api/auth/login">Login</a>
+          <br />
+          <a href="/api/auth/logout">Logout</a>
         </header>
       </div>
     </>
