@@ -24,7 +24,6 @@ export default function App() {
           <p>This is the welcome page.</p>
           <a href="/api/auth/login">Login</a>
           <br />
-          <a href="/api/auth/logout">Logout</a>
         </header>
       </div>
     </>
