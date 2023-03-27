@@ -1,6 +1,12 @@
 const { project } = require("../db/models");
 const logger = require("../middleware/logger");
 const { pitchSlide, requiredSkill } = require("../db/models");
+const {
+  deletePitchSlidesByProjectId,
+} = require("../repositories/pitchSlidesRepository");
+const {
+  deleteRequiredSkillsByProjectId,
+} = require("../repositories/requiredSkillsRepository");
 module.exports = {
   getAllProjects(options) {
     return project.findAll(options);
@@ -56,7 +62,9 @@ module.exports = {
     return response;
   },
   async deleteProject(id) {
-    // await deleteProjectImageByProjectId(id);
+    await deletePitchSlidesByProjectId(id);
+
+    await deleteRequiredSkillsByProjectId(id);
 
     return project.destroy({
       where: {

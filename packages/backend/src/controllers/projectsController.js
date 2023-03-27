@@ -59,6 +59,7 @@ module.exports = {
 
     return res.json(newProject);
   },
+
   async deleteProject(req, res) {
     const { id } = req.params;
     const deleteResult = await deleteProject(id);

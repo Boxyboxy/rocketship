@@ -3,6 +3,7 @@ const {
   getUserById,
   updateUserById,
   createUser,
+  deleteUser,
 } = require("../repositories/usersRepository");
 const { skillsIdMap } = require("../configs/data.js");
 const { Sequelize } = require("sequelize");
@@ -56,7 +57,11 @@ module.exports = {
       error.status = 400;
       throw error;
     }
-    const updatedUser = await updateUserById(id, req.body);
+    const { newSkills, ...rest } = req.body;
+    const skillIdArray = newSkills.map((skill) => skillsIdMap[skill]);
+
+    const updatedUser = await updateUserById(id, rest, skillIdArray);
+
     return res.json(updatedUser);
   },
   async createUser(req, res) {
@@ -65,8 +70,23 @@ module.exports = {
     const skillIdArray = skills.map((skill) => skillsIdMap[skill]);
     console.log(skillIdArray);
 
-    const newUser = await createUser({ ...payload, userSkills: skillIdArray });
+    const newUser = await createUser({
+      ...payload,
+      skillIdArray: skillIdArray,
+    });
 
     return res.json(newUser);
+  },
+  async deleteUser(req, res) {
+    const { id } = req.params;
+    const deleteResult = await deleteUser(id);
+
+    if (!deleteResult) {
+      const error = new Error(`Could not delete user with user ID ${id}`);
+      error.status = 400;
+      throw error;
+    }
+
+    res.json({ success: true });
   },
 };
