@@ -67,4 +67,17 @@ module.exports = {
     console.log(requiredSkills);
     return res.json(requiredSkills);
   },
+
+  async deleteRequiredSkillsByProjectId({ query }, res) {
+    const { projectId } = req.params;
+    const deleteResult = await deleteProject(id);
+
+    if (!deleteResult) {
+      const error = new Error(`Could not delete project with project ID ${id}`);
+      error.status = 400;
+      throw error;
+    }
+
+    res.json({ success: true });
+  },
 };

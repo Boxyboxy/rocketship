@@ -15,4 +15,11 @@ module.exports = {
       updated_at: currentDate,
     });
   },
+  deleteRequiredSkillsByProjectId(projectId) {
+    return requiredSkill.destroy({
+      where: {
+        projectId: projectId,
+      },
+    });
+  },
 };

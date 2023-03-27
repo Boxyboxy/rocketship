@@ -2,17 +2,20 @@ const { pitchSlide } = require("../db/models");
 const logger = require("../middleware/logger");
 
 module.exports = {
+  getAllPitchSlides(options) {
+    return pitchSlide.findAll(options);
+  },
   async createPitchSlide(payload) {
     const currentDate = new Date();
 
-    return productImage.create({
+    return pitchSlide.create({
       ...payload,
       created_at: currentDate,
       updated_at: currentDate,
     });
   },
 
-  deletePitchSlide(id) {
+  deletePitchSlideById(id) {
     return pitchSlide.destroy({
       where: {
         id: id,
@@ -20,10 +23,10 @@ module.exports = {
     });
   },
 
-  deletePitchSlideById(productId) {
+  deletePitchSlidesByProjectId(projectId) {
     return pitchSlide.destroy({
       where: {
-        productId: productId,
+        projectId: projectId,
       },
     });
   },
