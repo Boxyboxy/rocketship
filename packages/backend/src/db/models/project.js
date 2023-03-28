@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsToMany(models.skill, {
         through: models.requiredSkill,
       });
+      this.hasMany(models.funding);
     }
   }
   project.init(
