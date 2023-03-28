@@ -9,6 +9,8 @@ const projectsRouter = require("./projectsRouter");
 const skillsRouter = require("./skillsRouter");
 const userSkillsRouter = require("./userSkillsRouter");
 const requiredSkillsRouter = require("./requiredSkillsRouter");
+const fundingsRouter = require("./fundingRouter");
+
 const appRouter = express.Router();
 
 appRouter.use("/categories", categoriesRouter);
@@ -19,4 +21,6 @@ appRouter.use("/projects", projectsRouter);
 appRouter.use("/skills", skillsRouter);
 appRouter.use("/userSkills", userSkillsRouter);
 appRouter.use("/requiredSkills", requiredSkillsRouter);
+appRouter.use("/fundings", fundingsRouter);
+
 module.exports = appRouter;

@@ -44,6 +44,7 @@ npx sequelize db:seed --seed 20230322145218-seed-bank-accounts.js
 npx sequelize db:seed --seed 20230322151915-seed-users.js
 npx sequelize db:seed --seed 20230325073106-seed-skills.js
 npx sequelize db:seed --seed 20230325083101-seed-user-skills.js
+npx sequelize db:seed --seed 20230328142057-seed-fundings.js
 npm start
 
 ##ubuntu pg admin commands
