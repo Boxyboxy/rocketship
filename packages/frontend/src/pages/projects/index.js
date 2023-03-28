@@ -50,7 +50,7 @@ export default function HomePage() {
       <div>
         <p> This will be the navbar portion.</p>
       </div>
-      <body>
+      <div>
         <h3> Featured </h3>
         <Grid container spacing={2}>
           <Grid xs={12} sm={12} md={7} lg={6}>
@@ -95,7 +95,7 @@ export default function HomePage() {
             );
           })}
         </Grid>
-      </body>
+      </div>
     </div>
   );
 }
