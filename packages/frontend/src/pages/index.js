@@ -44,12 +44,14 @@ export default function App() {
       {/* about section  */}
       <div className={styles.about}>
         <div className={styles.gradient} />
-        <div>You can be a project owner, contributor or funder at RocketShip:</div>
+        <h2 className={styles.h3title}>
+          You can be a project owner, contributor or funder at RocketShip:
+        </h2>
         <div className={styles.cardContainer}>
           <div className={styles.card}>
             <img className={styles.cardImg} src="/images/planet-01.png" alt="planet1" />
             <h2>Project Owner</h2>
-            <div class="details">
+            <div className={styles.details}>
               <p>More details about card 1</p>
             </div>
           </div>
@@ -57,23 +59,22 @@ export default function App() {
             <img className={styles.cardImg} src="/images/planet-02.png" alt="planet2" />
             <h2>Contributor</h2>
             <div class="details">
-              <p>More details about card 1</p>
+              <p>More details about card 2</p>
             </div>
           </div>
           <div className={styles.card}>
             <img className={styles.cardImg} src="/images/planet-03.png" alt="planet3" />
             <h2>Fund this Ship</h2>
             <div class="details">
-              <p>More details about card 1</p>
+              <p>More details about card 3</p>
             </div>
           </div>
         </div>
       </div>
       {/* map section  */}
       <div className={styles.mapContainer}>
-        <h2 className={styles.h3title}>
-          Together, we can make a greater impact. Join your fellow astronauts on the RocketShip.
-        </h2>
+        <h2 className={styles.h3title}>Together, we can make a greater impact.</h2>
+        <h2 className={styles.h3title}>Join your fellow astronauts on the RocketShip.</h2>
         <img className={styles.map} src="/images/map.png" alt="map" />
       </div>
       {/* get started section  */}

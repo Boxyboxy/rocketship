@@ -14,7 +14,8 @@
 
 .categoryLI {
   display: inline;
-  margin-right: 20px;
+  /* margin-left: 10px; */
+  /* margin-right: 10px; */
   cursor: pointer;
   color: #21325e;
 }
@@ -22,4 +23,14 @@
 .linkName {
   color: #21325e;
   text-decoration: none;
+  text-align: center;
+  align-content: center;
 }
+
+.dash {
+  display: inline;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+

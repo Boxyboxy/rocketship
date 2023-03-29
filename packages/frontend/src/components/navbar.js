@@ -10,7 +10,7 @@ export default function NavBar() {
     <nav className={styles.navbar}>
       <div className={styles.container}>
         <ul className={styles.navbarHeader}>
-          <Link href="/">
+          <Link href="/projects">
             <img className={styles.logo} src="/images/logo.png" alt="logo" />
           </Link>
         </ul>

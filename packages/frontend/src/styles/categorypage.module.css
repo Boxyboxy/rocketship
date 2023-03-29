@@ -1,0 +1,81 @@
+.header {
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.description {
+  text-align: center;
+}
+
+.container {
+  margin: 0 150px 0 150px;
+}
+
+.shoutout {
+  color: #3e497a;
+  text-align: center;
+}
+
+.line {
+  display: block;
+  border-bottom: 2px dashed #ccc;
+  margin-bottom: 20px;
+}
+
+.cardsContainer {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  margin: 20px;
+}
+
+.title {
+  text-align: left;
+  margin-left: 80px;
+}
+
+.featuredImg {
+  width: 600px;
+}
+
+.featuredImg:hover {
+  -webkit-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+  transition: 1s ease;
+}
+
+.featuredContainer {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: auto;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.txtContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.featuredTxt {
+  flex: 1;
+  margin: 20px;
+}
+
+.featuredHeader {
+  font-size: 45px;
+  font-weight: 200;
+  margin: 20px;
+}
+
+.headerTitle {
+  font-size: 30px;
+  font-weight: 200;
+  color: #3e497a;
+  margin-bottom: 10px;
+}

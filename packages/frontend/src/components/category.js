@@ -6,44 +6,44 @@ export default function Category() {
     <div className={styles.categoryHead}>
       <ul className={styles.categoryUL}>
         <li className={styles.categoryLI}>
-          <Link className={styles.linkName} href="/">
-            All |
+          <Link className={styles.linkName} href="/projects">
+            All
           </Link>
+          <p className={styles.dash}>|</p>
         </li>
 
         <li className={styles.categoryLI}>
           <Link className={styles.linkName} href="/fintech">
-            {' '}
-            Fintech |
+            Fintech
           </Link>
+          <p className={styles.dash}>|</p>
         </li>
         <li className={styles.categoryLI}>
           <Link className={styles.linkName} href="/healthtech">
-            {' '}
-            HealthTech |
+            Health Tech
           </Link>
+          <p className={styles.dash}>|</p>
         </li>
         <li className={styles.categoryLI}>
           <Link className={styles.linkName} href="/fnb">
-            {' '}
-            F&B |
+            F&B
           </Link>
+          <p className={styles.dash}>|</p>
         </li>
         <li className={styles.categoryLI}>
-          <Link className={styles.linkName} href="/social-media">
-            {' '}
-            Social media |
+          <Link className={styles.linkName} href="/socialmedia">
+            Social media
           </Link>
+          <p className={styles.dash}>|</p>
         </li>
         <li className={styles.categoryLI}>
           <Link className={styles.linkName} href="/games">
-            {' '}
-            Games |
+            Games
           </Link>
+          <p className={styles.dash}>|</p>
         </li>
         <li className={styles.categoryLI}>
           <Link className={styles.linkName} href="/agritech">
-            {' '}
             Agritech
           </Link>
         </li>

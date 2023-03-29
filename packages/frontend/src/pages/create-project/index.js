@@ -5,10 +5,11 @@ import Footer from '../../components/footer';
 
 export default function CreateProject() {
   return (
-    <>
+    <div>
       <NavBar />
       <Category />
       <p> Test form</p>
-    </>
+      <Footer />
+    </div>
   );
 }
