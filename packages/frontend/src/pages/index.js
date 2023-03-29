@@ -1,6 +1,7 @@
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
+import Head from 'next/head';
+import Image from 'next/image';
+import NavBar from '../components/navbar';
+import styles from '../styles/Home.module.css';
 
 export default function App() {
   return (
@@ -11,10 +12,7 @@ export default function App() {
         <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
-        <meta
-          name="description"
-          content="Web site created using create-next-app"
-        />
+        <meta name="description" content="Web site created using create-next-app" />
         <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
         <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
       </Head>
@@ -25,6 +23,7 @@ export default function App() {
           <a href="/api/auth/login">Login</a>
           <br />
         </header>
+        <NavBar />
       </div>
     </>
   );
