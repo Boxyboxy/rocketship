@@ -1,0 +1,129 @@
+.container {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 15px;
+  display: flex;
+}
+
+.navbar {
+  top: 0;
+  width: 100%;
+  height: 70px;
+  background: #21325e;
+  position: sticky;
+}
+
+.navbarHeader {
+  position: relative;
+  margin-top: -10px;
+  float: right;
+  list-style-type: none;
+}
+
+.logo {
+  position: absolute;
+  left: 0px;
+  z-index: 1;
+  height: 60px;
+}
+
+.navli {
+  display: inline;
+  margin-right: 20px;
+  cursor: pointer;
+  color: #f0f0f0;
+}
+
+.linkName {
+  color: #f0f0f0;
+  text-decoration: none;
+}
+
+.linkName:hover {
+  color: #f1d00a;
+}
+
+.navbarRight {
+  position: relative;
+  margin-top: 2px;
+  float: right;
+  list-style-type: none;
+  margin-left: 800px;
+}
+
+.logout {
+  font-size: 16px;
+  color: #f0f0f0;
+  padding: 0;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  background: none;
+  cursor: pointer;
+}
+
+.logout:hover {
+  color: #f1d00a;
+}
+
+.searchBox {
+  display: inline;
+  position: absolute;
+  top: 50%;
+  left: 59%;
+  transform: translate(-50%, -50%);
+  background: #f0f0f0;
+  height: 40px;
+  border-radius: 40px;
+  padding: 10px;
+}
+
+.searchBox:hover > .txt {
+  width: 1050px;
+  transition: all 1s;
+}
+
+.searchBox:hover > .btn {
+  color: #21325e;
+  display: flex;
+}
+
+.btn {
+  color: #21325e;
+  float: right;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.4s;
+  cursor: pointer;
+}
+
+.btn > i {
+  font-size: 30px;
+  color: #21325e;
+}
+
+.txt {
+  border: none;
+  background: none;
+  outline: none;
+  color: #21325e;
+  transition: 0.4s;
+  width: 0px;
+  font-size: 15px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.btn:hover {
+  float: right;
+  color: #21325e;
+  margin: 0;
+  padding: 0;
+}
+
+.chat {
+  display: inline;
+  margin-top: 100px;
+  margin-right: 20px;
+  cursor: pointer;
+}
