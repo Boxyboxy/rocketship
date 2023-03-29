@@ -1,0 +1,25 @@
+.categoryHead {
+  top: 0;
+  width: 100%;
+  height: 20px;
+  background: #f0f0f0;
+}
+
+.categoryUL {
+  margin-top: 10px;
+  text-align: center;
+  /* float: right; */
+  list-style-type: none;
+}
+
+.categoryLI {
+  display: inline;
+  margin-right: 20px;
+  cursor: pointer;
+  color: #21325e;
+}
+
+.linkName {
+  color: #21325e;
+  text-decoration: none;
+}
