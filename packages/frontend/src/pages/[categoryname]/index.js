@@ -1,32 +1,39 @@
-import NavBar from '../../components/navbar';
-import Category from '../../components/category';
-import Footer from '../../components/footer';
-import styles from '../../styles/categorypage.module.css';
-import { categorydata } from '../../constants/categorydata';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import NavBar from "../../components/navbar";
+import Category from "../../components/category";
+import Footer from "../../components/footer";
+import styles from "../../styles/categorypage.module.css";
+import { categorydata } from "../../constants/categorydata";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 
 export async function getServerSideProps(context) {
   const { categoryname } = context.query;
   // Get the list of possible categories
-  const categories = ['fintech', 'healthtech', 'fnb', 'socialmedia', 'games', 'agritech'];
+  const categories = [
+    "fintech",
+    "healthtech",
+    "fnb",
+    "socialmedia",
+    "games",
+    "agritech",
+  ];
   // Get the content for the specified category
   const content = categorydata[categoryname];
   // Check if the requested category is valid
   if (!categories.includes(categoryname)) {
     return {
-      notFound: true
+      notFound: true,
     };
   }
   return {
     props: {
       // categoryname,
-      content
-    }
+      content,
+    },
   };
 }
 
@@ -47,7 +54,11 @@ export default function CategoryPage({ categoryname, content }) {
       <div className={styles.title}>
         <div className={styles.headerTitle}>FEATURED</div>
         <div className={styles.featuredContainer}>
-          <img className={styles.featuredImg} src={content.featuredImg} alt="fintech" />
+          <img
+            className={styles.featuredImg}
+            src={content.featuredImg}
+            alt="fintech"
+          />
           <div className={styles.txtContainer}>
             <div className={styles.featuredHeader}>{content.featured}</div>
             <p className={styles.featuredTxt}>{content.featuredTxt}</p>
@@ -61,14 +72,19 @@ export default function CategoryPage({ categoryname, content }) {
       </div>
       <div className={styles.cardsContainer}>
         <Card sx={{ maxWidth: 345 }}>
-          <CardMedia component="img" height="140" image="/images/planet-01.png" alt="project1" />
+          <CardMedia
+            component="img"
+            height="140"
+            image="/images/planet-01.png"
+            alt="project1"
+          />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               {content.project1}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              A personal finance app that helps users manage their budget, track their expenses, and
-              save money.
+              A personal finance app that helps users manage their budget, track
+              their expenses, and save money.
             </Typography>
           </CardContent>
           <CardActions>
@@ -78,14 +94,19 @@ export default function CategoryPage({ categoryname, content }) {
         </Card>
 
         <Card sx={{ maxWidth: 345 }}>
-          <CardMedia component="img" height="140" image="/images/planet-02.png" alt="project1" />
+          <CardMedia
+            component="img"
+            height="140"
+            image="/images/planet-02.png"
+            alt="project1"
+          />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               {content.project2}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              A payment processing solution that allows businesses to accept payments via mobile
-              devices, online, or in-person.
+              A payment processing solution that allows businesses to accept
+              payments via mobile devices, online, or in-person.
             </Typography>
           </CardContent>
           <CardActions>
@@ -95,14 +116,20 @@ export default function CategoryPage({ categoryname, content }) {
         </Card>
 
         <Card sx={{ maxWidth: 345 }}>
-          <CardMedia component="img" height="140" image="/images/planet-03.png" alt="project1" />
+          <CardMedia
+            component="img"
+            height="140"
+            image="/images/planet-03.png"
+            alt="project1"
+          />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               {content.project3}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              An investment platform that offers personalized investment recommendations based on
-              users' financial goals and risk tolerance.
+              An investment platform that offers personalized investment
+              recommendations based on users' financial goals and risk
+              tolerance.
             </Typography>
           </CardContent>
           <CardActions>

@@ -56,9 +56,10 @@
   color: #f0f0f0;
   padding: 0;
   border: none;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   background: none;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .logout:hover {
@@ -111,7 +112,7 @@
   transition: 0.4s;
   width: 0px;
   font-size: 15px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 .btn:hover {

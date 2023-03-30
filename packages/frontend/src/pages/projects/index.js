@@ -2,6 +2,8 @@ import Head from "next/head";
 import Grid from "@mui/material/Unstable_Grid2";
 import { useState } from "react";
 import { Typography } from "@mui/material";
+import NavBar from "../../components/navbar";
+import Category from "../../components/category";
 
 export default function HomePage() {
   // const [numOfProjects, setNumOfProjects] = useState(1238);
@@ -48,7 +50,8 @@ export default function HomePage() {
         <title>Discover Projects</title>
       </Head>
       <div>
-        <p> This will be the navbar portion.</p>
+        <NavBar />
+        <Category />
       </div>
       <div>
         <h3> Featured </h3>

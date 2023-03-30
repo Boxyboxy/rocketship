@@ -1,11 +1,9 @@
-import Link from 'next/link';
-import { useAuth0 } from '@auth0/auth0-react';
-import SmsRoundedIcon from '@mui/icons-material/SmsRounded';
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import styles from '../styles/navbar.module.css';
+import Link from "next/link";
+import SmsRoundedIcon from "@mui/icons-material/SmsRounded";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import styles from "../styles/navbar.module.css";
 
 export default function NavBar() {
-  const { logout } = useAuth0();
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
@@ -46,13 +44,15 @@ export default function NavBar() {
 
           <div className={styles.navli}>
             <Link className={styles.linkName} href="/chat">
-              <SmsRoundedIcon />{' '}
+              <SmsRoundedIcon />{" "}
             </Link>
           </div>
           <li className={styles.navli}>
-            <button className={styles.logout} onClick={logout}>
+            {/* <button className={styles.logout}> */}
+            <a className={styles.logout} href="/api/auth/logout">
               Logout
-            </button>
+            </a>
+            {/* </button> */}
           </li>
         </ul>
       </div>

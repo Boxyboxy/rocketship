@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import styles from '../styles/category.module.css';
+import Link from "next/link";
+import styles from "../styles/category.module.css";
 
 export default function Category() {
   return (
