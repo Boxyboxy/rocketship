@@ -6,6 +6,8 @@ import Avatar from "@mui/material/Avatar";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CategoryIcon from "@mui/icons-material/Category";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import NavBar from "../../../../components/navbar";
+import Category from "../../../../components/category";
 
 // bare bones is up, but margin/ spacing needs tweaking.
 
@@ -19,7 +21,10 @@ export default function ProjectPage() {
       <Head>
         <title>Project Name BY Creator Name</title>
       </Head>
-      <div>This is where the navbar goes.</div>
+      <div>
+        <NavBar />
+        <Category />
+      </div>
       <br />
       <br />
       <br />
