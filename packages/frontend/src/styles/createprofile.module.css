@@ -1,0 +1,14 @@
+.form {
+  margin: 20px;
+  /* position: relative; */
+}
+
+.header {
+  font-weight: bold;
+  margin: 20px 0 20px 0;
+  color: #3e497a;
+}
+
+.steps {
+  display: grid;
+}
