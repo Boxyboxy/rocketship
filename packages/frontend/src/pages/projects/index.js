@@ -46,10 +46,14 @@ export default function HomePage() {
 
   //math random to generate a featured project
   useEffect(() => {
-    const featuredProjectId = Math.round(Math.random() * projectsArray.length);
+    // adding 0.1 to avoid the chance that we get a zero
+    const featuredProjectId = Math.round(
+      (Math.random() + 0.1) * projectsArray.length
+    );
+    console.log(featuredProjectId);
     const featured = projectsArray[featuredProjectId];
     setFeaturedProject(featured);
-  }, [projectsArray]);
+  }, [projectsArray, featuredProject]);
 
   return (
     <div>
