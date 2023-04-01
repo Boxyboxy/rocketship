@@ -10,6 +10,9 @@ export default function HomePage() {
   // const [numOfProjects, setNumOfProjects] = useState(1238);
   // const [numOfContributers, setNumOfContributers] = useState("8723");
   // const [fundSum, setFundSum] = useState("123,000");
+  const [projectsArray, setProjectsArray] = useState([]);
+  const [featuredProject, setFeaturedProject] = useState();
+
   const [stats, setStats] = useState([
     { statName: "Projects", sum: "3456" },
     { statName: "Contributers", sum: "9877" },
@@ -41,9 +44,12 @@ export default function HomePage() {
     fetchProjects().then(console.log(projectsArray));
   }, []);
 
-  //dk if we should use a math random to generate a featured project.
-
-  const [projectsArray, setProjectsArray] = useState([]);
+  //math random to generate a featured project
+  useEffect(() => {
+    const featuredProjectId = Math.round(Math.random() * projectsArray.length);
+    const featured = projectsArray[featuredProjectId];
+    setFeaturedProject(featured);
+  }, [projectsArray]);
 
   return (
     <div>
@@ -56,23 +62,20 @@ export default function HomePage() {
       </div>
       <div>
         <h3> Featured </h3>
-        <Grid container spacing={2}>
-          <Grid xs={12} sm={12} md={7} lg={6}>
-            <img
-              src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1420&q=80"
-              width={500}
-            />
+        {featuredProject && (
+          <Grid container spacing={2}>
+            <Grid xs={12} sm={12} md={7} lg={6}>
+              <img src={featuredProject.coverImage} width={500} />
+            </Grid>
+            <Grid xs={12} sm={12} md={5} lg={6}>
+              <div>
+                <h2>{featuredProject.name}</h2>
+                <p>{featuredProject.description}</p>
+                <p> To be created by: {featuredProject.userName}</p>
+              </div>
+            </Grid>
           </Grid>
-          <Grid xs={12} sm={12} md={5} lg={6}>
-            <h2>PROJECT NAME</h2>
-            <p>
-              About the project. We will talk more about this project here. This
-              is supposed to be a brief summary that explains the project;
-              however users will have to click in to see the finer details.
-            </p>
-            <p> To be created by: Creator name</p>
-          </Grid>
-        </Grid>
+        )}
         <Grid container spacing={1} sx={{ margin: "10%" }}>
           {stats.map((stat) => {
             return (
@@ -94,7 +97,7 @@ export default function HomePage() {
 
                 <h2>{project.name} </h2>
                 <p>{project.summary}</p>
-                <p>Owner: {project.userName}</p>
+                <p>To be created by: {project.userName}</p>
               </Grid>
             );
           })}
