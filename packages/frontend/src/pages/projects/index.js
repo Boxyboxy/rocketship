@@ -53,7 +53,7 @@ export default function HomePage() {
     console.log(featuredProjectId);
     const featured = projectsArray[featuredProjectId];
     setFeaturedProject(featured);
-  }, [projectsArray, featuredProject]);
+  }, [projectsArray]);
 
   return (
     <div>
