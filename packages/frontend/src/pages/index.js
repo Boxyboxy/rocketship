@@ -1,8 +1,15 @@
-import Head from "next/head";
-import Button from "@mui/material/Button";
-import styles from "../styles/Home.module.css";
+import Head from 'next/head';
+import Button from '@mui/material/Button';
+import styles from '../styles/Home.module.css';
+import { useState } from 'react';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 export default function App() {
+  const [stats, setStats] = useState([
+    { statName: 'Projects', sum: '1234' },
+    { statName: 'Contributers', sum: '876' },
+    { statName: 'Funders', sum: '543' }
+  ]);
   return (
     <>
       <Head>
@@ -32,10 +39,16 @@ export default function App() {
           <h1>Create and fund projects that are </h1>
           <h1>out of this world.</h1>
           <h2 className={styles.h2title}>
-            <span className={styles.bold}>RocketShip</span> is a new thing in
-            the future, where you can enjoy the virtual world by feeling like
-            it's really real, you can feel what you feel in this metaverse
-            world, because this is really the madness of the metaverse of today.
+            <span className={styles.bold}>RocketShip</span> is your ticket to launch your wildest
+            ideas into the orbit!
+            <p>
+              Our cutting-edge crowdfunding platform is designed exclusively for software engineers
+              who want to take their creations to new heights with the power of community support.
+            </p>
+            <p>Join us on this exhilarating journey to bring the future to life!</p>
+            <p>
+              <ArrowDownwardIcon />
+            </p>
           </h2>
         </div>
 
@@ -110,22 +123,44 @@ export default function App() {
       </div>
       {/* map section  */}
       <div className={styles.mapContainer}>
-        <h2 className={styles.h3title}>
-          Together, we can make a greater impact.
-        </h2>
-        <h2 className={styles.h3title}>
-          Join your fellow astronauts on the RocketShip.
-        </h2>
-        <img className={styles.map} src="/images/map.png" alt="map" />
+        <h2 className={styles.mapTitle}>Together, we can make a greater impact.</h2>
+        <h2 className={styles.mapTitle}>Join your fellow astronauts on the RocketShip.</h2>
+        <div className={styles.mapNumbers}>
+          <img className={styles.map} src="/images/map.png" alt="map" />
+          <div className={styles.numbersContainer}>
+            {stats.map((stat) => {
+              return (
+                <div className={styles.numSummary}>
+                  <p>{stat.sum}</p>
+                  <p>{stat.statName}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
       {/* get started section  */}
+      <h2 className={styles.h3title}>Get started with just a few clicks</h2>
       <div className={styles.getStarted}>
-        <h2 className={styles.h3title}>Get started with just a few clicks</h2>
-        <img
-          className={styles.planet}
-          src="/images/get-started.png"
-          alt="get-started"
-        />
+        <ul className={styles.bullets}>
+          <li className={styles.bulletpoint}>
+            <p className={styles.number}>1</p>
+            <p className={styles.gsTxt}>Sign up as an astronaut to enter the RocketShip</p>
+          </li>
+
+          <li className={styles.bulletpoint}>
+            <p className={styles.number}>2</p>
+            <p className={styles.gsTxt}>Explore the space for projects that interest you</p>
+          </li>
+
+          <li className={styles.bulletpoint}>
+            <p className={styles.number}>3</p>
+            <p className={styles.gsTxt}>
+              Fund a ship or help your fellow astronauts with your skills!
+            </p>
+          </li>
+        </ul>
+        <img className={styles.planet} src="/images/get-started.png" alt="get-started" />
       </div>
       {/* footer */}
       <footer className={styles.footer}>Copyright © Rocketship 2023</footer>;

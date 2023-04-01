@@ -223,21 +223,41 @@
   text-align: center;
 }
 
+.mapNumbers {
+  position: relative;
+}
+
 .map {
   width: 80%;
   text-align: center;
 }
 
+.getStarted {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+}
+
 .planet {
-  width: 40%;
-  margin-left: 55%;
+  width: 80%;
+  margin-left: 10%;
+  grid-column: 2 / span 1;
 }
 
 .h3title {
-  top: 250%;
+  /* top: 300%; */
   color: #f0f0f0;
-  font-size: 30px;
+  font-size: 40px;
   text-align: center;
+  margin-left: 10px;
+  margin-top: 50px;
+}
+
+.mapTitle {
+  color: #f0f0f0;
+  font-size: 40px;
+  text-align: center;
+  margin: 5px;
 }
 
 .footer {
@@ -250,6 +270,68 @@
   margin: 20px;
   text-align: center;
   justify-content: center;
+}
+
+.bullets {
+  grid-column: 1 / span 1;
+  list-style: none;
+  margin-top: 80px;
+  padding: 0;
+}
+
+.bulletpoint {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.number {
+  font-weight: bold;
+  font-size: 20px;
+  color: #f0f0f0;
+  width: 70px;
+  height: 70px;
+  border-radius: 24px;
+  background-color: #323f5d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 70px;
+  margin-top: 20px;
+  padding: 0;
+}
+
+.gsTxt {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 35px;
+  font-size: 18px;
+  color: #f0f0f0;
+  line-height: 32.4px;
+}
+
+.numbersContainer {
+  /* position: absolute; */
+  /* margin: 0 200px 0 200px; */
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.numSummary {
+  text-align: center;
+  color: #f0f0f0;
+  font-size: 30px;
+  margin: 0 50px;
+  margin-top: -80px;
 }
 
 /* .main {
