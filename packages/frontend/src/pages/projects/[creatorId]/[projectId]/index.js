@@ -60,7 +60,6 @@ export default function ProjectPage() {
           await axios
             .get(`http://localhost:8080/skills/${skillNeeded.skillId}`)
             .then(function (response) {
-              console.log(response.data.skill);
               skillArray.push(response.data.skill);
             })
             .catch(function (error) {
@@ -76,7 +75,7 @@ export default function ProjectPage() {
         //     }
         //   }
         // }
-        console.log(skillArray);
+
         setSkills(skillArray);
 
         const editedProject = {
