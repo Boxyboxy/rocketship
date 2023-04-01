@@ -51,19 +51,32 @@ export default function ProjectPage() {
             axios.get(
               `http://localhost:8080/requiredSkills?projectId=${projectId}`
             ),
-            axios.get(`http://localhost:8080/skills`),
+            // axios.get(`http://localhost:8080/skills`),
           ]);
 
         const skillArray = [];
+
         for (const skillNeeded of skillsNeededResponse.data) {
-          for (const skill of allSkills.data) {
-            if (skillNeeded.skillId === skill.id) {
-              skillArray.push(skill.skill);
-              break;
-            }
-          }
+          await axios
+            .get(`http://localhost:8080/skills/${skillNeeded.skillId}`)
+            .then(function (response) {
+              console.log(response.data.skill);
+              skillArray.push(response.data.skill);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
         }
 
+        // for (const skillNeeded of skillsNeededResponse.data) {
+        //   for (const skill of allSkills.data) {
+        //     if (skillNeeded.skillId === skill.id) {
+        //       skillArray.push(skill.skill);
+        //       break;
+        //     }
+        //   }
+        // }
+        console.log(skillArray);
         setSkills(skillArray);
 
         const editedProject = {
