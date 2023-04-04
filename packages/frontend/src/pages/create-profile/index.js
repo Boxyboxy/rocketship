@@ -1,32 +1,32 @@
-import Head from 'next/head';
-import NavBar from '../../components/navbar';
-import Category from '../../components/category';
-import Footer from '../../components/footer';
-import { Stepper, Step, StepLabel } from '@material-ui/core';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import styles from '../../styles/createprofile.module.css';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import Head from "next/head";
+import NavBar from "../../components/navbar";
+import Category from "../../components/category";
+import Footer from "../../components/footer";
+import { Stepper, Step, StepLabel } from "@material-ui/core";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import styles from "../../styles/createprofile.module.css";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import { useState, useEffect } from "react";
+import TextField from "@mui/material/TextField";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 // import axios from 'axios';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#21325e' // Replace with your desired primary color
-    }
+      main: "#21325e", // Replace with your desired primary color
+    },
   },
   typography: {
-    fontFamily: 'Montserrat, sans-serif' // Replace with your desired font family
-  }
+    fontFamily: "Montserrat, sans-serif", // Replace with your desired font family
+  },
 });
 
-const steps = ['Personal Details', 'Social Links', 'Skill Sets'];
+const steps = ["Personal Details", "Social Links", "Skill Sets"];
 
 export default function CreateProfile() {
   const [activeStep, setActiveStep] = useState(0);
@@ -39,8 +39,8 @@ export default function CreateProfile() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const [name, setName] = useState('');
-  const [mobileNumber, setMobileNumber] = useState('');
+  const [name, setName] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
 
   const handleMobileNumberChange = (e) => {
     const inputMobileNumber = e.target.value;
@@ -58,11 +58,13 @@ export default function CreateProfile() {
   const handleCheckboxChange = (event) => {
     setUserSkillsCheckBox({
       ...userSkillsCheckBox,
-      [event.target.name]: event.target.checked
+      [event.target.name]: event.target.checked,
     });
     console.log(userSkillsCheckBox);
     // Maps checkbox boolean object into an array of skills to interface with backend
-    const skills = Object.keys(userSkillsCheckBox).filter((skill) => userSkillsCheckBox[skill]);
+    const skills = Object.keys(userSkillsCheckBox).filter(
+      (skill) => userSkillsCheckBox[skill]
+    );
   };
 
   // useEffect(() => {
@@ -94,10 +96,11 @@ export default function CreateProfile() {
           <Box
             component="form"
             sx={{
-              '& .MuiTextField-root': { m: 1, width: '25ch' }
+              "& .MuiTextField-root": { m: 1, width: "25ch" },
             }}
             noValidate
-            autoComplete="off">
+            autoComplete="off"
+          >
             {activeStep === 0 && (
               // Render form content for step 1
               <div>
@@ -117,7 +120,7 @@ export default function CreateProfile() {
                     onChange={handleMobileNumberChange}
                     inputProps={{
                       maxLength: 10,
-                      pattern: '^0[1-9]\\d{8}$' // Restrict input to only numbers
+                      pattern: "^0[1-9]\\d{8}$", // Restrict input to only numbers
                     }}
                   />
                   <TextField
@@ -164,11 +167,26 @@ export default function CreateProfile() {
                 <div className={styles.steps}>
                   <div className={styles.header}>Skill Sets</div>
                   <FormGroup>
-                    <FormControlLabel control={<Checkbox defaultChecked />} label="UX/UI skills" />
-                    <FormControlLabel control={<Checkbox />} label="Software Engineering" />
-                    <FormControlLabel control={<Checkbox />} label="Project Management" />
-                    <FormControlLabel control={<Checkbox />} label="Cybersecurity" />
-                    <FormControlLabel control={<Checkbox />} label="Data Enginering" />
+                    <FormControlLabel
+                      control={<Checkbox defaultChecked />}
+                      label="UX/UI skills"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Software Engineering"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Project Management"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Cybersecurity"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Data Enginering"
+                    />
                     <FormControlLabel
                       control={<Checkbox />}
                       label="Data Science/ Artificial Intelligence"

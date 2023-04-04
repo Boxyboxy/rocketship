@@ -36,6 +36,7 @@ export default function ProjectPage() {
   }, [router.query.creatorId, router.query.projectId]);
 
   useEffect(() => {
+    // will refactor all this
     const fetchProject = async () => {
       try {
         const [projectResponse, userResponse] = await Promise.all([
@@ -60,7 +61,6 @@ export default function ProjectPage() {
           await axios
             .get(`http://localhost:8080/skills/${skillNeeded.skillId}`)
             .then(function (response) {
-              console.log(response.data.skill);
               skillArray.push(response.data.skill);
             })
             .catch(function (error) {
@@ -76,7 +76,7 @@ export default function ProjectPage() {
         //     }
         //   }
         // }
-        console.log(skillArray);
+
         setSkills(skillArray);
 
         const editedProject = {
