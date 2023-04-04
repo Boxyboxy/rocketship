@@ -36,6 +36,7 @@ export default function ProjectPage() {
   }, [router.query.creatorId, router.query.projectId]);
 
   useEffect(() => {
+    // will refactor all this
     const fetchProject = async () => {
       try {
         const [projectResponse, userResponse] = await Promise.all([
