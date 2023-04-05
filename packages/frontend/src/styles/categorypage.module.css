@@ -65,6 +65,7 @@
 .featuredTxt {
   flex: 1;
   margin: 20px;
+  padding-right: 90px;
 }
 
 .featuredHeader {

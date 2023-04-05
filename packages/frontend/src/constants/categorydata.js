@@ -82,5 +82,33 @@ export const categorydata = {
     project1: 'FarmGenius',
     project2: 'LivestockTracker',
     project3: 'AgriConnect'
+  },
+  edutech: {
+    title: 'EDUTECH PROJECTS',
+    description:
+      'Edutech projects involve leveraging technology to enhance and transform traditional educational experiences, such as classroom learning, online courses, and professional development.',
+    shoutout:
+      'Look out for the use of virtual and augmented reality for immersive learning experiences, the adoption of adaptive learning algorithms for personalized education, the implementation of collaborative tools for peer-to-peer learning and group projects, and the integration of gamification and game-based learning for engagement and motivation!',
+    featured: 'CropMind',
+    featuredImg: '/images/agritech.jpg',
+    featuredTxt:
+      'An AI-powered crop management system that uses machine learning to optimize farming practices and increase crop yields.',
+    project1: 'FarmGenius',
+    project2: 'LivestockTracker',
+    project3: 'AgriConnect'
+  },
+  ecommerce: {
+    title: 'E-COMMERCE PROJECTS',
+    description:
+      'Ecommerce projects involve building digital storefronts and marketplaces that allow customers to purchase products and services online.',
+    shoutout:
+      'Look out for the use of AI and machine learning for personalized recommendations, the adoption of mobile-first design principles for seamless browsing on smartphones and tablets and the implementation of innovative payment and fulfillment solutions for fast and efficient order processing!',
+    featured: 'CropMind',
+    featuredImg: '/images/agritech.jpg',
+    featuredTxt:
+      'An AI-powered crop management system that uses machine learning to optimize farming practices and increase crop yields.',
+    project1: 'FarmGenius',
+    project2: 'LivestockTracker',
+    project3: 'AgriConnect'
   }
 };
