@@ -4,7 +4,7 @@ import Category from '../../components/category';
 import Footer from '../../components/footer';
 import { Stepper, Step, StepLabel } from '@material-ui/core';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import styles from '../../styles/createprofile.module.css';
+import styles from '../../styles/createproject.module.css';
 import Box from '@mui/material/Box';
 import { Input, Button } from '@material-ui/core';
 import { useState, useEffect } from 'react';
@@ -13,6 +13,10 @@ import { Select, MenuItem } from '@material-ui/core';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
+import PhotoUpload from '../../components/photoUpload';
+import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+// import Loader from '../../components/loader';
 
 const steps = ['Project name & Summary', 'Cover image', 'Project details'];
 
@@ -29,6 +33,7 @@ export default function CreateProject() {
   });
 
   const [activeStep, setActiveStep] = useState(0);
+  const [formValues, setFormValues] = useState({});
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -38,11 +43,41 @@ export default function CreateProject() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const [selectedOption, setSelectedOption] = useState('');
+  const [categoryId, setCategoryId] = useState('');
 
   const handleOptionChange = (event) => {
-    const selectedOption = event.target.value;
-    setSelectedOption(selectedOption);
+    const categoryId = event.target.value;
+    setCategoryId(categoryId);
+    console.log(categoryId);
+  };
+
+  const handleInputChange = (e) => {
+    setFormValues({ ...formValues, [e.target.id]: e.target.value });
+    console.log(formValues);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .post(`http://localhost:8080/createproject`, formValues, configs)
+      .then(function (response) {
+        console.log(response);
+        openSuccessNotification('top');
+      })
+      .catch(function (error) {
+        console.log(error);
+        openFailureNotification('top');
+      });
+  };
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showFailure, setShowFailure] = useState(false);
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setShowSuccess(false); // Close success snackbar
+    setShowFailure(false); // Close failure snackbar
   };
 
   return (
@@ -61,65 +96,65 @@ export default function CreateProject() {
             </Stepper>
           </div>
           <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
             component="form"
             sx={{
-              '& .MuiTextField-root': { m: 1, width: '25ch' }
+              '& .MuiTextField-root': { m: 1, width: '50ch' }
             }}
             noValidate
             autoComplete="off">
             {activeStep === 0 && (
               // Render form content for step 1
-              <div>
+              <div className={styles.stepsBox}>
                 <div className={styles.steps}>
                   <div className={styles.header}>Project name & Summary</div>
                   <p>Project Name</p>
                   <TextField
                     required
-                    id="outlined-required"
-                    // onChange={handleProjectNameChange}
+                    onChange={handleInputChange}
+                    id="name"
+                    variant="outlined"
                     // label="Project Name"
                   />
-                  <p>Give a brief summary of what your Rocket is about</p>
+                  <p>Brief summary of your Project</p>
                   <TextField
-                    id="outlined-multiline-static"
-                    label="Brief Summary"
+                    id="summary"
+                    label="Give a brief summary of what your Rocket is about"
+                    onChange={handleInputChange}
                     multiline
                     rows={4}
                   />
                   <p>Project Category</p>
-                  <Select value={selectedOption} onChange={handleOptionChange}>
+                  <Select id="categoryId" value={categoryId} onChange={handleOptionChange}>
                     <MenuItem value="">Select an option</MenuItem>
-                    <MenuItem value="fintech">Fintech</MenuItem>
-                    <MenuItem value="healthtech">Health Tech</MenuItem>
-                    <MenuItem value="fnb">F&B</MenuItem>
-                    <MenuItem value="socialmedia">Social Media</MenuItem>
-                    <MenuItem value="games">Games</MenuItem>
-                    <MenuItem value="agritech">Agritech</MenuItem>
+                    <MenuItem value="1">Fintech</MenuItem>
+                    <MenuItem value="2">Health Tech</MenuItem>
+                    <MenuItem value="3">Social Media</MenuItem>
+                    <MenuItem value="4">Games</MenuItem>
+                    <MenuItem value="5">Agritech</MenuItem>
+                    <MenuItem value="6">Edutech</MenuItem>
+                    <MenuItem value="7">E-Commerce</MenuItem>
+                    <MenuItem value="8">F&B</MenuItem>
                   </Select>
 
                   <p>Bank Account Number</p>
-                  <TextField
-                    required
-                    id="outlined-required"
-                    // onChange={handleProjectNameChange}
-                    // label="Project Name"
-                  />
+                  <TextField required id="bankAccountId" onChange={handleInputChange} />
                   <p>Location</p>
-                  <TextField
-                    required
-                    id="outlined-required"
-                    // onChange={handleProjectNameChange}
-                    // label="Project Name"
-                  />
+                  <TextField required id="location" onChange={handleInputChange} />
                   <p>Funding Goal</p>
                   <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
                   <OutlinedInput
-                    id="outlined-adornment-amount"
+                    id="fundinggoal"
                     startAdornment={<InputAdornment position="start">$</InputAdornment>}
                     label="Amount"
+                    onChange={handleInputChange}
                   />
                 </div>
-                <Button onClick={handleNext}>Next</Button>
+                <div className={styles.btn}>
+                  <Button onClick={handleNext}>Next</Button>
+                </div>
               </div>
             )}
 
@@ -128,15 +163,12 @@ export default function CreateProject() {
               <div>
                 <div className={styles.steps}>
                   <div className={styles.header}>Cover image</div>
-                  {/* to be replaced by cloudinary file upload widget */}
-                  <Input type="file" />
-
-                  <Button variant="contained" color="primary">
-                    Upload
-                  </Button>
+                  <PhotoUpload />
                 </div>
-                <Button onClick={handleBack}>Back</Button>
-                <Button onClick={handleNext}>Next</Button>
+                <div className={styles.btn}>
+                  <Button onClick={handleBack}>Back</Button>
+                  <Button onClick={handleNext}>Next</Button>
+                </div>
               </div>
             )}
 
@@ -144,37 +176,57 @@ export default function CreateProject() {
               // Render form content for step 3
               <div>
                 <div className={styles.steps}>
-                  <div className={styles.header}>
-                    This is where you key in SPECIFIC DETAILS OF THE PROJECT
-                  </div>
+                  <div className={styles.header}>Key in SPECIFIC DETAILS of your project</div>
                   <p>Pitch Slide #1</p>
-                  <Input type="file" />
-                  <Button variant="contained" color="primary">
-                    Upload
-                  </Button>
+                  <PhotoUpload />
+
                   <p>Pitch Slide #2</p>
-                  <Input type="file" />
-                  <Button variant="contained" color="primary">
-                    Upload
-                  </Button>
+                  <PhotoUpload />
+
                   <p>Pitch Slide #3</p>
-                  <Input type="file" />
-                  <Button variant="contained" color="primary">
-                    Upload
-                  </Button>
+                  <PhotoUpload />
 
                   <p>Share all the details about your project here:</p>
                   <TextField
-                    id="outlined-multiline-static"
-                    label="Brief Summary"
+                    id="details"
+                    label="Details of your project"
                     multiline
                     rows={10}
+                    onChange={handleInputChange}
                   />
                 </div>
-                <Button onClick={handleBack}>Back</Button>
-                <Button type="submit" variant="contained">
-                  Submit
-                </Button>
+                <div className={styles.btn}>
+                  <Button onClick={handleBack}>Back</Button>
+                  <Button type="submit" variant="contained" onClick={handleSubmit}>
+                    Submit
+                  </Button>
+                  <Snackbar
+                    open={showSuccess}
+                    autoHideDuration={3000}
+                    onClose={handleSnackbarClose}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                    <Alert
+                      elevation={6}
+                      variant="filled"
+                      onClose={handleSnackbarClose}
+                      severity="success">
+                      User creation successful!
+                    </Alert>
+                  </Snackbar>
+                  <Snackbar
+                    open={showFailure}
+                    autoHideDuration={3000}
+                    onClose={handleSnackbarClose}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                    <Alert
+                      elevation={6}
+                      variant="filled"
+                      onClose={handleSnackbarClose}
+                      severity="error">
+                      User creation failed. Please try again.
+                    </Alert>
+                  </Snackbar>
+                </div>
               </div>
             )}
           </Box>

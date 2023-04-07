@@ -1,24 +1,52 @@
-.rocket{
-  position:absolute;
-  width:500px;
-  height:500px;
+.rocket {
+  position: block;
+  margin: auto;
+  /* display: block; */
+  width: 150px;
+  height: 150px;
   animation-name: spin;
-  animation:spin 5s linear infinite;
-  
+  animation: spin 5s linear infinite;
 }
-@keyframes spin{ 
-  0% { -webkit-transform: rotate(0deg);transform:rotate(0deg);}
-  25% { -webkit-transform: rotate(90deg);transform:rotate(90deg);}
-  50% { -webkit-transform: rotate(180deg);transform:rotate(180deg);}
-  75% { -webkit-transform: rotate(270deg);transform:rotate(270deg);}
-  100% { -webkit-transform: rotate(360deg);transform:rotate(360deg);} 
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  25% {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+  }
+  50% {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+  }
+  75% {
+    -webkit-transform: rotate(270deg);
+    transform: rotate(270deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }
-@media screen and (max-width: 700px){
-  .rocket{
-    width:250px;
-    height:250px;
+@media screen and (max-width: 700px) {
+  .rocket {
+    width: 100px;
+    height: 100px;
   }
-  .moon{
-    width:40%;
+  .moon {
+    width: 10%;
   }
+}
+
+.loader {
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+}
+
+.moon {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }

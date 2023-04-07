@@ -1,32 +1,48 @@
-import Head from "next/head";
-import NavBar from "../../components/navbar";
-import Category from "../../components/category";
-import Footer from "../../components/footer";
-import { Stepper, Step, StepLabel } from "@material-ui/core";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import styles from "../../styles/createprofile.module.css";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import { useState, useEffect } from "react";
-import TextField from "@mui/material/TextField";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+import Head from 'next/head';
+import NavBar from '../../components/navbar';
+import Category from '../../components/category';
+import Footer from '../../components/footer';
+import { Stepper, Step, StepLabel } from '@material-ui/core';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import styles from '../../styles/createprofile.module.css';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import { useState, useEffect } from 'react';
+import TextField from '@mui/material/TextField';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 // import axios from 'axios';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#21325e", // Replace with your desired primary color
-    },
+      main: '#21325e' // Replace with your desired primary color
+    }
   },
   typography: {
-    fontFamily: "Montserrat, sans-serif", // Replace with your desired font family
-  },
+    fontFamily: 'Montserrat, sans-serif' // Replace with your desired font family
+  }
 });
 
-const steps = ["Personal Details", "Social Links", "Skill Sets"];
+const steps = ['Personal Details', 'Social Links', 'Skill Sets'];
+const skillsList = [
+  'UI/UX Design',
+  'Data Analytics',
+  'Data Engineering',
+  'Data Science',
+  'DevOps',
+  'Web Development',
+  'Application Development',
+  'Game Development',
+  'Project Management',
+  'Product Management',
+  'Digital Marketing',
+  'Graphic Design'
+];
 
 export default function CreateProfile() {
   const [activeStep, setActiveStep] = useState(0);
@@ -39,44 +55,48 @@ export default function CreateProfile() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const [name, setName] = useState("");
-  const [mobileNumber, setMobileNumber] = useState("");
+  const [formValues, setFormValues] = useState({});
 
-  const handleMobileNumberChange = (e) => {
-    const inputMobileNumber = e.target.value;
-
-    setMobileNumber(inputMobileNumber);
+  const handleInputChange = (e) => {
+    setFormValues({ ...formValues, [e.target.id]: e.target.value });
+    console.log(formValues);
   };
 
-  const handleNameChange = (e) => {
-    const name = e.target.value;
-    setName(name);
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const handleCheckboxChange = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedSkills([...selectedSkills, value]); // Add selected skill to state
+      console.log(selectedSkills);
+    } else {
+      setSelectedSkills(selectedSkills.filter((skill) => skill !== value)); // Remove unselected skill from state
+    }
   };
 
-  const [userSkillsCheckBox, setUserSkillsCheckBox] = useState({});
-
-  const handleCheckboxChange = (event) => {
-    setUserSkillsCheckBox({
-      ...userSkillsCheckBox,
-      [event.target.name]: event.target.checked,
-    });
-    console.log(userSkillsCheckBox);
-    // Maps checkbox boolean object into an array of skills to interface with backend
-    const skills = Object.keys(userSkillsCheckBox).filter(
-      (skill) => userSkillsCheckBox[skill]
-    );
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .post(`http://localhost:8080/createUser`, formValues, configs)
+      .then(function (response) {
+        console.log(response);
+        setShowSuccess(true);
+      })
+      .catch(function (error) {
+        console.log(error);
+        setShowFailure(true);
+      });
   };
 
-  // useEffect(() => {
-  //   axios.get(`http://localhost:8080/skills`).then(({ data }) => {
-  //     let skillObjectsArray = Object.values(data);
-  //     const checkBoxBoolean = {};
-  //     skillObjectsArray
-  //       .map((item) => item.skill)
-  //       .map((element, index) => (checkBoxBoolean[element] = false));
-  //     setUserSkillsCheckBox(checkBoxBoolean);
-  //   });
-  // }, []);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showFailure, setShowFailure] = useState(false);
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setShowSuccess(false); // Close success snackbar
+    setShowFailure(false); // Close failure snackbar
+  };
 
   return (
     <div>
@@ -94,45 +114,51 @@ export default function CreateProfile() {
             </Stepper>
           </div>
           <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
             component="form"
             sx={{
-              "& .MuiTextField-root": { m: 1, width: "25ch" },
+              '& .MuiTextField-root': { m: 1, width: '50ch' }
             }}
             noValidate
-            autoComplete="off"
-          >
+            autoComplete="off">
             {activeStep === 0 && (
               // Render form content for step 1
-              <div>
+              <div className={styles.stepsBox}>
                 <div className={styles.steps}>
                   <div className={styles.header}>Personal details</div>
+                  <p>Your Name</p>
                   <TextField
                     required
-                    id="outlined-required"
-                    onChange={handleNameChange}
+                    id="name"
+                    onChange={handleInputChange}
                     label="Name"
-                    // defaultValue="" -> to put from users database
+                    // defaultValue="" -> to pull from users database
                   />
+                  <p>Contact Number</p>
                   <TextField
                     required
-                    id="outlined-number"
+                    id="mobile"
                     label="Mobile Number"
-                    onChange={handleMobileNumberChange}
+                    onChange={handleInputChange}
                     inputProps={{
                       maxLength: 10,
-                      pattern: "^0[1-9]\\d{8}$", // Restrict input to only numbers
+                      pattern: '^0[1-9]\\d{8}$' // Restrict input to only numbers
                     }}
                   />
+                  <p>Email Address</p>
                   <TextField
                     required
-                    id="outlined-required"
-                    onChange={handleNameChange}
+                    id="email"
+                    onChange={handleInputChange}
                     label="Email address"
                     // defaultValue="" -> to put from users database
                   />
                 </div>
-
-                <Button onClick={handleNext}>Next</Button>
+                <div className={styles.btn}>
+                  <Button onClick={handleNext}>Next</Button>
+                </div>
               </div>
             )}
 
@@ -143,15 +169,15 @@ export default function CreateProfile() {
                   <div className={styles.header}>Social Links</div>
                   <TextField
                     // required
-                    id="outlined"
-                    onChange={handleNameChange}
+                    id="githubUrl"
+                    onChange={handleInputChange}
                     label="Github Link"
                     // defaultValue="" -> to put from users database
                   />
                   <TextField
                     // required
-                    id="outlined"
-                    onChange={handleNameChange}
+                    id="linkedinUrl"
+                    onChange={handleInputChange}
                     label="LinkedIn Profile Link"
                     // defaultValue="" -> to put from users database
                   />
@@ -167,59 +193,51 @@ export default function CreateProfile() {
                 <div className={styles.steps}>
                   <div className={styles.header}>Skill Sets</div>
                   <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox defaultChecked />}
-                      label="UX/UI skills"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Software Engineering"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Project Management"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Cybersecurity"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Data Enginering"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Data Science/ Artificial Intelligence"
-                    />
-                  </FormGroup>
-                  {/* <FormGroup>
-                    {Object.keys(userSkillsCheckBox).length > 0 ? (
-                      Object.entries(userSkillsCheckBox).map(([k, v]) => (
-                        <FormControlLabel
-                          control={
-                            <Checkbox checked={v} onChange={handleCheckboxChange} name={k} />
-                          }
-                          label={k}
-                        />
-                      ))
-                    ) : (
+                    {skillsList.map((skill) => (
                       <FormControlLabel
+                        key={skill}
                         control={
                           <Checkbox
-                            checked={false}
+                            checked={selectedSkills.includes(skill)}
                             onChange={handleCheckboxChange}
-                            name="rendering"
+                            value={skill}
                           />
                         }
-                        label="Rendering"
+                        label={skill}
                       />
-                    )}
-                  </FormGroup> */}
+                    ))}
+                  </FormGroup>
                 </div>
                 <Button onClick={handleBack}>Back</Button>
-                <Button type="submit" variant="contained">
+                <Button onClick={handleSubmit} type="submit" variant="contained">
                   Submit
                 </Button>
+                <Snackbar
+                  open={showSuccess}
+                  autoHideDuration={3000}
+                  onClose={handleSnackbarClose}
+                  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                  <Alert
+                    elevation={6}
+                    variant="filled"
+                    onClose={handleSnackbarClose}
+                    severity="success">
+                    User creation successful!
+                  </Alert>
+                </Snackbar>
+                <Snackbar
+                  open={showFailure}
+                  autoHideDuration={3000}
+                  onClose={handleSnackbarClose}
+                  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                  <Alert
+                    elevation={6}
+                    variant="filled"
+                    onClose={handleSnackbarClose}
+                    severity="error">
+                    User creation failed. Please try again.
+                  </Alert>
+                </Snackbar>
               </div>
             )}
           </Box>
