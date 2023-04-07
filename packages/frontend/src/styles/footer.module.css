@@ -1,16 +1,31 @@
-.footer {
+/* .footer {
   position: fixed;
-  bottom: -20px; /* Start the footer off the page */
+  bottom: -20px; 
   left: 0;
   right: 0;
   height: 20px;
   background-color: #3e497a;
   color: #21325e;
   text-align: center;
-  /* padding-top: 50px; */
-  transition: bottom 0.3s ease-out;
-}
 
+  transition: bottom 0.3s ease-out;
+} */
+/* 
 .footer .visible {
   bottom: 0px;
+} */
+
+.footer {
+  position: absolute;
+  /* bottom: 0; */
+  width: 100%;
+  height: 2rem;
+  font-size: small;
+}
+
+.pageContainer {
+  position: relative;
+  color: #21325e;
+  text-align: center;
+  height: 20px;
 }
