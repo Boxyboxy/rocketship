@@ -1,0 +1,7 @@
+.majordiv {
+  min-height: 100vh;
+}
+
+.minordiv {
+  z-index: -1;
+}

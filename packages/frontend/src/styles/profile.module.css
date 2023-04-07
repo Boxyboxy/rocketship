@@ -1,0 +1,7 @@
+.container {
+  margin: 0 150px 0 150px;
+}
+
+.avatar {
+  z-index: -1;
+}
