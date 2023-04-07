@@ -26,5 +26,8 @@ export default function Footer() {
     }
   }
 
-  return <footer className={`${styles.footer} visible`}>Copyright © Rocketship 2023</footer>;
+  return (
+    <footer className={`${styles.footer} visible`}>Copyright © Rocketship 2023</footer>
+    // <footer>Copyright © Rocketship 2023</footer>
+  );
 }
