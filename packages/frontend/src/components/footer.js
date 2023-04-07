@@ -26,11 +26,13 @@ export default function Footer() {
     }
   }
 
+
   // return <footer className={`${styles.footer} visible`}>Copyright © Rocketship 2023</footer>;
 
   return (
     <>
       <h1>Footer</h1>
     </>
+
   );
 }
