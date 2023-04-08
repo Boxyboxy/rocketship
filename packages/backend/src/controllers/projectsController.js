@@ -4,6 +4,7 @@ const {
   getProjectById,
   createProject,
   deleteProject,
+  getProjectsCount,
 } = require("../repositories/projectsRepository");
 const { Sequelize } = require("sequelize");
 const { skillsIdMap } = require("../configs/data");
@@ -81,5 +82,10 @@ module.exports = {
     }
 
     res.json({ success: true });
+  },
+
+  async getProjectsCount(req, res) {
+    const count = await getProjectsCount();
+    return res.json(count);
   },
 };

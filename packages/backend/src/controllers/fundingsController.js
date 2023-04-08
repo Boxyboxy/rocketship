@@ -2,7 +2,10 @@ const { project, user } = require("../db/models");
 const {
   getAllFundings,
   createFunding,
+  sumAllFundings,
+  sumFundingsByProjectId,
 } = require("../repositories/fundingRepository");
+const { getProjectById } = require("../repositories/projectsRepository");
 
 module.exports = {
   async getAllFundings({ query }, res) {
@@ -30,5 +33,37 @@ module.exports = {
     const newFunding = await createFunding({ ...req.body });
 
     return res.json(newFunding);
+  },
+  async sumAllFundings(req, res) {
+    const sum = await sumAllFundings();
+    return res.json(sum);
+  },
+  async sumFundingsByProjectId(req, res) {
+    const { projectId } = req.params;
+
+    if (
+      isNaN(projectId) ||
+      +projectId > Number.MAX_SAFE_INTEGER ||
+      +projectId < 0
+    ) {
+      const error = new Error("Project Id must be a valid number");
+      error.status = 400;
+      throw error;
+    }
+    const project = await getProjectById(projectId);
+    if (!project) {
+      const error = new Error(
+        `Project with project id ${projectId} does not exist`
+      );
+      error.status = 400;
+      throw error;
+    }
+
+    const sum = await sumFundingsByProjectId(projectId);
+    if (!sum) {
+      return res.json("project does not have funding");
+    }
+
+    return res.json(sum);
   },
 };
