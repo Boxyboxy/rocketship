@@ -16,12 +16,13 @@ export default function CategoryPage({ selectedCategory }) {
     const fetchFeaturedProject = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/projects?categories=${selectedCategory.name}`
+          `http://localhost:8080/projects?categoryName=${selectedCategory.name}`
         );
         setFeaturedProject(response.data[selectedCategory.id]);
-        console.log(response.data[selectedCategory.id]);
-        console.log(selectedCategory.categoryId);
+        // console.log(response.data[selectedCategory.name]);
+        // console.log(selectedCategory.categoryId);
         console.log(selectedCategory.name);
+        console.log(response.data);
       } catch (err) {
         console.log(err);
       }
