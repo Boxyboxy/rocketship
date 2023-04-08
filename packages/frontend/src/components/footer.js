@@ -7,6 +7,7 @@ export default function Footer() {
     // <footer>Copyright © Rocketship 2023</footer>
 
     <div className={styles.pageContainer}>
+      <div className={styles.contentContainer}></div>
       <footer className={styles.footer}>Copyright © Rocketship 2023</footer>
     </div>
   );

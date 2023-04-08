@@ -16,6 +16,9 @@ import InputAdornment from '@mui/material/InputAdornment';
 import PhotoUpload from '../../components/photoUpload';
 import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import axios from 'axios';
 // import Loader from '../../components/loader';
 
 const steps = ['Project name & Summary', 'Cover image', 'Project details'];
@@ -34,6 +37,34 @@ export default function CreateProject() {
 
   const [activeStep, setActiveStep] = useState(0);
   const [formValues, setFormValues] = useState({});
+  const [skills, setSkills] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/skills'); // Fetch data from the skills db route
+        const data = await response.json();
+        setSkills(data);
+        console.log(data);
+      } catch (error) {
+        console.error('Failed to fetch skills:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const [checkedSkills, setCheckedSkills] = useState([]);
+  const handleCheckboxChange = (event) => {
+    const { value, checked } = event.target;
+    if (checked) {
+      // Add the skill to the checkedSkills array if it's checked
+      setCheckedSkills([...checkedSkills, value]);
+      console.log(checkedSkills);
+    } else {
+      // Remove the skill from the checkedSkills array if it's unchecked
+      setCheckedSkills(checkedSkills.filter((skill) => skill !== value));
+    }
+  };
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -45,8 +76,8 @@ export default function CreateProject() {
 
   const [categoryId, setCategoryId] = useState('');
 
-  const handleOptionChange = (event) => {
-    const categoryId = event.target.value;
+  const handleOptionChange = (e) => {
+    const categoryId = e.target.value;
     setCategoryId(categoryId);
     console.log(categoryId);
   };
@@ -138,7 +169,18 @@ export default function CreateProject() {
                     <MenuItem value="7">E-Commerce</MenuItem>
                     <MenuItem value="8">F&B</MenuItem>
                   </Select>
-
+                  <p>Required Skill Sets</p>
+                  {skills.map((skill, index) => (
+                    <FormControlLabel
+                      key={index}
+                      control={<Checkbox />}
+                      label={skill.skill} // Render the skill value as the label
+                      value={skill.skill}
+                      onChange={handleCheckboxChange}
+                    />
+                  ))}
+                  <p>Github Repo URL</p>
+                  <TextField required id="githubRepoUrl" onChange={handleInputChange} />
                   <p>Bank Account Number</p>
                   <TextField required id="bankAccountId" onChange={handleInputChange} />
                   <p>Location</p>
@@ -177,15 +219,16 @@ export default function CreateProject() {
               <div>
                 <div className={styles.steps}>
                   <div className={styles.header}>Key in SPECIFIC DETAILS of your project</div>
-                  <p>Pitch Slide #1</p>
-                  <PhotoUpload />
+                  <div className={styles.slidesUpload}>
+                    <p>Pitch Slide #1</p>
+                    <PhotoUpload />
 
-                  <p>Pitch Slide #2</p>
-                  <PhotoUpload />
+                    <p>Pitch Slide #2</p>
+                    <PhotoUpload />
 
-                  <p>Pitch Slide #3</p>
-                  <PhotoUpload />
-
+                    <p>Pitch Slide #3</p>
+                    <PhotoUpload />
+                  </div>
                   <p>Share all the details about your project here:</p>
                   <TextField
                     id="details"
