@@ -1,11 +1,26 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Avatar } from "@mui/material";
+import {
+  Avatar,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+} from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import styles from "../styles/profile.module.css";
+import Link from "@mui/material/Link";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import EmailIcon from "@mui/icons-material/Email";
+import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
+import PermIdentityIcon from "@mui/icons-material/PermIdentity";
+import HandymanIcon from "@mui/icons-material/Handyman";
+import ProjectCard from "./projectCard";
+import ProjectCardsContainer from "./projectCardsContainer";
 
 export default function Profile({ personalId }) {
   const [profile, setProfile] = useState({
@@ -14,6 +29,11 @@ export default function Profile({ personalId }) {
     email: "johndoe@gmail.com",
     linkedinUrl: "https://www.linkedin.com/in/johndoe/",
     githubUrl: "https://github.com/johndoe",
+    skills: [
+      { skill: "UI/UX Design" },
+      { skill: "Web Development" },
+      { skill: "Digital Marketing" },
+    ],
   });
 
   useEffect(() => {
@@ -42,7 +62,6 @@ export default function Profile({ personalId }) {
     for (i = 0; i < string.length; i += 1) {
       hash = string.charCodeAt(i) + ((hash << 5) - hash);
     }
-
     let color = "#";
 
     for (i = 0; i < 3; i += 1) {
@@ -50,10 +69,8 @@ export default function Profile({ personalId }) {
       color += `00${value.toString(16)}`.slice(-2);
     }
     /* eslint-enable no-bitwise */
-
     return color;
   }
-
   function stringAvatar(name) {
     return {
       sx: {
@@ -71,6 +88,20 @@ export default function Profile({ personalId }) {
     textAlign: "center",
     color: theme.palette.text.secondary,
   }));
+  function generateSkillsList(skills) {
+    if (skills.length < 1) {
+      return (
+        <ListItem>
+          <ListItemText primary="No skills to display" />
+        </ListItem>
+      );
+    }
+    return skills.map((element) => (
+      <ListItem>
+        <ListItemText primary={element.skill} />
+      </ListItem>
+    ));
+  }
 
   return (
     <>
@@ -81,21 +112,55 @@ export default function Profile({ personalId }) {
         alignItems="center"
         sx={{ minHeight: "100vh" }}
       >
-        <div className={styles.avatar}>
-          <Avatar {...stringAvatar(profile.name)} />
-        </div>
+        <Grid
+          container
+          direction="row"
+          justifyContent="space-evenly"
+          alignItems="center"
+          sx={{ minWidth: "80vw" }}
+        >
+          <div className={styles.avatar}>
+            <Avatar {...stringAvatar(profile.name)} />
+          </div>
+          <div>
+            <h3>
+              <PermIdentityIcon fontSize="small" /> {" " + profile.name}
+            </h3>
+            <h3>
+              <PhoneIphoneIcon fontSize="small" /> {profile.mobile}
+            </h3>
+            <h3>
+              <EmailIcon fontSize="small" /> {" " + profile.email}
+            </h3>
+            <Link href={profile.linkedinUrl} variant="body2" sx={{ mr: 5 }}>
+              <LinkedInIcon fontSize="large" />
+            </Link>
+            <Link href={profile.githubUrl} variant="body2">
+              <GitHubIcon fontSize="large" />
+            </Link>
+          </div>
+          <div>
+            <List>
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar>
+                    <HandymanIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary="Skills" />
+              </ListItem>
+
+              {profile.skills
+                ? generateSkillsList(profile.skills)
+                : generateSkillsList([])}
+            </List>
+          </div>
+        </Grid>
+
+        <ProjectCardsContainer projects={profile.projects} />
 
         <Grid item xs={6}>
-          <Item>1</Item>
-        </Grid>
-        <Grid item xs={6}>
           <Item>2</Item>
-        </Grid>
-        <Grid item xs={6}>
-          <Item>3</Item>
-        </Grid>
-        <Grid item xs={6}>
-          <Item>4</Item>
         </Grid>
       </Grid>
     </>

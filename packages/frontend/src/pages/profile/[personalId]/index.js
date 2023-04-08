@@ -16,21 +16,8 @@ export default function ProfilePage() {
     <div className={styles.majorDiv}>
       <NavBar />
       <Category />
-      <div className={styles.minorDiv}>
-        <Grid
-          container
-          direction="column"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Grid>
-            <Profile personalId={personalId} />
-          </Grid>
-          <Grid>
-            <Footer />
-          </Grid>
-        </Grid>
-      </div>
+      <Profile personalId={personalId} />
+      <Footer />
     </div>
   );
 }
