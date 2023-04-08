@@ -27,7 +27,7 @@ module.exports = {
     }
 
     if (categoryName) {
-      options.include[1].name = categoryName;
+      options.include[1].where.name = categoryName;
     }
 
     const projects = await getAllProjects(options);
