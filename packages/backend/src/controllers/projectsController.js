@@ -6,6 +6,7 @@ const {
   deleteProject,
 } = require("../repositories/projectsRepository");
 const { Sequelize } = require("sequelize");
+const { skillsIdMap } = require("../configs/data");
 module.exports = {
   async getAllProjects({ query }, res) {
     const { projectName, categoryName } = query;
@@ -55,7 +56,16 @@ module.exports = {
   },
 
   async createProject(req, res) {
-    const newProject = await createProject({ ...req.body });
+    const { requiredSkills, ...payload } = { ...req.body };
+    const skillIdArray = requiredSkills.map(
+      (requiredSkill) => skillsIdMap[requiredSkill]
+    );
+    console.log(skillIdArray);
+
+    const newProject = await createProject({
+      ...payload,
+      skillIdArray,
+    });
 
     return res.json(newProject);
   },

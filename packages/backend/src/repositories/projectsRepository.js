@@ -6,6 +6,7 @@ const {
 } = require("../repositories/pitchSlidesRepository");
 const {
   deleteRequiredSkillsByProjectId,
+  createRequiredSkills,
 } = require("../repositories/requiredSkillsRepository");
 module.exports = {
   getAllProjects(options) {
@@ -20,7 +21,7 @@ module.exports = {
 
   async createProject(payload) {
     const currentDate = new Date();
-    const { pitchSlidesUrlStrings, requiredSkills, ...rest } = payload;
+    const { pitchSlidesUrlStrings, skillIdArray, ...rest } = payload;
     console.log(rest);
 
     const newProject = await project.create({
@@ -43,20 +44,16 @@ module.exports = {
       });
       pitchSlides.push(newPitchSlide);
     }
-    const skills = [];
-    for (skillId of requiredSkills) {
-      const newRequiredSkill = await requiredSkill.create({
-        skillId: skillId,
-        projectId: newProjectJson.id,
-        createdAt: currentDate,
-        updatedAt: currentDate,
-      });
-      skills.push(newRequiredSkill);
-    }
+
+    const requiredSkillsCreated = await createRequiredSkills(
+      newProjectJson.id,
+      skillIdArray
+    );
+
     const response = {
       ...newProjectJson,
       pitchSlides: pitchSlides,
-      skills: skills,
+      skills: requiredSkillsCreated,
     };
 
     return response;
