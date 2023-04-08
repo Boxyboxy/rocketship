@@ -7,17 +7,26 @@ import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
 import axios from "axios";
 export default function ProjectCard({ project }) {
-  const [funding, setFunding] = useState("funding not loaded");
+  const [funding, setFunding] = useState("not loaded");
   const [projectOwner, setProjectOwner] = useState({ name: "John Doe" });
 
   useEffect(() => {
     const fetchFunding = async () => {
       try {
         const response = await axios.get(
-          `https://localhost:8080/fundings/sum/${project.id}`
+          `http://localhost:8080/fundings/sum/${project.id}`
         );
         console.log(response.data);
-        setFunding(response.data);
+
+        if (
+          isNaN(response.data) ||
+          +response.data > Number.MAX_SAFE_INTEGER ||
+          +response.data < 0
+        ) {
+          setFunding(response.data);
+        } else {
+          setFunding(`$${response.data} funded`);
+        }
       } catch (err) {
         console.log(err);
       }
@@ -30,7 +39,7 @@ export default function ProjectCard({ project }) {
     const fetchProjectOwner = async () => {
       try {
         const response = await axios.get(
-          `https://localhost:8080/users/${project.userId}`
+          `http://localhost:8080/users/${project.userId}`
         );
         console.log(response.data);
         setProjectOwner(response.data);
@@ -59,7 +68,7 @@ export default function ProjectCard({ project }) {
       </CardContent>
       <CardActions>
         {<Button size="small">{projectOwner.name}</Button>}
-        <Typography size="small">{funding} funded</Typography>
+        <Typography size="small">{funding}</Typography>
       </CardActions>
     </Card>
   );
