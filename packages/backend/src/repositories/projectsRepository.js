@@ -8,6 +8,7 @@ const {
   deleteRequiredSkillsByProjectId,
   createRequiredSkills,
 } = require("../repositories/requiredSkillsRepository");
+const { Op } = require("sequelize");
 module.exports = {
   getAllProjects(options) {
     return project.findAll(options);
@@ -66,6 +67,16 @@ module.exports = {
     return project.destroy({
       where: {
         id: id,
+      },
+    });
+  },
+
+  async getProjectsCount() {
+    return project.count({
+      where: {
+        id: {
+          [Op.gt]: 0,
+        },
       },
     });
   },

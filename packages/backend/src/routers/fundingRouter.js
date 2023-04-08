@@ -7,4 +7,6 @@ const fundingRouter = express.Router();
 
 fundingRouter.get("/", fundingsController.getAllFundings);
 fundingRouter.post("/", fundingsController.createFunding);
+fundingRouter.get("/sumAll", fundingsController.sumAllFundings);
+fundingRouter.get("/sum/:projectId", fundingsController.sumFundingsByProjectId);
 module.exports = fundingRouter;
