@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { categorydata } from '../constants/categorydata';
-import styles from '../styles/categorypage.module.css';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { categorydata } from "../constants/categorydata";
+import styles from "../styles/categorypage.module.css";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import { BACKEND_URL } from "../constants/categorydata";
 
 export default function CategoryPage({ selectedCategory }) {
   const [featuredProject, setFeaturedProject] = useState(null);
@@ -16,7 +17,7 @@ export default function CategoryPage({ selectedCategory }) {
     const fetchFeaturedProject = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/projects?categoryName=${selectedCategory.name}`
+          `${BACKEND_URL}projects?categoryName=${selectedCategory.name}`
         );
         setFeaturedProject(response.data[selectedCategory.id]);
         // console.log(response.data[selectedCategory.name]);
@@ -47,12 +48,20 @@ export default function CategoryPage({ selectedCategory }) {
         <div className={styles.title}>
           <div className={styles.headerTitle}>FEATURED</div>
           <div className={styles.featuredContainer}>
-            <img className={styles.featuredImg} src={featuredProject.coverImage} alt="fintech" />
+            <img
+              className={styles.featuredImg}
+              src={featuredProject.coverImage}
+              alt="fintech"
+            />
 
             <div className={styles.txtContainer}>
-              <div className={styles.featuredHeader}>{featuredProject.name}</div>
+              <div className={styles.featuredHeader}>
+                {featuredProject.name}
+              </div>
               <p className={styles.featuredTxt}>{featuredProject.details}</p>
-              <p className={styles.featuredTxt}>Created by: {featuredProject.userId}</p>
+              <p className={styles.featuredTxt}>
+                Created by: {featuredProject.userId}
+              </p>
             </div>
           </div>
 
@@ -64,14 +73,19 @@ export default function CategoryPage({ selectedCategory }) {
 
       <div className={styles.cardsContainer}>
         <Card sx={{ maxWidth: 345 }}>
-          <CardMedia component="img" height="140" image="/images/planet-01.png" alt="project1" />
+          <CardMedia
+            component="img"
+            height="140"
+            image="/images/planet-01.png"
+            alt="project1"
+          />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               {category.project1}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              A personal finance app that helps users manage their budget, track their expenses, and
-              save money.
+              A personal finance app that helps users manage their budget, track
+              their expenses, and save money.
             </Typography>
           </CardContent>
           <CardActions>
@@ -81,14 +95,19 @@ export default function CategoryPage({ selectedCategory }) {
         </Card>
 
         <Card sx={{ maxWidth: 345 }}>
-          <CardMedia component="img" height="140" image="/images/planet-02.png" alt="project1" />
+          <CardMedia
+            component="img"
+            height="140"
+            image="/images/planet-02.png"
+            alt="project1"
+          />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               {category.project2}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              A payment processing solution that allows businesses to accept payments via mobile
-              devices, online, or in-person.
+              A payment processing solution that allows businesses to accept
+              payments via mobile devices, online, or in-person.
             </Typography>
           </CardContent>
           <CardActions>
@@ -98,14 +117,20 @@ export default function CategoryPage({ selectedCategory }) {
         </Card>
 
         <Card sx={{ maxWidth: 345 }}>
-          <CardMedia component="img" height="140" image="/images/planet-03.png" alt="project1" />
+          <CardMedia
+            component="img"
+            height="140"
+            image="/images/planet-03.png"
+            alt="project1"
+          />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               {category.project3}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              An investment platform that offers personalized investment recommendations based on
-              users' financial goals and risk tolerance.
+              An investment platform that offers personalized investment
+              recommendations based on users' financial goals and risk
+              tolerance.
             </Typography>
           </CardContent>
           <CardActions>

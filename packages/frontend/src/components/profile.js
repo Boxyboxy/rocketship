@@ -21,6 +21,7 @@ import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import HandymanIcon from "@mui/icons-material/Handyman";
 import ProjectCard from "./projectCard";
 import ProjectCardsContainer from "./projectCardsContainer";
+import { BACKEND_URL } from "../constants/backendUrl";
 
 export default function Profile({ personalId }) {
   const [profile, setProfile] = useState({
@@ -39,9 +40,7 @@ export default function Profile({ personalId }) {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/users/${personalId}`
-        );
+        const response = await axios.get(`${BACKEND_URL}/users/${personalId}`);
 
         console.log(response.data);
 
@@ -112,56 +111,72 @@ export default function Profile({ personalId }) {
         alignItems="center"
         sx={{ minHeight: "100vh" }}
       >
-        <Grid
-          container
-          direction="row"
-          justifyContent="space-evenly"
-          alignItems="center"
-          sx={{ minWidth: "80vw" }}
-        >
-          <div className={styles.avatar}>
-            <Avatar {...stringAvatar(profile.name)} />
-          </div>
-          <div>
-            <h3>
-              <PermIdentityIcon fontSize="small" /> {" " + profile.name}
-            </h3>
-            <h3>
-              <PhoneIphoneIcon fontSize="small" /> {profile.mobile}
-            </h3>
-            <h3>
-              <EmailIcon fontSize="small" /> {" " + profile.email}
-            </h3>
-            <Link href={profile.linkedinUrl} variant="body2" sx={{ mr: 5 }}>
-              <LinkedInIcon fontSize="large" />
-            </Link>
-            <Link href={profile.githubUrl} variant="body2">
-              <GitHubIcon fontSize="large" />
-            </Link>
-          </div>
-          <div>
-            <List>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <HandymanIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Skills" />
-              </ListItem>
+        <div>
+          <h1>User info</h1>
+          <span className={styles.line}></span>
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-evenly"
+            alignItems="center"
+            sx={{ minWidth: "70vw" }}
+          >
+            <div className={styles.avatar}>
+              <Avatar {...stringAvatar(profile.name)} />
+            </div>
+            <div>
+              <h3>
+                <PermIdentityIcon fontSize="small" /> {" " + profile.name}
+              </h3>
+              <h3>
+                <PhoneIphoneIcon fontSize="small" /> {profile.mobile}
+              </h3>
+              <h3>
+                <EmailIcon fontSize="small" /> {" " + profile.email}
+              </h3>
+              <Link href={profile.linkedinUrl} variant="body2" sx={{ mr: 5 }}>
+                <LinkedInIcon fontSize="large" />
+              </Link>
+              <Link href={profile.githubUrl} variant="body2">
+                <GitHubIcon fontSize="large" />
+              </Link>
+            </div>
+            <div>
+              <List>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <HandymanIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary="Skills" />
+                </ListItem>
 
-              {profile.skills
-                ? generateSkillsList(profile.skills)
-                : generateSkillsList([])}
-            </List>
-          </div>
-        </Grid>
+                {profile.skills
+                  ? generateSkillsList(profile.skills)
+                  : generateSkillsList([])}
+              </List>
+            </div>
+          </Grid>
+        </div>
 
-        <ProjectCardsContainer projects={profile.projects} />
-
-        <Grid item xs={6}>
-          <Item>2</Item>
-        </Grid>
+        <div>
+          <h1>Projects Started</h1>
+          <span className={styles.line}></span>
+          <ProjectCardsContainer projects={profile.projects} />
+        </div>
+        {/* to change the data input*/}
+        <div>
+          <h1>Projects Contributed</h1>
+          <span className={styles.line}></span>
+          <ProjectCardsContainer projects={profile.projects} />
+        </div>
+        {/* to change the data input*/}
+        <div>
+          <h1>Projects Funded</h1>
+          <span className={styles.line}></span>
+          <ProjectCardsContainer projects={profile.projects} />
+        </div>
       </Grid>
     </>
   );
