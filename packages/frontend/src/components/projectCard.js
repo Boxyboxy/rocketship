@@ -5,6 +5,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
+import { BACKEND_URL } from "../constants/categorydata";
 import axios from "axios";
 export default function ProjectCard({ project }) {
   const [funding, setFunding] = useState("not loaded");
@@ -14,7 +15,7 @@ export default function ProjectCard({ project }) {
     const fetchFunding = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/fundings/sum/${project.id}`
+          `${BACKEND_URL}/fundings/sum/${project.id}`
         );
         console.log(response.data);
 
@@ -39,7 +40,7 @@ export default function ProjectCard({ project }) {
     const fetchProjectOwner = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/users/${project.userId}`
+          `${BACKEND_URL}/users/${project.userId}`
         );
         console.log(response.data);
         setProjectOwner(response.data);
