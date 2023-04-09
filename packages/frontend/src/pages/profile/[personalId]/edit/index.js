@@ -14,15 +14,20 @@ import styles from "../../../../styles/editprofile.module.css";
 import { BACKEND_URL } from "../../../../constants/backendUrl";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-import FormHelperText from "@mui/material/FormHelperText";
+import Button from "@mui/material/Button";
+import Snackbar, { SnackbarOrigin } from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 export default function EditProfilPage({}) {
   const router = useRouter();
   const { personalId } = router.query;
-  const [skills, setSkills] = useState([]);
-  const [userSkillsCheckBox, setUserSkillsCheckBox] = useState({});
   const [presentUserSkills, setPresentUserSkills] = useState({});
+
+  const [userSkillsCheckBox, setUserSkillsCheckBox] = useState({});
   const [formValues, setFormValues] = useState({});
+
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showFailure, setShowFailure] = useState(false);
 
   const theme = createTheme({
     palette: {
@@ -93,6 +98,42 @@ export default function EditProfilPage({}) {
       (skill) => userSkillsCheckBox[skill]
     );
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log({
+      ...formValues,
+      newSkills: Object.keys(userSkillsCheckBox).filter(
+        (key) => userSkillsCheckBox[key]
+      ),
+    });
+
+    axios
+      .patch(`${BACKEND_URL}/users/${personalId}`, {
+        ...formValues,
+        newSkills: Object.keys(userSkillsCheckBox).filter(
+          (key) => userSkillsCheckBox[key]
+        ),
+      })
+      .then(function (response) {
+        console.log(response);
+        setShowSuccess(true);
+      })
+      .catch(function (error) {
+        console.log(error);
+        setShowFailure(true);
+      });
+
+    // TODO: redirect and add in autho layer
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setShowSuccess(false); // Close success snackbar
+    setShowFailure(false); // Close failure snackbar
+  };
   return (
     <div className={styles.majorDiv}>
       <NavBar />
@@ -136,7 +177,7 @@ export default function EditProfilPage({}) {
           id="githubUrl"
           onChange={handleInputChange}
           label="Github Link"
-          value={formValues.linkedinUrl}
+          value={formValues.githubUrl}
           InputLabelProps={{ shrink: true }}
         />
         <br />
@@ -145,7 +186,7 @@ export default function EditProfilPage({}) {
           id="linkedinUrl"
           onChange={handleInputChange}
           label="LinkedIn Profile Link"
-          value={formValues.githubUrl}
+          value={formValues.linkedinUrl}
           InputLabelProps={{ shrink: true }}
         />
         <div className={styles.header}>Skills</div>
@@ -203,6 +244,40 @@ export default function EditProfilPage({}) {
             )}
           </FormGroup>
         </FormControl>
+        <br />
+        <Button onClick={handleSubmit} type="submit" variant="contained">
+          Submit
+        </Button>
+        <Snackbar
+          open={showSuccess}
+          autoHideDuration={3000}
+          onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert
+            elevation={6}
+            variant="filled"
+            onClose={handleSnackbarClose}
+            severity="success"
+          >
+            User Profile updated successfully.
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={showFailure}
+          autoHideDuration={3000}
+          onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert
+            elevation={6}
+            variant="filled"
+            onClose={handleSnackbarClose}
+            severity="error"
+          >
+            User Profile failed. Please try again.
+          </Alert>
+        </Snackbar>
       </div>
 
       <Footer />
