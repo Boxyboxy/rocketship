@@ -1,0 +1,19 @@
+.form {
+  margin: 20px;
+  /* position: relative; */
+  min-height: 100vh;
+}
+
+.header {
+  font-weight: bold;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  color: #3e497a;
+  margin: auto;
+  position: relative;
+}
+.btn {
+  margin: auto;
+  position: relative;
+  padding-top: 20px;
+}

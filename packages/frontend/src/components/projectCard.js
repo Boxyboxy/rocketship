@@ -5,7 +5,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
-import { BACKEND_URL } from "../constants/categorydata";
+import { BACKEND_URL } from "../constants/backendUrl";
 import axios from "axios";
 export default function ProjectCard({ project }) {
   const [funding, setFunding] = useState("not loaded");
@@ -52,7 +52,7 @@ export default function ProjectCard({ project }) {
   }, [project]);
   console.log(project);
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ minWidth: 345, maxWidth: 345, margin: 10 }}>
       <CardMedia
         component="img"
         height="140"

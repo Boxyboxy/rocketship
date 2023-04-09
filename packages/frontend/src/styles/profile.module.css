@@ -8,3 +8,8 @@
 .inline {
   display: inline-block;
 }
+.line {
+  display: block;
+  border-bottom: 2px dashed #ccc;
+  margin-bottom: 20px;
+}
