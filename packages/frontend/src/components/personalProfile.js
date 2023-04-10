@@ -23,7 +23,7 @@ import ProjectCard from "./projectCard";
 import ProjectCardsContainer from "./projectCardsContainer";
 import { BACKEND_URL } from "../constants/backendUrl";
 
-export default function Profile({ personalId }) {
+export default function PublicProfile({ personalId }) {
   const [profile, setProfile] = useState({
     name: "John Doe",
     mobile: "81112222",
