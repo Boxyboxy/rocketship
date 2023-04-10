@@ -26,10 +26,10 @@
 
 .pageContainer {
   /* position: relative;
-  color: #21325e;
+  color: #21325e; */
   text-align: center;
-  height: 20px; */
-  min-height: 0vh;
+  height: 20px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
