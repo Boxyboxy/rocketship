@@ -5,7 +5,7 @@ import { Stepper, Step, StepLabel } from "@material-ui/core";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { useRouter } from "next/router";
 import Footer from "../../../components/footer";
-import Profile from "../../../components/profile";
+import PublicProfile from "../../../components/publicProfile";
 import Grid from "@mui/material/Grid";
 import styles from "../../../styles/profilepage.module.css";
 
@@ -16,7 +16,7 @@ export default function ProfilePage() {
     <div className={styles.majorDiv}>
       <NavBar />
       <Category />
-      <Profile personalId={personalId} />
+      <PublicProfile personalId={personalId} />
       <Footer />
     </div>
   );

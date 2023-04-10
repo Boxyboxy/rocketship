@@ -1,4 +1,4 @@
-import Head from "next/head";
+import Box from "@mui/material/Box";
 import NavBar from "../../../../components/navbar";
 import Category from "../../../../components/category";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
@@ -138,148 +138,161 @@ export default function EditProfilPage({}) {
     <div className={styles.majorDiv}>
       <NavBar />
       <Category />
-      <div className={styles.form}>
-        <div className={styles.header}>Personal details</div>
-
-        <TextField
-          required
-          id="name"
-          onChange={handleInputChange}
-          label="Name"
-          value={formValues.name}
-          InputLabelProps={{ shrink: true }}
-        />
-        <br />
-        <TextField
-          required
-          id="mobile"
-          label="Mobile Number"
-          onChange={handleInputChange}
-          inputProps={{
-            maxLength: 10,
-            pattern: "^0[1-9]\\d{8}$", // Restrict input to only numbers
+      <ThemeProvider theme={theme}>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          component="form"
+          sx={{
+            "& .MuiTextField-root": { m: 1, width: "50ch" },
           }}
-          value={formValues.mobile}
-          InputLabelProps={{ shrink: true }}
-        />
-        <br />
-        <TextField
-          required
-          id="email"
-          onChange={handleInputChange}
-          label="Email address"
-          value={formValues.email}
-          InputLabelProps={{ shrink: true }}
-        />
-        <div className={styles.header}>Social Links</div>
-        <TextField
-          // required
-          id="githubUrl"
-          onChange={handleInputChange}
-          label="Github Link"
-          value={formValues.githubUrl}
-          InputLabelProps={{ shrink: true }}
-        />
-        <br />
-        <TextField
-          // required
-          id="linkedinUrl"
-          onChange={handleInputChange}
-          label="LinkedIn Profile Link"
-          value={formValues.linkedinUrl}
-          InputLabelProps={{ shrink: true }}
-        />
-        <div className={styles.header}>Skills</div>
-        <FormControl component="fieldset" variant="standard">
-          <FormLabel component="legend">Present Skills</FormLabel>
-          <FormGroup>
-            {Object.keys(presentUserSkills).length > 0 ? (
-              Object.entries(presentUserSkills).map(([k, v]) => (
-                <FormControlLabel
-                  control={<Checkbox checked={v} disabled name={k} />}
-                  label={k}
-                />
-              ))
-            ) : (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={false}
-                    onChange={handleCheckboxChange}
-                    name="rendering"
-                  />
-                }
-                label="Rendering"
-              />
-            )}
-          </FormGroup>
-        </FormControl>
-        <FormControl component="fieldset" variant="standard">
-          <FormLabel component="legend">Select more skills</FormLabel>
-          <FormGroup>
-            {Object.keys(userSkillsCheckBox).length > 0 ? (
-              Object.entries(userSkillsCheckBox).map(([k, v]) => (
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={v}
-                      onChange={handleCheckboxChange}
-                      name={k}
-                    />
-                  }
-                  label={k}
-                />
-              ))
-            ) : (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={false}
-                    onChange={handleCheckboxChange}
-                    name="rendering"
-                  />
-                }
-                label="Rendering"
-              />
-            )}
-          </FormGroup>
-        </FormControl>
-        <br />
-        <Button onClick={handleSubmit} type="submit" variant="contained">
-          Submit
-        </Button>
-        <Snackbar
-          open={showSuccess}
-          autoHideDuration={3000}
-          onClose={handleSnackbarClose}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          noValidate
+          autoComplete="off"
         >
-          <Alert
-            elevation={6}
-            variant="filled"
-            onClose={handleSnackbarClose}
-            severity="success"
-          >
-            User Profile updated successfully.
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          open={showFailure}
-          autoHideDuration={3000}
-          onClose={handleSnackbarClose}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert
-            elevation={6}
-            variant="filled"
-            onClose={handleSnackbarClose}
-            severity="error"
-          >
-            User Profile failed. Please try again.
-          </Alert>
-        </Snackbar>
-      </div>
+          <div className={styles.form}>
+            <div className={styles.header}>Personal details</div>
 
+            <TextField
+              required
+              id="name"
+              onChange={handleInputChange}
+              label="Name"
+              value={formValues.name}
+              InputLabelProps={{ shrink: true }}
+            />
+            <br />
+            <TextField
+              required
+              id="mobile"
+              label="Mobile Number"
+              onChange={handleInputChange}
+              inputProps={{
+                maxLength: 10,
+                pattern: "^0[1-9]\\d{8}$", // Restrict input to only numbers
+              }}
+              value={formValues.mobile}
+              InputLabelProps={{ shrink: true }}
+            />
+            <br />
+            <TextField
+              required
+              id="email"
+              onChange={handleInputChange}
+              label="Email address"
+              value={formValues.email}
+              InputLabelProps={{ shrink: true }}
+            />
+            <div className={styles.header}>Social Links</div>
+            <TextField
+              // required
+              id="githubUrl"
+              onChange={handleInputChange}
+              label="Github Link"
+              value={formValues.githubUrl}
+              InputLabelProps={{ shrink: true }}
+            />
+            <br />
+            <TextField
+              // required
+              id="linkedinUrl"
+              onChange={handleInputChange}
+              label="LinkedIn Profile Link"
+              value={formValues.linkedinUrl}
+              InputLabelProps={{ shrink: true }}
+            />
+            <div className={styles.header}>Skills</div>
+            <FormControl component="fieldset" variant="standard">
+              <FormLabel component="legend">Present Skills</FormLabel>
+              <FormGroup>
+                {Object.keys(presentUserSkills).length > 0 ? (
+                  Object.entries(presentUserSkills).map(([k, v]) => (
+                    <FormControlLabel
+                      control={<Checkbox checked={v} disabled name={k} />}
+                      label={k}
+                    />
+                  ))
+                ) : (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={false}
+                        onChange={handleCheckboxChange}
+                        name="rendering"
+                      />
+                    }
+                    label="Rendering"
+                  />
+                )}
+              </FormGroup>
+            </FormControl>
+            <FormControl component="fieldset" variant="standard">
+              <FormLabel component="legend">Select more skills</FormLabel>
+              <FormGroup>
+                {Object.keys(userSkillsCheckBox).length > 0 ? (
+                  Object.entries(userSkillsCheckBox).map(([k, v]) => (
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={v}
+                          onChange={handleCheckboxChange}
+                          name={k}
+                        />
+                      }
+                      label={k}
+                    />
+                  ))
+                ) : (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={false}
+                        onChange={handleCheckboxChange}
+                        name="rendering"
+                      />
+                    }
+                    label="Rendering"
+                  />
+                )}
+              </FormGroup>
+            </FormControl>
+            <br />
+            <Button onClick={handleSubmit} type="submit" variant="contained">
+              Submit
+            </Button>
+            <Snackbar
+              open={showSuccess}
+              autoHideDuration={3000}
+              onClose={handleSnackbarClose}
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            >
+              <Alert
+                elevation={6}
+                variant="filled"
+                onClose={handleSnackbarClose}
+                severity="success"
+              >
+                User Profile updated successfully.
+              </Alert>
+            </Snackbar>
+            <Snackbar
+              open={showFailure}
+              autoHideDuration={3000}
+              onClose={handleSnackbarClose}
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            >
+              <Alert
+                elevation={6}
+                variant="filled"
+                onClose={handleSnackbarClose}
+                severity="error"
+              >
+                User Profile failed. Please try again.
+              </Alert>
+            </Snackbar>
+          </div>
+        </Box>
+      </ThemeProvider>
       <Footer />
     </div>
   );
