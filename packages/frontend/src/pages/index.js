@@ -1,15 +1,50 @@
-import Head from 'next/head';
-import Button from '@mui/material/Button';
-import styles from '../styles/Home.module.css';
-import { useState } from 'react';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-
+import Head from "next/head";
+import Button from "@mui/material/Button";
+import styles from "../styles/Home.module.css";
+import { useState, useEffect } from "react";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import axios from "axios";
+import { BACKEND_URL } from "../constants/backendUrl";
+import { containerClasses } from "@mui/material";
 export default function App() {
   const [stats, setStats] = useState([
-    { statName: 'Projects', sum: '1234' },
-    { statName: 'Contributers', sum: '876' },
-    { statName: 'Funders', sum: '543' }
+    { statName: "Projects", sum: "1234" },
+    { statName: "Contributers", sum: "876" },
+    { statName: "Funded", sum: "$543" },
   ]);
+
+  useEffect(() => {
+    const fetchNumberOfProjects = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/projects`);
+        let numberOfProjects = response.data.length;
+        console.log(response.data.length);
+        let updatedStats = stats;
+        updatedStats[0].sum = numberOfProjects;
+        setStats(updatedStats);
+      } catch (error) {
+        console.error("Failed to fetch number of projects:", error);
+      }
+    };
+    fetchNumberOfProjects();
+  }, []);
+
+  useEffect(() => {
+    const fetchSumOfFundings = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/fundings/sumAll`);
+
+        console.log(response.data);
+        let updatedStats = stats;
+        updatedStats[2].sum = "$" + response.data;
+        setStats(updatedStats);
+      } catch (error) {
+        console.error("Failed to fetch sum of fundings:", error);
+      }
+    };
+    fetchSumOfFundings();
+  }, []);
+
   return (
     <>
       <Head>
@@ -39,13 +74,16 @@ export default function App() {
           <h1>Create and fund projects that are </h1>
           <h1>out of this world.</h1>
           <h2 className={styles.h2title}>
-            <span className={styles.bold}>RocketShip</span> is your ticket to launch your wildest
-            ideas into the orbit!
+            <span className={styles.bold}>RocketShip</span> is your ticket to
+            launch your wildest ideas into the orbit!
             <p>
-              Our cutting-edge crowdfunding platform is designed exclusively for software engineers
-              who want to take their creations to new heights with the power of community support.
+              Our cutting-edge crowdfunding platform is designed exclusively for
+              software engineers who want to take their creations to new heights
+              with the power of community support.
             </p>
-            <p>Join us on this exhilarating journey to bring the future to life!</p>
+            <p>
+              Join us on this exhilarating journey to bring the future to life!
+            </p>
             <p>
               <ArrowDownwardIcon />
             </p>
@@ -123,8 +161,12 @@ export default function App() {
       </div>
       {/* map section  */}
       <div className={styles.mapContainer}>
-        <h2 className={styles.mapTitle}>Together, we can make a greater impact.</h2>
-        <h2 className={styles.mapTitle}>Join your fellow astronauts on the RocketShip.</h2>
+        <h2 className={styles.mapTitle}>
+          Together, we can make a greater impact.
+        </h2>
+        <h2 className={styles.mapTitle}>
+          Join your fellow astronauts on the RocketShip.
+        </h2>
         <div className={styles.mapNumbers}>
           <img className={styles.map} src="/images/map.png" alt="map" />
           <div className={styles.numbersContainer}>
@@ -145,12 +187,16 @@ export default function App() {
         <ul className={styles.bullets}>
           <li className={styles.bulletpoint}>
             <p className={styles.number}>1</p>
-            <p className={styles.gsTxt}>Sign up as an astronaut to enter the RocketShip</p>
+            <p className={styles.gsTxt}>
+              Sign up as an astronaut to enter the RocketShip
+            </p>
           </li>
 
           <li className={styles.bulletpoint}>
             <p className={styles.number}>2</p>
-            <p className={styles.gsTxt}>Explore the space for projects that interest you</p>
+            <p className={styles.gsTxt}>
+              Explore the space for projects that interest you
+            </p>
           </li>
 
           <li className={styles.bulletpoint}>
@@ -160,7 +206,11 @@ export default function App() {
             </p>
           </li>
         </ul>
-        <img className={styles.planet} src="/images/get-started.png" alt="get-started" />
+        <img
+          className={styles.planet}
+          src="/images/get-started.png"
+          alt="get-started"
+        />
       </div>
       {/* footer */}
       <footer className={styles.footer}>Copyright © Rocketship 2023</footer>;
