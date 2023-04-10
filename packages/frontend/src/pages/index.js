@@ -14,35 +14,21 @@ export default function App() {
   ]);
 
   useEffect(() => {
-    const fetchNumberOfProjects = async () => {
+    const fetchStatistics = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/projects`);
-        let numberOfProjects = response.data.length;
-        console.log(response.data.length);
+        const projects = await axios.get(`${BACKEND_URL}/projects`);
+        const fundingsSum = await axios.get(`${BACKEND_URL}/fundings/sumAll`);
+        let numberOfProjects = projects.data.length;
         let updatedStats = stats;
         updatedStats[0].sum = numberOfProjects;
+        updatedStats[2].sum = "$" + fundingsSum.data;
         setStats(updatedStats);
       } catch (error) {
         console.error("Failed to fetch number of projects:", error);
       }
     };
-    fetchNumberOfProjects();
-  }, []);
 
-  useEffect(() => {
-    const fetchSumOfFundings = async () => {
-      try {
-        const response = await axios.get(`${BACKEND_URL}/fundings/sumAll`);
-
-        console.log(response.data);
-        let updatedStats = stats;
-        updatedStats[2].sum = "$" + response.data;
-        setStats(updatedStats);
-      } catch (error) {
-        console.error("Failed to fetch sum of fundings:", error);
-      }
-    };
-    fetchSumOfFundings();
+    fetchStatistics();
   }, []);
 
   return (
