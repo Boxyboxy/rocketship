@@ -42,7 +42,7 @@ export default function Category() {
         </li>
         <li className={styles.categoryLI}>
           <Link className={styles.linkName} href="/agritech">
-            Agritech
+            AgriTech
           </Link>
           <p className={styles.dash}>|</p>
         </li>

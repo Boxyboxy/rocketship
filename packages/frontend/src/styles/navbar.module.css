@@ -57,7 +57,7 @@
   color: #f0f0f0;
   padding: 0;
   border: none;
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
   background: none;
   cursor: pointer;
   text-decoration: none;
@@ -93,11 +93,14 @@
   color: #21325e;
   float: right;
   border-radius: 50%;
-  display: flex;
+  display: inline;
   justify-content: center;
   align-items: center;
   transition: 0.4s;
   cursor: pointer;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .btn > i {
@@ -113,7 +116,7 @@
   transition: 0.4s;
   width: 0px;
   font-size: 15px;
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .btn:hover {

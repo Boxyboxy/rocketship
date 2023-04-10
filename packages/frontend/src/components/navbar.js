@@ -1,9 +1,46 @@
-import Link from "next/link";
-import SmsRoundedIcon from "@mui/icons-material/SmsRounded";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import styles from "../styles/navbar.module.css";
+import Link from 'next/link';
+import SmsRoundedIcon from '@mui/icons-material/SmsRounded';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import IconButton from '@mui/material/IconButton';
+import styles from '../styles/navbar.module.css';
+import axios from 'axios';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 export default function NavBar() {
+  const [searchResults, setSearchResults] = useState([]);
+  const router = useRouter();
+  const [inputValue, setinputValue] = useState('');
+
+  const handleChange = (e) => {
+    setinputValue(e.target.value);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      // Trigger search when Enter key is pressed
+      handleSearch();
+    }
+  };
+
+  const handleSearch = () => {
+    axios
+      .get(`http://localhost:8080/projects?categoryName=${inputValue}`)
+      .then((response) => {
+        // Update state with search results
+        setSearchResults(response.data);
+        console.log(response.data);
+        router.push({
+          pathname: '/searchResults',
+          query: { inputValue: inputValue } // Pass search results as query parameter
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    console.log('Search term:', inputValue);
+  };
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
@@ -15,14 +52,17 @@ export default function NavBar() {
 
         <div className={styles.searchBox}>
           <input
+            type="text"
             className={styles.txt}
             id="standard-basic"
             placeholder="Search for projects or categories"
             variant="standard"
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
           />
-          <div className={styles.btn}>
+          <IconButton className={styles.btn} type="submit" component="label">
             <SearchRoundedIcon />
-          </div>
+          </IconButton>
         </div>
 
         <ul className={styles.navbarRight}>
@@ -44,7 +84,7 @@ export default function NavBar() {
 
           <div className={styles.navli}>
             <Link className={styles.linkName} href="/chat">
-              <SmsRoundedIcon />{" "}
+              <SmsRoundedIcon />{' '}
             </Link>
           </div>
           <li className={styles.navli}>

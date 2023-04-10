@@ -1,0 +1,21 @@
+.header {
+  margin: 20px;
+}
+
+.searchContainer {
+  margin: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+}
+
+.linkName {
+  text-decoration: none;
+}
