@@ -15,7 +15,6 @@ export default function App() {
     const fetchProjects = async () => {
       try {
         const projects = await axios.get(`${BACKEND_URL}/projects`);
-
         setProjects(projects.data.length);
       } catch (error) {
         console.error("Failed to fetch number of projects:", error);
@@ -28,7 +27,6 @@ export default function App() {
     const fetchFunded = async () => {
       try {
         const fundingsSum = await axios.get(`${BACKEND_URL}/fundings/sumAll`);
-
         setFunded("$" + fundingsSum.data);
       } catch (error) {
         console.error("Failed to fetch amount dunded:", error);
