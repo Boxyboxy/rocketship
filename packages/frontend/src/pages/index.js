@@ -23,6 +23,19 @@ export default function App() {
 
     fetchProjects();
   }, []);
+
+  useEffect(() => {
+    const fetchContributors = async () => {
+      try {
+        const contributions = await axios.get(`${BACKEND_URL}/contributions`);
+        setContributors(contributions.data.length);
+      } catch (error) {
+        console.error("Failed to fetch amount dunded:", error);
+      }
+    };
+
+    fetchContributors();
+  }, []);
   useEffect(() => {
     const fetchFunded = async () => {
       try {
