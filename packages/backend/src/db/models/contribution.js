@@ -1,4 +1,5 @@
 "use strict";
+const { userSkill } = require("../models");
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class contribution extends Model {
@@ -11,13 +12,23 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(models.project);
       this.belongsTo(models.userSkill);
-      this.belongsTo(models.project, { through: models.userSkill });
     }
   }
   contribution.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
       projectId: DataTypes.INTEGER,
-      userSkillId: DataTypes.INTEGER,
+      userSkillId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: userSkill,
+          key: "id",
+        },
+      },
       status: DataTypes.ENUM("pending", "accepted", "cancelled"),
       message: DataTypes.TEXT,
     },
