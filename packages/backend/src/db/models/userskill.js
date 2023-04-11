@@ -11,11 +11,15 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(models.user);
       this.belongsTo(models.skill);
-      this.hasMany(models.contribution);
     }
   }
   userSkill.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
       skillId: DataTypes.INTEGER,
       userId: DataTypes.INTEGER,
     },
