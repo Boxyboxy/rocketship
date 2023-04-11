@@ -18,7 +18,6 @@ module.exports = {
       "contributions",
       contributions.map(({ project_id, user_skill_id, status, message }) => ({
         project_id: project_id,
-
         user_skill_id: user_skill_id,
         status: status,
         message: message,

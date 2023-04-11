@@ -9,8 +9,8 @@ const projectsRouter = require("./projectsRouter");
 const skillsRouter = require("./skillsRouter");
 const userSkillsRouter = require("./userSkillsRouter");
 const requiredSkillsRouter = require("./requiredSkillsRouter");
-const fundingsRouter = require("./fundingRouter");
-
+const fundingsRouter = require("./fundingsRouter");
+const contributionsRouter = require("./contributionsRouter");
 const appRouter = express.Router();
 
 appRouter.use("/categories", categoriesRouter);
@@ -22,5 +22,6 @@ appRouter.use("/skills", skillsRouter);
 appRouter.use("/userSkills", userSkillsRouter);
 appRouter.use("/requiredSkills", requiredSkillsRouter);
 appRouter.use("/fundings", fundingsRouter);
+appRouter.use("/contributions", contributionsRouter);
 
 module.exports = appRouter;
