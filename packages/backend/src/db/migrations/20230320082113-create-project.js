@@ -57,6 +57,9 @@ module.exports = {
           isUrl: true,
         },
       },
+      funding_goal: {
+        type: Sequelize.INTEGER,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

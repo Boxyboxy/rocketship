@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(models.user);
       this.belongsTo(models.skill);
+      this.hasOne(models.contribution);
     }
   }
   userSkill.init(

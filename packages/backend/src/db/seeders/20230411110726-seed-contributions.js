@@ -1,5 +1,5 @@
-'use strict';
-const contributions = require('./contributions.json');
+"use strict";
+const contributions = require("./contributions.json");
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -15,15 +15,15 @@ module.exports = {
      */
     const currentDate = new Date();
     return queryInterface.bulkInsert(
-      'contributions',
-      contributions.map(({ project_id, user_id, skill_id, status, message }) => ({
+      "contributions",
+      contributions.map(({ project_id, user_skill_id, status, message }) => ({
         project_id: project_id,
-        user_id: user_id,
-        skill_id: skill_id,
+
+        user_skill_id: user_skill_id,
         status: status,
         message: message,
         created_at: currentDate,
-        updated_at: currentDate
+        updated_at: currentDate,
       }))
     );
   },
@@ -35,6 +35,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete('contributions');
-  }
+    await queryInterface.bulkDelete("contributions");
+  },
 };
