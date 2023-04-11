@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         through: models.requiredSkill,
       });
       this.hasMany(models.funding);
+      this.hasMany(models.contribution);
     }
   }
   project.init(
@@ -31,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       status: DataTypes.ENUM("active", "completed", "cancelled"),
       location: DataTypes.STRING,
       githubRepoUrl: DataTypes.STRING,
+      fundingGoal: DataTypes.INTEGER,
     },
     {
       sequelize,
