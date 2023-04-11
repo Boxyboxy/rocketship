@@ -1,0 +1,30 @@
+[
+  {
+    "project_id": 1,
+    "user_id": 2,
+    "skill_id": 1,
+    "status": "pending",
+    "message": "I can contribute to a project by leveraging my UX/UI skills to improve the user experience and interface, creating intuitive designs that enhance usability and delight users."
+  },
+  {
+    "project_id": 2,
+    "user_id": 1,
+    "skill_id": 5,
+    "status": "accepted",
+    "message": "I can help to optimize the software development lifecycle, automate deployment processes to ensure continuous integration and delivery of the project"
+  },
+  {
+    "project_id": 3,
+    "user_id": 1,
+    "skill_id": 3,
+    "status": "cancelled",
+    "message": "I can design, build, and optimize data pipelines for your project to ensure efficient data processing, storage, and analysis."
+  },
+  {
+    "project_id": 4,
+    "user_id": 3,
+    "skill_id": 8,
+    "status": "pending",
+    "message": "I can help to create an immersive gameplay experience, design engaging mechanics, and implement captivating visuals and audio for your project."
+  }
+]
