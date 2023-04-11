@@ -7,28 +7,35 @@ import axios from "axios";
 import { BACKEND_URL } from "../constants/backendUrl";
 import { containerClasses } from "@mui/material";
 export default function App() {
-  const [stats, setStats] = useState([
-    { statName: "Projects", sum: "1234" },
-    { statName: "Contributers", sum: "876" },
-    { statName: "Funded", sum: "$543" },
-  ]);
+  const [projects, setProjects] = useState(1234);
+  const [contributors, setContributors] = useState(876);
+  const [funded, setFunded] = useState("$543");
 
   useEffect(() => {
-    const fetchStatistics = async () => {
+    const fetchProjects = async () => {
       try {
         const projects = await axios.get(`${BACKEND_URL}/projects`);
-        const fundingsSum = await axios.get(`${BACKEND_URL}/fundings/sumAll`);
-        let numberOfProjects = projects.data.length;
-        let updatedStats = stats;
-        updatedStats[0].sum = numberOfProjects;
-        updatedStats[2].sum = "$" + fundingsSum.data;
-        setStats(updatedStats);
+
+        setProjects(projects.data.length);
       } catch (error) {
         console.error("Failed to fetch number of projects:", error);
       }
     };
 
-    fetchStatistics();
+    fetchProjects();
+  }, []);
+  useEffect(() => {
+    const fetchFunded = async () => {
+      try {
+        const fundingsSum = await axios.get(`${BACKEND_URL}/fundings/sumAll`);
+
+        setFunded("$" + fundingsSum.data);
+      } catch (error) {
+        console.error("Failed to fetch amount dunded:", error);
+      }
+    };
+
+    fetchFunded();
   }, []);
 
   return (
@@ -156,14 +163,18 @@ export default function App() {
         <div className={styles.mapNumbers}>
           <img className={styles.map} src="/images/map.png" alt="map" />
           <div className={styles.numbersContainer}>
-            {stats.map((stat) => {
-              return (
-                <div className={styles.numSummary}>
-                  <p>{stat.sum}</p>
-                  <p>{stat.statName}</p>
-                </div>
-              );
-            })}
+            <div className={styles.numSummary}>
+              <p>{projects}</p>
+              <p>Projects</p>
+            </div>
+            <div className={styles.numSummary}>
+              <p>{contributors}</p>
+              <p>Contributors</p>
+            </div>
+            <div className={styles.numSummary}>
+              <p>{funded}</p>
+              <p>Raised</p>
+            </div>
           </div>
         </div>
       </div>
