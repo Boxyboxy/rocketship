@@ -5,25 +5,27 @@ const {
 } = require("../repositories/contributionsRepository");
 
 module.exports = {
-  async getAllContributions(query, res) {
-    const { projectId, userSkillId } = query;
+  async getAllContributions({ query }, res) {
+    const { projectId, userId } = query;
     const options = {
       include: [
-        { model: project, where: {} },
+        { model: project },
         {
           model: userSkill,
           where: {},
-          include: [{ model: user }, { model: skill }],
+          include: [{ model: user, where: {} }, { model: skill }],
         },
       ],
+      where: {},
     };
 
     if (projectId) {
-      options.include[0].where.id = projectId;
+      console.log(projectId);
+      options.where.projectId = projectId;
     }
 
-    if (userSkillId) {
-      options.include[1].where.id = userSkillId;
+    if (userId) {
+      options.include[1].include[0].where.id = userId;
     }
 
     const contributions = await getAllContributions(options);

@@ -3,7 +3,7 @@ const logger = require("../middleware/logger");
 const { Op } = require("sequelize");
 
 module.exports = {
-  getAllContributions(options) {
+  async getAllContributions(options) {
     return contribution.findAll(options);
   },
 

@@ -8,6 +8,7 @@ const {
 } = require("../repositories/projectsRepository");
 const { Sequelize } = require("sequelize");
 const { skillsIdMap } = require("../configs/data");
+
 module.exports = {
   async getAllProjects({ query }, res) {
     const { projectName, categoryName } = query;
