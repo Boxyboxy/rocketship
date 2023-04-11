@@ -1,14 +1,7 @@
 import NavBar from '../../components/navbar';
 import Category from '../../components/category';
 import Footer from '../../components/footer';
-import styles from '../../styles/categorypage.module.css';
 import { categorydata } from '../../constants/categorydata';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import CategoryPage from '../../components/categoryPage';
 import { useRouter } from 'next/router';
 

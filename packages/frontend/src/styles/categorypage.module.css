@@ -80,3 +80,7 @@
   color: #3e497a;
   margin-bottom: 10px;
 }
+
+.linkName {
+  text-decoration: none;
+}
