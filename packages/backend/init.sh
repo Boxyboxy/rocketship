@@ -2,7 +2,7 @@ npm init --y
 npm i dotenv express nodemon sequelize
 npm install --save pg pg-hstore
 npm install -D sequelize-cli
-npx sequeize init
+npx sequelize init
 npx sequelize db:create
 npm install date-fns express-async-errors express-oauth2-jwt-bearer cloudinary cors
 
@@ -15,6 +15,7 @@ npx sequelize model:generate --name user --attributes name:string,mobile:string,
 npx sequelize model:generate --name skill --attributes skill:string --underscored
 npx sequelize model:generate --name requiredSkill --attributes skillId:integer,projectId:integer --underscored
 npx sequelize model:generate --name userSkill --attributes skillId:integer,userId:integer --underscored
+npx sequelize model:generate --name contribution --attributes projectId:integer,userId:integer,skillId:integer,status:enum:'{pending, accepted, cancelled}',message:text --underscored
 #NOTE: Make sure to change migration files to snakecase and leave camel case in model files
 #NOTE: data attributes in seeder config file requires snake case
 
@@ -36,6 +37,10 @@ npx sequelize db:seed --seed 20230325073106-seed-skills.js
 
 npx sequelize seed:generate --name seed-user-skills
 npx sequelize db:seed --seed 20230325083101-seed-user-skills.js
+
+npx sequelize seed:generate --name seed-contributions
+npx sequelize db:seed --seed 20230411110726-seed-contributions.js
+
 #RESET CODE:
 npx sequelize db:migrate:undo:all
 npx sequelize db:migrate
@@ -45,6 +50,7 @@ npx sequelize db:seed --seed 20230322151915-seed-users.js
 npx sequelize db:seed --seed 20230325073106-seed-skills.js
 npx sequelize db:seed --seed 20230325083101-seed-user-skills.js
 npx sequelize db:seed --seed 20230328142057-seed-fundings.js
+npx sequelize db:seed --seed 20230411110726-seed-contributions.js
 npm start
 
 ##ubuntu pg admin commands
