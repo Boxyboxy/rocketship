@@ -19,3 +19,25 @@
 .linkName {
   text-decoration: none;
 }
+
+.title {
+  font-weight: bold;
+  font-size: 20px;
+  text-align: center;
+  color: #3e497a;
+}
+.icon {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  width: 20%;
+  height: auto;
+}
+
+.title2 {
+  font-weight: bold;
+  font-size: 20px;
+  margin: 20px;
+}

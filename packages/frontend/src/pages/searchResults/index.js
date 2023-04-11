@@ -97,7 +97,9 @@ const SearchResults = () => {
         </Grid>
       ) : (
         <div className={styles.header}>
-          No results found, but you may be interested in the following projects:
+          <div className={styles.title}>We can't find what you are looking for ☹️ </div>
+          <img className={styles.icon} src="/images/lostastronaut.png" alt="noresults" />
+          <div className={styles.title2}>But you can continue exploring other rockets here:</div>
           <Grid
             className={styles.searchContainer}
             container
