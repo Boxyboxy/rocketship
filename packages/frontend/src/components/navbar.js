@@ -60,9 +60,9 @@ export default function NavBar() {
             onChange={handleChange}
             onKeyDown={handleKeyDown}
           />
-          <IconButton className={styles.btn} type="submit" component="label">
-            <SearchRoundedIcon />
-          </IconButton>
+          {/* <IconButton className={styles.btn} type="submit"> */}
+          <SearchRoundedIcon className={styles.btn} />
+          {/* </IconButton> */}
         </div>
 
         <ul className={styles.navbarRight}>

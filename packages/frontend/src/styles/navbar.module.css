@@ -86,7 +86,7 @@
 
 .searchBox:hover > .btn {
   color: #21325e;
-  display: flex;
+  /* display: flex; */
 }
 
 .btn {
@@ -103,10 +103,10 @@
   margin-right: auto;
 }
 
-.btn > i {
+/* .btn > i {
   font-size: 30px;
   color: #21325e;
-}
+} */
 
 .txt {
   border: none;
@@ -119,11 +119,9 @@
   font-family: 'Montserrat', sans-serif;
 }
 
-.btn:hover {
+.btn:hover::after {
   float: right;
   color: #21325e;
-  margin: 0;
-  padding: 0;
 }
 
 .chat {
