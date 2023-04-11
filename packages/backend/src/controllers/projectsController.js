@@ -29,7 +29,8 @@ module.exports = {
     }
 
     if (categoryName) {
-      options.include[1].where.name = categoryName;
+      const actualCategoryName = categoryName.replace("%20", " ");
+      options.include[1].where.name = actualCategoryName;
     }
 
     const projects = await getAllProjects(options);
