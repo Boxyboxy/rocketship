@@ -7,10 +7,12 @@ import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../constants/backendUrl";
 import axios from "axios";
-export default function ProjectCard({ project }) {
+import { BorderLinearProgress } from "./BorderLinearProgress";
+
+export default function ProjectCard({ project, ownerBoolean }) {
   const [funding, setFunding] = useState("not loaded");
   const [projectOwner, setProjectOwner] = useState({ name: "John Doe" });
-
+  // TODO: Style the card, set up href for owner profile button
   useEffect(() => {
     const fetchFunding = async () => {
       try {
@@ -26,7 +28,7 @@ export default function ProjectCard({ project }) {
         ) {
           setFunding(response.data);
         } else {
-          setFunding(`$${response.data} funded`);
+          setFunding(`${response.data} `);
         }
       } catch (err) {
         console.log(err);
@@ -67,10 +69,21 @@ export default function ProjectCard({ project }) {
           {project.summary}
         </Typography>
       </CardContent>
-      <CardActions>
-        {<Button size="small">{projectOwner.name}</Button>}
-        <Typography size="small">{funding}</Typography>
-      </CardActions>
+      {ownerBoolean ? (
+        ""
+      ) : (
+        <CardActions>
+          Started by:
+          {<Button size="small">{projectOwner.name}</Button>}
+        </CardActions>
+      )}
+      <Typography size="small">
+        {` $${funding}/$${project.fundingGoal} raised`}
+      </Typography>
+      <BorderLinearProgress
+        variant="determinate"
+        value={(funding * 100) / project.fundingGoal}
+      />
     </Card>
   );
 }

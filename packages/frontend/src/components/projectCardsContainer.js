@@ -1,15 +1,10 @@
 import styles from "../styles/projectCardsContainer.module.css";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import ProjectCard from "./projectCard";
-export default function ProjectCardsContainer({ projects }) {
+export default function ProjectCardsContainer({ projects, ownerBoolean }) {
   function generateCards(projects) {
     if (!projects) {
       return (
+        // TODO: Display message that there are not projects
         <ProjectCard
           project={{
             id: 8,
@@ -31,7 +26,9 @@ export default function ProjectCardsContainer({ projects }) {
         />
       );
     }
-    return projects.map((project) => <ProjectCard project={project} />);
+    return projects.map((project) => (
+      <ProjectCard project={project} ownerBoolean={ownerBoolean} />
+    ));
   }
 
   return <div className={styles.cardsContainer}>{generateCards(projects)}</div>;

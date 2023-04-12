@@ -1,4 +1,4 @@
-const { pitchSlide, category, skill } = require("../db/models");
+const { pitchSlide, category, skill, funding } = require("../db/models");
 const {
   getAllProjects,
   getProjectById,
@@ -11,14 +11,17 @@ const { skillsIdMap } = require("../configs/data");
 
 module.exports = {
   async getAllProjects({ query }, res) {
-    const { projectName, categoryName } = query;
+    const { projectName, categoryName, sortBy, order } = query;
     const options = {
       include: [
         { model: pitchSlide },
         { model: category, where: {} },
         { model: skill },
       ],
+      attributes: {},
+
       where: {},
+      order: [],
     };
 
     if (projectName) {
@@ -32,6 +35,28 @@ module.exports = {
     if (categoryName) {
       const actualCategoryName = categoryName.replace("%20", " ");
       options.include[1].where.name = actualCategoryName;
+    }
+
+    if (sortBy && order) {
+      if (sortBy == "date") {
+        options.order[0] = ["createdAt", order];
+      }
+
+      if (sortBy == "funding") {
+        options.attributes = {
+          include: [
+            [
+              Sequelize.literal(`(
+            SELECT coalesce(SUM(amount),0) FROM fundings WHERE fundings.project_id = project.id
+
+          )`),
+              "totalRaised",
+            ],
+          ],
+        };
+
+        options.order[0] = ["totalRaised", order];
+      }
     }
 
     const projects = await getAllProjects(options);
