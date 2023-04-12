@@ -4,6 +4,7 @@ export default function ProjectCardsContainer({ projects, ownerBoolean }) {
   function generateCards(projects) {
     if (!projects) {
       return (
+        // TODO: Display message that there are not projects
         <ProjectCard
           project={{
             id: 8,

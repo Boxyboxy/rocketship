@@ -23,6 +23,7 @@ import ContributorProjectCardsContainer from "./contributorProjectCardsContainer
 import { BACKEND_URL } from "../constants/backendUrl";
 
 export default function PublicProfile({ personalId }) {
+  // Should this be a reusable component???? To be shared across public and personal
   const [profile, setProfile] = useState({
     name: "John Doe",
     mobile: "81112222",
@@ -167,7 +168,7 @@ export default function PublicProfile({ personalId }) {
             ownerBoolean={true}
           />
         </div>
-        {/* to change the data input*/}
+
         <div>
           <h1>Projects Contributed</h1>
           <span className={styles.line}></span>

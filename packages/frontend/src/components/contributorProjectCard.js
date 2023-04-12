@@ -10,6 +10,7 @@ import axios from "axios";
 import { BorderLinearProgress } from "./BorderLinearProgress";
 
 export default function ProjectCard({ contribution }) {
+  // TODO: Style the cards
   const [funding, setFunding] = useState(0);
   const [projectOwner, setProjectOwner] = useState({ name: "John Doe" });
   const [sample, setSample] = useState({
@@ -97,15 +98,15 @@ export default function ProjectCard({ contribution }) {
       <CardMedia
         component="img"
         height="140"
-        src={sample.project.coverImage}
+        src={contribution.project.coverImage}
         alt="project1"
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {sample.project.name}
+          {contribution.project.name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {sample.project.summary}
+          {contribution.project.summary}
         </Typography>
       </CardContent>
       <CardActions>
@@ -113,14 +114,14 @@ export default function ProjectCard({ contribution }) {
         {<Button size="small">{projectOwner.name}</Button>}
       </CardActions>
       <Typography size="small">
-        {` $${funding}/$${sample.project.fundingGoal} raised`}
+        {` $${funding}/$${contribution.project.fundingGoal} raised`}
       </Typography>
       <BorderLinearProgress
         variant="determinate"
-        value={(funding * 100) / sample.project.fundingGoal}
+        value={(funding * 100) / contribution.project.fundingGoal}
       />
       <Typography size="small">
-        {`Skill contributed: ${sample.userSkill.skill.skill}`}
+        {`Skill contributed: ${contribution.userSkill.skill.skill}`}
       </Typography>
     </Card>
   );

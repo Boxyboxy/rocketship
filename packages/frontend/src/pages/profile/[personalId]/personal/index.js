@@ -10,6 +10,8 @@ import Grid from "@mui/material/Grid";
 import styles from "../../../../styles/profilepage.module.css";
 
 export default function PersonalProfilePage() {
+  // Add autho layer for middleware
+
   const router = useRouter();
   const { personalId } = router.query;
   return (

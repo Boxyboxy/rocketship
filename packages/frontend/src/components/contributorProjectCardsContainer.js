@@ -4,6 +4,7 @@ import axios from "axios";
 import ContributorProjectCard from "./contributorProjectCard";
 import { BACKEND_URL } from "../constants/backendUrl";
 export default function ProjectCardsContainer({ userId }) {
+  // TODO: Display message if there are no contributions
   const [contributions, setContributions] = useState([
     {
       id: 5,

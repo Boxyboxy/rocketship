@@ -22,8 +22,11 @@ import HandymanIcon from "@mui/icons-material/Handyman";
 import ProjectCard from "./projectCard";
 import ProjectCardsContainer from "./projectCardsContainer";
 import { BACKEND_URL } from "../constants/backendUrl";
+import ContributorProjectCardsContainer from "./contributorProjectCardsContainer";
 
 export default function PublicProfile({ personalId }) {
+  // TODO: add edit button that links to edit page.
+  // Figure out a way to display funding, a table?
   const [profile, setProfile] = useState({
     name: "John Doe",
     mobile: "81112222",
@@ -169,7 +172,7 @@ export default function PublicProfile({ personalId }) {
         <div>
           <h1>Projects Contributed</h1>
           <span className={styles.line}></span>
-          <ProjectCardsContainer projects={profile.projects} />
+          <ContributorProjectCardsContainer userId={profile.id} />
         </div>
         {/* to change the data input*/}
         <div>

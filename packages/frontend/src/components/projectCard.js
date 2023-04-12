@@ -12,7 +12,7 @@ import { BorderLinearProgress } from "./BorderLinearProgress";
 export default function ProjectCard({ project, ownerBoolean }) {
   const [funding, setFunding] = useState("not loaded");
   const [projectOwner, setProjectOwner] = useState({ name: "John Doe" });
-
+  // TODO: Style the card, set up href for owner profile button
   useEffect(() => {
     const fetchFunding = async () => {
       try {
