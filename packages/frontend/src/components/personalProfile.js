@@ -23,6 +23,7 @@ import ProjectCard from "./projectCard";
 import ProjectCardsContainer from "./projectCardsContainer";
 import { BACKEND_URL } from "../constants/backendUrl";
 import ContributorProjectCardsContainer from "./contributorProjectCardsContainer";
+import FundingHistory from "./FundingHistory";
 
 export default function PublicProfile({ personalId }) {
   // TODO: add edit button that links to edit page.
@@ -44,9 +45,7 @@ export default function PublicProfile({ personalId }) {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(`${BACKEND_URL}/users/${personalId}`);
-
         console.log(response.data);
-
         setProfile(response.data);
       } catch (err) {
         console.log(err);
@@ -176,9 +175,9 @@ export default function PublicProfile({ personalId }) {
         </div>
         {/* to change the data input*/}
         <div>
-          <h1>Projects Funded</h1>
+          <h1>Funding History</h1>
           <span className={styles.line}></span>
-          <ProjectCardsContainer projects={profile.projects} />
+          <FundingHistory personalId={personalId} />
         </div>
       </Grid>
     </>

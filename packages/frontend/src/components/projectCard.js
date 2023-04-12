@@ -19,7 +19,6 @@ export default function ProjectCard({ project, ownerBoolean }) {
         const response = await axios.get(
           `${BACKEND_URL}/fundings/sum/${project.id}`
         );
-        console.log(response.data);
 
         if (
           isNaN(response.data) ||
@@ -44,7 +43,7 @@ export default function ProjectCard({ project, ownerBoolean }) {
         const response = await axios.get(
           `${BACKEND_URL}/users/${project.userId}`
         );
-        console.log(response.data);
+
         setProjectOwner(response.data);
       } catch (err) {
         console.log(err);
@@ -52,7 +51,7 @@ export default function ProjectCard({ project, ownerBoolean }) {
     };
     fetchProjectOwner();
   }, [project]);
-  console.log(project);
+
   return (
     <Card sx={{ minWidth: 345, maxWidth: 345, margin: 10 }}>
       <CardMedia

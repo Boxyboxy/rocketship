@@ -1,4 +1,4 @@
-const { project, user } = require("../db/models");
+const { project, user, category } = require("../db/models");
 const {
   getAllFundings,
   createFunding,
@@ -12,7 +12,7 @@ module.exports = {
     const { projectId, userId } = query;
     const options = {
       include: [
-        { model: project, where: {} },
+        { model: project, include: [{ model: category }], where: {} },
         { model: user, where: {} },
       ],
     };
