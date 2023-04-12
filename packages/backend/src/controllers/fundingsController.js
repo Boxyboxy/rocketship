@@ -61,7 +61,7 @@ module.exports = {
 
     const sum = await sumFundingsByProjectId(projectId);
     if (!sum) {
-      return res.json("project does not have funding");
+      return res.json("0");
     }
 
     return res.json(sum);

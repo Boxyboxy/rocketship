@@ -10,7 +10,6 @@ import {
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
 import styles from "../styles/profile.module.css";
 import Link from "@mui/material/Link";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -19,8 +18,8 @@ import EmailIcon from "@mui/icons-material/Email";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import HandymanIcon from "@mui/icons-material/Handyman";
-import ProjectCard from "./projectCard";
 import ProjectCardsContainer from "./projectCardsContainer";
+import ContributorProjectCardsContainer from "./contributorProjectCardsContainer";
 import { BACKEND_URL } from "../constants/backendUrl";
 
 export default function PublicProfile({ personalId }) {
@@ -163,13 +162,16 @@ export default function PublicProfile({ personalId }) {
         <div>
           <h1>Projects Started</h1>
           <span className={styles.line}></span>
-          <ProjectCardsContainer projects={profile.projects} />
+          <ProjectCardsContainer
+            projects={profile.projects}
+            ownerBoolean={true}
+          />
         </div>
         {/* to change the data input*/}
         <div>
           <h1>Projects Contributed</h1>
           <span className={styles.line}></span>
-          <ProjectCardsContainer projects={profile.projects} />
+          <ContributorProjectCardsContainer userId={profile.id} />
         </div>
       </Grid>
     </>
