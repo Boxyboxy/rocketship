@@ -26,6 +26,20 @@ export default function ProjectPage() {
   const [projectId, setProjectId] = useState();
   const [skills, setSkills] = useState([]);
 
+  function handleEquityPurchaseClick() {
+    router.push({
+      pathname: `/projects/${projectId}/${creatorId}/checkout`,
+      query: { type: "equity" },
+    });
+  }
+
+  function handleMembershipPurchaseClick() {
+    router.push({
+      pathname: `/projects/${projectId}/${creatorId}/checkout`,
+      query: { type: "membership" },
+    });
+  }
+
   useEffect(() => {
     if (router.query.creatorId) {
       setCreatorId(router.query.creatorId);
@@ -36,61 +50,63 @@ export default function ProjectPage() {
   }, [router.query.creatorId, router.query.projectId]);
 
   useEffect(() => {
-    // will refactor all this
-    const fetchProject = async () => {
-      try {
-        const [projectResponse, userResponse] = await Promise.all([
-          axios.get(`http://localhost:8080/projects/${projectId}`),
-          axios.get(`http://localhost:8080/users/${creatorId}`),
-        ]);
-
-        const [categoryResponse, skillsNeededResponse, allSkills] =
-          await Promise.all([
-            axios.get(
-              `http://localhost:8080/categories/${projectResponse.data.categoryId}`
-            ),
-            axios.get(
-              `http://localhost:8080/requiredSkills?projectId=${projectId}`
-            ),
-            // axios.get(`http://localhost:8080/skills`),
+    if (projectId && creatorId) {
+      // will refactor all this
+      const fetchProject = async () => {
+        try {
+          const [projectResponse, userResponse] = await Promise.all([
+            axios.get(`http://localhost:8080/projects/${projectId}`),
+            axios.get(`http://localhost:8080/users/${creatorId}`),
           ]);
 
-        const skillArray = [];
+          const [categoryResponse, skillsNeededResponse, allSkills] =
+            await Promise.all([
+              axios.get(
+                `http://localhost:8080/categories/${projectResponse.data.categoryId}`
+              ),
+              axios.get(
+                `http://localhost:8080/requiredSkills?projectId=${projectId}`
+              ),
+              // axios.get(`http://localhost:8080/skills`),
+            ]);
 
-        for (const skillNeeded of skillsNeededResponse.data) {
-          await axios
-            .get(`http://localhost:8080/skills/${skillNeeded.skillId}`)
-            .then(function (response) {
-              skillArray.push(response.data.skill);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
+          const skillArray = [];
+
+          for (const skillNeeded of skillsNeededResponse.data) {
+            await axios
+              .get(`http://localhost:8080/skills/${skillNeeded.skillId}`)
+              .then(function (response) {
+                skillArray.push(response.data.skill);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          }
+
+          // for (const skillNeeded of skillsNeededResponse.data) {
+          //   for (const skill of allSkills.data) {
+          //     if (skillNeeded.skillId === skill.id) {
+          //       skillArray.push(skill.skill);
+          //       break;
+          //     }
+          //   }
+          // }
+
+          setSkills(skillArray);
+
+          const editedProject = {
+            ...projectResponse.data,
+            creatorName: userResponse.data.name,
+            categoryName: categoryResponse.data.name,
+          };
+          console.log(editedProject);
+          setSpecificProject(editedProject);
+        } catch (err) {
+          console.log(err);
         }
-
-        // for (const skillNeeded of skillsNeededResponse.data) {
-        //   for (const skill of allSkills.data) {
-        //     if (skillNeeded.skillId === skill.id) {
-        //       skillArray.push(skill.skill);
-        //       break;
-        //     }
-        //   }
-        // }
-
-        setSkills(skillArray);
-
-        const editedProject = {
-          ...projectResponse.data,
-          creatorName: userResponse.data.name,
-          categoryName: categoryResponse.data.name,
-        };
-        console.log(editedProject);
-        setSpecificProject(editedProject);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchProject().then(console.log(specificProject));
+      };
+      fetchProject().then(console.log(specificProject));
+    }
   }, [creatorId, projectId]);
 
   return (
@@ -224,7 +240,8 @@ export default function ProjectPage() {
                   >
                     Funding options
                     <br />
-                    Option 1 blah blah blah
+                    Option 1: MEMBERSHIP. You get this and this and that
+                    benefits.
                     <br></br>
                     <Button
                       variant="contained"
@@ -234,11 +251,12 @@ export default function ProjectPage() {
                         backgroundColor: "#F0F0F0",
                         width: "100%",
                       }}
+                      onClick={handleMembershipPurchaseClick}
                     >
                       Select
                     </Button>
                     <br></br>
-                    Option 2 blah blah blah
+                    Option 2: EQUITY
                     <br></br>
                     <Button
                       variant="contained"
@@ -248,6 +266,7 @@ export default function ProjectPage() {
                         backgroundColor: "#F0F0F0",
                         width: "100%",
                       }}
+                      onClick={handleEquityPurchaseClick}
                     >
                       Select
                     </Button>

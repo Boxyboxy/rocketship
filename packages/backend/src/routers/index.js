@@ -11,6 +11,9 @@ const userSkillsRouter = require("./userSkillsRouter");
 const requiredSkillsRouter = require("./requiredSkillsRouter");
 const fundingsRouter = require("./fundingsRouter");
 const contributionsRouter = require("./contributionsRouter");
+
+const stripeWebHookRouter = require("./stripeWebHookRouter");
+
 const appRouter = express.Router();
 
 appRouter.use("/categories", categoriesRouter);
@@ -23,5 +26,7 @@ appRouter.use("/userSkills", userSkillsRouter);
 appRouter.use("/requiredSkills", requiredSkillsRouter);
 appRouter.use("/fundings", fundingsRouter);
 appRouter.use("/contributions", contributionsRouter);
+
+appRouter.use("/stripe-webhook", stripeWebHookRouter);
 
 module.exports = appRouter;
