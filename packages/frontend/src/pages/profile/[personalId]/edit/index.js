@@ -24,7 +24,13 @@ export default function EditProfilPage() {
   const [presentUserSkills, setPresentUserSkills] = useState({});
 
   const [userSkillsCheckBox, setUserSkillsCheckBox] = useState({});
-  const [formValues, setFormValues] = useState({});
+  const [formValues, setFormValues] = useState({
+    name: "john doe",
+    mobile: "88888888",
+    email: "abdcefg@gmail.com",
+    githubUrl: "https://github.com",
+    linkedinUrl: "https://linkedin.com",
+  });
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [showFailure, setShowFailure] = useState(false);
@@ -33,48 +39,27 @@ export default function EditProfilPage() {
     "User Profile failed. Please try again."
   );
 
-  const [validateName, setValidName] = useState({
-    name: "john doe",
-    tempName: "",
-  });
-  const [validateMobile, setValidMobile] = useState({
-    mobile: "88888888",
-    tempMobile: "",
-  });
-  const [validateEmail, setValidEmail] = useState({
-    email: "abcdefg@gmail.com",
-    tempEmail: "",
-  });
-
-  const [validateGithubUrl, setValidGithub] = useState({
-    url: "https://github.com",
-    tempUrl: "",
-  });
-  const [validateLinkedinUrl, setValidLinkedin] = useState({
-    url: "https://linkedin.com",
-    tempUrl: "",
-  });
   const isNameValid = (name) =>
-    name.trim().includes(" ") ||
-    name.trim().length > 3 ||
-    name.trim().split(" ").length - 1 == 2;
+    name.trim().includes(" ") &&
+    name.trim().length > 3 &&
+    name.trim().split(" ").length == 2;
 
   const isMobileValid = (mobile) =>
-    mobile.length == 8 || mobile.match(/^\d{8}$/);
+    mobile.length == 8 && mobile.match(/^\d{8}$/);
 
   const isEmailValid = (email) =>
     email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 
   const isGithubUrlValid = (url) =>
-    url.length > 2 ||
-    url.includes(".") ||
-    url.startsWith("http") ||
+    url.length > 2 &&
+    url.includes(".") &&
+    url.startsWith("http") &&
     url.includes("github");
 
   const isLinkedinUrlValid = (url) =>
-    url.length > 2 ||
-    url.includes(".") ||
-    url.startsWith("http") ||
+    url.length > 2 &&
+    url.includes(".") &&
+    url.startsWith("http") &&
     url.includes("linkedin");
 
   const theme = createTheme({
@@ -111,24 +96,6 @@ export default function EditProfilPage() {
           githubUrl: response.data.githubUrl,
         });
 
-        setValidName({ name: "john doe", tempName: response.data.name });
-        setValidMobile({
-          mobile: "88888888",
-          tempMobile: response.data.mobile,
-        });
-        setValidEmail({
-          email: "abcdefg@gmail.com",
-          tempEmail: response.data.email,
-        });
-        setValidGithub({
-          url: "https://github.com",
-          tempUrl: response.data.githubUrl,
-        });
-        setValidLinkedin({
-          url: "https://linkedin.com",
-          tempUrl: response.data.linkedinUrl,
-        });
-
         let skillObjectsArray = Object.values(response.data.skills);
 
         const checkBoxBoolean = {};
@@ -150,26 +117,6 @@ export default function EditProfilPage() {
 
   const handleInputChange = (e) => {
     setFormValues({ ...formValues, [e.target.id]: e.target.value });
-    if (e.target.id == "name") {
-      setValidName({ name: "john doe", tempName: e.target.value });
-    }
-
-    if (e.target.id == "mobile") {
-      setValidMobile({ mobile: "88888888", tempMobile: e.target.value });
-    }
-
-    if (e.target.id == "email") {
-      setValidEmail({ email: "abcdefg@gmail.com", tempEmail: e.target.value });
-    }
-    if (e.target.id == "githubUrl") {
-      setValidGithub({ url: "https://github.com", tempUrl: e.target.value });
-    }
-    if (e.target.id == "linkedinUrl") {
-      setValidLinkedin({
-        url: "https://linkedin.com",
-        tempUrl: e.target.value,
-      });
-    }
   };
   const trimWhitespaces = (obj) => {
     for (let [key, value] of Object.entries(obj)) {
@@ -198,28 +145,6 @@ export default function EditProfilPage() {
       newSkills: Object.keys(userSkillsCheckBox).filter(
         (key) => userSkillsCheckBox[key]
       ),
-    });
-
-    setValidName({
-      name: validateName.tempName,
-      tempName: validateName.name,
-    });
-    setValidMobile({
-      mobile: validateMobile.tempMobile,
-      tempMobile: validateMobile.mobile,
-    });
-    setValidEmail({
-      email: validateEmail.tempEmail,
-      tempEmail: validateEmail.email,
-    });
-    setValidGithub({
-      url: validateGithubUrl.tempUrl,
-      tempUrl: validateGithubUrl.url,
-    });
-
-    setValidLinkedin({
-      url: validateLinkedinUrl.tempUrl,
-      tempUrl: validateLinkedinUrl.url,
     });
 
     axios
@@ -275,9 +200,11 @@ export default function EditProfilPage() {
               label="Name"
               value={formValues.name}
               InputLabelProps={{ shrink: true }}
-              error={!isNameValid(validateName.name)}
+              error={!isNameValid(formValues.name)}
               helperText={
-                isNameValid(validateName.name) ? "" : "Name is not valid"
+                isNameValid(formValues.name)
+                  ? ""
+                  : "Please enter a full name with a space in between your first and last name"
               }
             />
             <br />
@@ -294,9 +221,9 @@ export default function EditProfilPage() {
               }}
               value={formValues.mobile}
               InputLabelProps={{ shrink: true }}
-              error={!isMobileValid(validateMobile.mobile)}
+              error={!isMobileValid(formValues.mobile)}
               helperText={
-                isMobileValid(validateMobile.mobile)
+                isMobileValid(formValues.mobile)
                   ? ""
                   : "Please enter an 8 digit mobile number"
               }
@@ -309,9 +236,9 @@ export default function EditProfilPage() {
               label="Email address"
               value={formValues.email}
               InputLabelProps={{ shrink: true }}
-              error={!isEmailValid(validateEmail.email)}
+              error={!isEmailValid(formValues.email)}
               helperText={
-                isEmailValid(validateEmail.email) ? "" : "Email is not valid"
+                isEmailValid(formValues.email) ? "" : "Email is not valid"
               }
             />
             <div className={styles.header}>Social Links</div>
@@ -322,9 +249,9 @@ export default function EditProfilPage() {
               label="Github Link"
               value={formValues.githubUrl}
               InputLabelProps={{ shrink: true }}
-              error={!isGithubUrlValid(validateGithubUrl.url)}
+              error={!isGithubUrlValid(formValues.githubUrl)}
               helperText={
-                isGithubUrlValid(validateGithubUrl.url)
+                isGithubUrlValid(formValues.githubUrl)
                   ? ""
                   : "Github URL is not valid"
               }
@@ -337,9 +264,9 @@ export default function EditProfilPage() {
               label="LinkedIn Profile Link"
               value={formValues.linkedinUrl}
               InputLabelProps={{ shrink: true }}
-              error={!isLinkedinUrlValid(validateLinkedinUrl.url)}
+              error={!isLinkedinUrlValid(formValues.linkedinUrl)}
               helperText={
-                isLinkedinUrlValid(validateLinkedinUrl.url)
+                isLinkedinUrlValid(formValues.linkedinUrl)
                   ? ""
                   : "Linkedin URL is not valid"
               }
@@ -402,7 +329,20 @@ export default function EditProfilPage() {
               </FormGroup>
             </FormControl>
             <br />
-            <Button onClick={handleSubmit} type="submit" variant="contained">
+            <Button
+              onClick={handleSubmit}
+              type="submit"
+              variant="contained"
+              disabled={
+                !(
+                  isNameValid(formValues.name) &&
+                  isMobileValid(formValues.mobile) &&
+                  isEmailValid(formValues.email) &&
+                  isGithubUrlValid(formValues.githubUrl) &&
+                  isLinkedinUrlValid(formValues.linkedinUrl)
+                )
+              }
+            >
               Submit
             </Button>
             <Snackbar
