@@ -18,7 +18,7 @@ import Button from "@mui/material/Button";
 import Snackbar, { SnackbarOrigin } from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
-export default function EditProfilPage({}) {
+export default function EditProfilPage() {
   const router = useRouter();
   const { personalId } = router.query;
   const [presentUserSkills, setPresentUserSkills] = useState({});
@@ -55,27 +55,27 @@ export default function EditProfilPage({}) {
     tempUrl: "",
   });
   const isNameValid = (name) =>
-    !name.trim().includes(" ") ||
-    name.trim().length < 3 ||
-    name.trim().split(" ").length - 1 > 2;
+    name.trim().includes(" ") ||
+    name.trim().length > 3 ||
+    name.trim().split(" ").length - 1 == 2;
 
   const isMobileValid = (mobile) =>
-    mobile.length > 8 || !mobile.match(/^\d{8}$/);
+    mobile.length == 8 || mobile.match(/^\d{8}$/);
 
   const isEmailValid = (email) =>
-    !email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+    email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 
   const isGithubUrlValid = (url) =>
-    url.length < 2 ||
-    !url.includes(".") ||
-    !url.startsWith("http") ||
-    !url.includes("github");
+    url.length > 2 ||
+    url.includes(".") ||
+    url.startsWith("http") ||
+    url.includes("github");
 
   const isLinkedinUrlValid = (url) =>
-    url.length < 2 ||
-    !url.includes(".") ||
-    !url.startsWith("http") ||
-    !url.includes("linkedin");
+    url.length > 2 ||
+    url.includes(".") ||
+    url.startsWith("http") ||
+    url.includes("linkedin");
 
   const theme = createTheme({
     palette: {
@@ -275,9 +275,9 @@ export default function EditProfilPage({}) {
               label="Name"
               value={formValues.name}
               InputLabelProps={{ shrink: true }}
-              error={isNameValid(validateName.name)}
+              error={!isNameValid(validateName.name)}
               helperText={
-                isNameValid(validateName.name) ? "Name is not valid" : ""
+                isNameValid(validateName.name) ? "" : "Name is not valid"
               }
             />
             <br />
@@ -294,11 +294,11 @@ export default function EditProfilPage({}) {
               }}
               value={formValues.mobile}
               InputLabelProps={{ shrink: true }}
-              error={isMobileValid(validateMobile.mobile)}
+              error={!isMobileValid(validateMobile.mobile)}
               helperText={
                 isMobileValid(validateMobile.mobile)
-                  ? "Please enter an 8 digit mobile number."
-                  : ""
+                  ? ""
+                  : "Please enter an 8 digit mobile number"
               }
             />
             <br />
@@ -309,9 +309,9 @@ export default function EditProfilPage({}) {
               label="Email address"
               value={formValues.email}
               InputLabelProps={{ shrink: true }}
-              error={isEmailValid(validateEmail.email)}
+              error={!isEmailValid(validateEmail.email)}
               helperText={
-                isEmailValid(validateEmail.email) ? "Email is not valid" : ""
+                isEmailValid(validateEmail.email) ? "" : "Email is not valid"
               }
             />
             <div className={styles.header}>Social Links</div>
@@ -322,11 +322,11 @@ export default function EditProfilPage({}) {
               label="Github Link"
               value={formValues.githubUrl}
               InputLabelProps={{ shrink: true }}
-              error={isGithubUrlValid(validateGithubUrl.url)}
+              error={!isGithubUrlValid(validateGithubUrl.url)}
               helperText={
                 isGithubUrlValid(validateGithubUrl.url)
-                  ? "Github URL is not valid."
-                  : ""
+                  ? ""
+                  : "Github URL is not valid"
               }
             />
             <br />
@@ -337,11 +337,11 @@ export default function EditProfilPage({}) {
               label="LinkedIn Profile Link"
               value={formValues.linkedinUrl}
               InputLabelProps={{ shrink: true }}
-              error={isLinkedinUrlValid(validateLinkedinUrl.url)}
+              error={!isLinkedinUrlValid(validateLinkedinUrl.url)}
               helperText={
                 isLinkedinUrlValid(validateLinkedinUrl.url)
-                  ? "Linkedin URL is not valid."
-                  : ""
+                  ? ""
+                  : "Linkedin URL is not valid"
               }
             />
             <div className={styles.header}>Skills</div>
@@ -352,6 +352,7 @@ export default function EditProfilPage({}) {
                   Object.entries(presentUserSkills).map(([k, v]) => (
                     <FormControlLabel
                       control={<Checkbox checked={v} disabled name={k} />}
+                      key={k}
                       label={k}
                     />
                   ))
@@ -380,6 +381,7 @@ export default function EditProfilPage({}) {
                           checked={v}
                           onChange={handleCheckboxChange}
                           name={k}
+                          key={k}
                         />
                       }
                       label={k}
