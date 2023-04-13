@@ -58,6 +58,54 @@ module.exports = {
       throw error;
     }
     const { newSkills, ...rest } = req.body;
+
+    if (
+      !rest.name.includes(" ") ||
+      rest.name.length < 3 ||
+      rest.name.split(" ").length - 1 > 2
+    ) {
+      const error = new Error(
+        "Please enter a full name with a space in between 2 words."
+      );
+      error.status = 411;
+      throw error;
+    }
+
+    if (rest.mobile.length > 8 || !rest.mobile.match(/^\d{8}$/)) {
+      const error = new Error(
+        "Mobile number must be 8 digits. Please input only numbers."
+      );
+      error.status = 412;
+      throw error;
+    }
+
+    if (!rest.email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
+      const error = new Error("Please enter a valid email");
+      error.status = 413;
+      throw error;
+    }
+
+    if (
+      rest.githubUrl.length < 2 ||
+      !rest.githubUrl.includes(".") ||
+      !rest.githubUrl.startsWith("http") ||
+      !rest.githubUrl.includes("github")
+    ) {
+      const error = new Error("Github url is not valid");
+      error.status = 414;
+      throw error;
+    }
+
+    if (
+      rest.linkedinUrl.length < 2 ||
+      !rest.linkedinUrl.includes(".") ||
+      !rest.linkedinUrl.startsWith("http") ||
+      !rest.linkedinUrl.includes("linkedin")
+    ) {
+      const error = new Error("Linkedin url is not valid");
+      error.status = 415;
+      throw error;
+    }
     const skillIdArray = newSkills.map((skill) => skillsIdMap[skill]);
 
     const updatedUser = await updateUserById(id, rest, skillIdArray);
