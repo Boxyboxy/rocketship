@@ -45,11 +45,9 @@ export default function PublicProfile({ personalId }) {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(`${BACKEND_URL}/users/${personalId}`);
-        console.log(response.data);
+
         setProfile(response.data);
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     };
 
     fetchProfile();
