@@ -12,14 +12,18 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import styles from '../../styles/search.module.css';
 import Grid from '@mui/material/Unstable_Grid2';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 import Link from 'next/link';
 
 const SearchResults = () => {
   const router = useRouter();
   const { inputValue } = router.query;
-  console.log(inputValue);
+  // console.log(inputValue);
   const [searchResults, setSearchResults] = useState([]);
   const [topProjects, setTopProjects] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const projectsPerPage = 6;
 
   // Fetch data using the search query value and update searchResults state
   useEffect(() => {
@@ -37,19 +41,11 @@ const SearchResults = () => {
   }, [inputValue]);
 
   useEffect(() => {
-    // Fetch all projects on component mount
     fetch('http://localhost:8080/projects')
       .then((response) => response.json())
       .then((data) => {
-        // Sort the projects by some criteria (e.g. project popularity or rating)
-        // and select the top 6 projects
-        const sortedProjects = data.sort((a, b) => {
-          // Modify the sorting criteria based on your requirements
-          // For example, if you have a "popularity" field in your project object,
-          // you can sort by it like this: return b.popularity - a.popularity;
-        });
         const top3Projects = sortedProjects.slice(0, 3);
-        // Set the top 6 projects to the state
+        // Set the top 3 projects to the state
         setTopProjects(top3Projects);
         console.log(top3Projects);
       })
@@ -57,6 +53,16 @@ const SearchResults = () => {
         console.error('Error fetching projects:', error);
       });
   }, []);
+
+  const totalPages = Math.ceil(searchResults.length / projectsPerPage);
+
+  const handlePageChange = (e, value) => {
+    setCurrentPage(value);
+  };
+
+  const startIndex = (currentPage - 1) * projectsPerPage;
+  const endIndex = startIndex + projectsPerPage;
+  const projectsToDisplay = searchResults.slice(startIndex, endIndex);
 
   return (
     <div>
@@ -71,7 +77,7 @@ const SearchResults = () => {
           direction="row"
           justify="flex-start"
           alignItems="flex-start">
-          {searchResults.map((result) => (
+          {projectsToDisplay.map((result) => (
             <Grid item xs={12} sm={6} md={3} key={result.id}>
               <Card className={styles.card} sx={{ maxWidth: 345 }}>
                 <CardMedia sx={{ height: 140 }} image={result.coverImage} title="green iguana" />
@@ -132,6 +138,16 @@ const SearchResults = () => {
             ))}
           </Grid>
         </div>
+      )}
+      {searchResults.length >= 1 && (
+        <Stack spacing={2} className={styles.pagination}>
+          <Pagination
+            count={totalPages}
+            color="primary"
+            page={currentPage}
+            onChange={handlePageChange}
+          />
+        </Stack>
       )}
       <Footer />
     </div>

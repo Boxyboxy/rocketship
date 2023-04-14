@@ -7,7 +7,7 @@ import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import styles from '../../styles/createproject.module.css';
 import Box from '@mui/material/Box';
 import { Input, Button } from '@material-ui/core';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import TextField from '@mui/material/TextField';
 import { Select, MenuItem } from '@material-ui/core';
 import InputLabel from '@mui/material/InputLabel';
@@ -18,6 +18,8 @@ import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { getNames } from 'country-list';
+
 import axios from 'axios';
 // import Loader from '../../components/loader';
 
@@ -38,6 +40,14 @@ export default function CreateProject() {
   const [activeStep, setActiveStep] = useState(0);
   const [formValues, setFormValues] = useState({});
   const [skills, setSkills] = useState([]);
+  // const countryList = require('country-list');
+  const [country, setCountry] = useState('');
+  const countryNames = getNames();
+
+  const changeCountry = (selectedCountry) => {
+    setCountry(selectedCountry);
+    console.log(selectedCountry);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -184,7 +194,14 @@ export default function CreateProject() {
                   <p>Bank Account Number</p>
                   <TextField required id="bankAccountId" onChange={handleInputChange} />
                   <p>Location</p>
-                  <TextField required id="location" onChange={handleInputChange} />
+                  <Select value={country} onChange={(e) => changeCountry(e.target.value)}>
+                    {countryNames.map((country) => (
+                      <MenuItem key={country} value={country}>
+                        {country}
+                      </MenuItem>
+                    ))}
+                  </Select>
+
                   <p>Funding Goal</p>
                   <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
                   <OutlinedInput
