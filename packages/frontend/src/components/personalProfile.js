@@ -163,7 +163,10 @@ export default function PublicProfile({ personalId }) {
         <div>
           <h1>Projects Started</h1>
           <span className={styles.line}></span>
-          <ProjectCardsContainer projects={profile.projects} />
+          <ProjectCardsContainer
+            projects={profile.projects}
+            ownerBoolean={true}
+          />
         </div>
         {/* to change the data input*/}
         <div>

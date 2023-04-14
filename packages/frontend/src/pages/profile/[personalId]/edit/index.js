@@ -15,7 +15,7 @@ import { BACKEND_URL } from "../../../../constants/backendUrl";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import Button from "@mui/material/Button";
-import Snackbar, { SnackbarOrigin } from "@mui/material/Snackbar";
+import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
 export default function EditProfilPage() {
@@ -34,7 +34,6 @@ export default function EditProfilPage() {
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [showFailure, setShowFailure] = useState(false);
-
   const [errorMessage, setErrorMessage] = useState(
     "User Profile failed. Please try again."
   );
@@ -132,7 +131,7 @@ export default function EditProfilPage() {
     });
     console.log(userSkillsCheckBox);
     // Maps checkbox boolean object into an array of skills to interface with backend
-    const skills = Object.keys(userSkillsCheckBox).filter(
+    Object.keys(userSkillsCheckBox).filter(
       (skill) => userSkillsCheckBox[skill]
     );
   };
