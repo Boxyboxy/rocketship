@@ -55,14 +55,13 @@ export default function NavBar() {
             type="text"
             className={styles.txt}
             id="standard-basic"
-            placeholder="Search for projects or categories"
+            placeholder="Search for projects here"
             variant="standard"
             onChange={handleChange}
             onKeyDown={handleKeyDown}
           />
-          {/* <IconButton className={styles.btn} type="submit"> */}
+
           <SearchRoundedIcon className={styles.btn} />
-          {/* </IconButton> */}
         </div>
 
         <ul className={styles.navbarRight}>

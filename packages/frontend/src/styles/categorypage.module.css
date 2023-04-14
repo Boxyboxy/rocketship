@@ -66,6 +66,16 @@
   flex: 1;
   margin: 20px;
   padding-right: 90px;
+  text-decoration: none;
+  color: #3e497a;
+}
+
+.name {
+  text-decoration: none;
+  color: black;
+  flex: 1;
+  margin: 20px;
+  padding-right: 90px;
 }
 
 .featuredHeader {
@@ -83,4 +93,10 @@
 
 .linkName {
   text-decoration: none;
+  font-size: small;
+}
+
+.pagination {
+  padding: 10px;
+  margin-left: 80px;
 }
