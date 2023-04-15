@@ -3,11 +3,11 @@ const stripe = require("stripe")(process.env.NEXT_STRIPE_SECRET_KEY);
 
 const calculatePurchaseAmount = (product) => {
   // Calculate the order total on the server to prevent people from directly manipulating the amount on the client
-  // if (product.type === "membership") {
-  //   return 2000;
-  // } else {
-  return 14000;
-  // }
+  if (product[0].incentive === "membership") {
+    return 2000;
+  } else {
+    return 14000;
+  }
 };
 
 export default async function stripeIntentHandler(req, res) {

@@ -27,7 +27,6 @@ module.exports = {
       if (event.data.object.object === "payment_intent") {
         // Get the payment intent ID from the event
         const paymentIntentId = event.data.object.id;
-        // console.log(paymentIntentId);
 
         // Get the payment intent from Stripe
         const paymentIntent = await stripe.paymentIntents.retrieve(
