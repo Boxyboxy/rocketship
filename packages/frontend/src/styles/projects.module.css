@@ -1,0 +1,10 @@
+.sort {
+  margin: 20px;
+  background-color: #f1d00a;
+  border: 1px solid #f1d00a;
+  border-radius: 40px;
+  color: #21325e;
+  outline: 0;
+  width: 120px;
+  text-align: center;
+}

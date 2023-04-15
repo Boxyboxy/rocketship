@@ -7,8 +7,10 @@ import Category from '../../components/category';
 import axios from 'axios';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import SortIcon from '@mui/icons-material/Sort';
-import { Box, IconButton, Menu, MenuItem } from '@mui/material';
+import Button from '@mui/material/Button';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { Box } from '@mui/material';
 import styles from '../../styles/projects.module.css';
 
 export default function HomePage() {
@@ -20,10 +22,10 @@ export default function HomePage() {
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 9;
-  const [sortOption, setSortOption] = useState(null);
-  const [sortedProjects, setSortedProjects] = useState(projectsArray);
-
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [dateSortOption, setDateSortOption] = useState('asc');
+  const [fundingSortOption, setFundingSortOption] = useState('asc');
+  const [projectsFunding, setProjectsFunding] = useState([]);
+  const [sortedProjects, setSortedProjects] = useState([]);
 
   const [stats, setStats] = useState([
     { statName: 'Projects', sum: '3456' },
@@ -72,41 +74,73 @@ export default function HomePage() {
     // const featured = projectsArray[featuredProjectId];
     setFeaturedProject(projectsArray[randomIndex]);
   }, [projectsArray]);
-  console.log(featuredProject);
 
+  //to remove featured project from projectsArray
   useEffect(() => {
-    console.log(featuredProject);
-    console.log(projectsArray);
-  }, [featuredProject, projectsArray]);
-
-  // useEffect(() => {
-  //   const filteredProjects = projectsArray.filter((project) => project.name !== featuredProject.id);
-
-  //   setFilteredProjects(filteredProjects);
-  // }, [projectsArray, featuredProject]);
-
-  const handleMenuOpen = (e) => {
-    setAnchorEl(e.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleSort = (option) => {
-    setSortOption(option);
-    handleMenuClose();
-  };
-
-  useEffect(() => {
-    const sortedArray = [...projectsArray];
-    if (sortOption === 'date') {
-      sortedArray.sort((a, b) => new Date(b.date) - new Date(a.date)); // sort by date
-    } else if (sortOption === 'fundings') {
-      sortedArray.sort((a, b) => a.fundings - b.fundings); // sort by fundings
+    if (featuredProject) {
+      const filteredProjects = projectsArray.filter(
+        (project) => project.name !== featuredProject.name
+      );
+      setFilteredProjects(filteredProjects);
+      // console.log(filteredProjects);
     }
+  }, [projectsArray, featuredProject]);
+
+  //get funding
+  useEffect(() => {
+    const fetchFunding = async () => {
+      console.log(filteredProjects);
+      if (projectsArray) {
+        for (const project of filteredProjects) {
+          try {
+            const fundingPromises = filteredProjects.map(async (project) => {
+              const response = await axios.get(`http://localhost:8080/fundings/sum/${project.id}`);
+              return { ...project, funding: response.data };
+            });
+
+            const fetchedFundings = await Promise.all(fundingPromises);
+            setProjectsFunding(fetchedFundings);
+            console.log(projectsFunding);
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      }
+    };
+
+    fetchFunding();
+  }, [filteredProjects]);
+
+  const handleSort = (button) => {
+    if (button === 'date') {
+      setDateSortOption(dateSortOption === 'asc' ? 'desc' : 'asc');
+    } else if (button === 'funding') {
+      setFundingSortOption(fundingSortOption === 'asc' ? 'desc' : 'asc');
+    }
+  };
+
+  //sorting logic
+  useEffect(() => {
+    const sortedArray = [...projectsFunding];
+    sortedArray.sort((a, b) => {
+      if (dateSortOption === 'desc' && fundingSortOption === 'desc') {
+        if (new Date(b.date) < new Date(a.date)) {
+          return -1;
+        } else if (new Date(b.date) > new Date(a.date)) {
+          return 1;
+        } else {
+          return b.funding - a.funding; // if dates are equal, sort by funding descending
+        }
+      } else if (dateSortOption === 'desc') {
+        return new Date(b.date) - new Date(a.date); // sort by date descending
+      } else if (fundingSortOption === 'desc') {
+        return b.funding - a.funding; // sort by funding descending
+      } else {
+        return 0; // no sorting applied
+      }
+    });
     setSortedProjects(sortedArray);
-  }, [sortOption, projectsArray]);
+  }, [dateSortOption, fundingSortOption, projectsFunding]);
 
   const totalPages = Math.ceil(sortedProjects.length / projectsPerPage);
 
@@ -155,19 +189,15 @@ export default function HomePage() {
         </Grid>
         <h1>Trending Projects</h1>
         <Box>
-          <IconButton onClick={handleMenuOpen} edge="end" color="inherit" aria-label="Sort">
-            <SortIcon />
-          </IconButton>
-          <Menu
-            anchor={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-            // anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            // transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          >
-            <MenuItem onClick={() => handleSort('date')}>Sort by Date</MenuItem>
-            <MenuItem onClick={() => handleSort('funding')}>Sort by Funding</MenuItem>
-          </Menu>
+          <Button className={styles.sort} onClick={() => handleSort('date')}>
+            Date
+            {dateSortOption === 'asc' ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+          </Button>
+
+          <Button className={styles.sort} onClick={() => handleSort('funding')}>
+            Funding
+            {fundingSortOption === 'asc' ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+          </Button>
         </Box>
         <Grid container spacing={2}>
           {projectsToDisplay.map((project) => {
