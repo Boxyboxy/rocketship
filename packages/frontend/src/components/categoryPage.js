@@ -10,8 +10,9 @@ import Button from '@mui/material/Button';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { BACKEND_URL } from '../constants/categorydata';
-import SortIcon from '@mui/icons-material/Sort';
-import { Box, Typography, IconButton, Menu, MenuItem } from '@mui/material';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { Box, Typography } from '@mui/material';
 import Link from 'next/link';
 
 const categoryMapping = {
@@ -31,10 +32,10 @@ export default function CategoryPage({ selectedCategory }) {
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 6;
-  const [sortOption, setSortOption] = useState(null); // default sort option is 'date'
   const [sortedProjects, setSortedProjects] = useState(filteredProjects); // initial sorted projects array
-
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [projectsFunding, setProjectsFunding] = useState([]);
+  const [dateSortOption, setDateSortOption] = useState('asc');
+  const [fundingSortOption, setFundingSortOption] = useState('asc');
   const [projectOwner, setProjectOwner] = useState({});
 
   useEffect(() => {
@@ -51,9 +52,6 @@ export default function CategoryPage({ selectedCategory }) {
         const randomIndex = Math.floor(Math.random() * response.data.length);
         // Use the random index to select a random project
         setRandomProject(response.data[randomIndex]);
-
-        console.log(randomProject);
-        console.log(featuredProjects);
       } catch (err) {
         console.log(err);
       }
@@ -67,7 +65,7 @@ export default function CategoryPage({ selectedCategory }) {
       (project) => project.name !== randomProject.name
     );
 
-    // Format the date in the desired format "DD-MMM-YY"
+    // Format the date in the desired format "DD-MMM-YYYY"
     const formattedData = filteredProjects.map((item) => ({
       ...item,
       date: new Date(item.createdAt).toLocaleDateString('en-US', {
@@ -78,34 +76,67 @@ export default function CategoryPage({ selectedCategory }) {
     }));
 
     setFilteredProjects(formattedData);
-    console.log(formattedData);
+    // console.log(formattedData);
   }, [featuredProjects, randomProject]);
 
   const category = categorydata[selectedCategory.name];
 
-  //for sorting
-  const handleMenuOpen = (e) => {
-    setAnchorEl(e.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleSort = (option) => {
-    setSortOption(option);
-    handleMenuClose();
-  };
-
+  //get funding
   useEffect(() => {
-    const sortedArray = [...filteredProjects];
-    if (sortOption === 'date') {
-      sortedArray.sort((a, b) => new Date(b.date) - new Date(a.date)); // sort by date
-    } else if (sortOption === 'fundings') {
-      sortedArray.sort((a, b) => a.fundings - b.fundings); // sort by fundings
+    const fetchFunding = async () => {
+      console.log(filteredProjects);
+      if (filteredProjects) {
+        for (const project of filteredProjects) {
+          try {
+            const fundingPromises = filteredProjects.map(async (project) => {
+              const response = await axios.get(`http://localhost:8080/fundings/sum/${project.id}`);
+              return { ...project, funding: response.data };
+            });
+
+            const fetchedFundings = await Promise.all(fundingPromises);
+            setProjectsFunding(fetchedFundings);
+            console.log(projectsFunding);
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      }
+    };
+
+    fetchFunding();
+  }, [filteredProjects]);
+
+  //for sorting
+  const handleSort = (button) => {
+    if (button === 'date') {
+      setDateSortOption(dateSortOption === 'asc' ? 'desc' : 'asc');
+    } else if (button === 'funding') {
+      setFundingSortOption(fundingSortOption === 'asc' ? 'desc' : 'asc');
     }
+  };
+
+  //sorting logic
+  useEffect(() => {
+    const sortedArray = [...projectsFunding];
+    sortedArray.sort((a, b) => {
+      if (dateSortOption === 'desc' && fundingSortOption === 'desc') {
+        if (new Date(b.date) < new Date(a.date)) {
+          return -1;
+        } else if (new Date(b.date) > new Date(a.date)) {
+          return 1;
+        } else {
+          return b.funding - a.funding; // if dates are equal, sort by funding descending
+        }
+      } else if (dateSortOption === 'desc') {
+        return new Date(b.date) - new Date(a.date); // sort by date descending
+      } else if (fundingSortOption === 'desc') {
+        return b.funding - a.funding; // sort by funding descending
+      } else {
+        return 0; // no sorting applied
+      }
+    });
     setSortedProjects(sortedArray);
-  }, [sortOption, filteredProjects]);
+  }, [dateSortOption, fundingSortOption, projectsFunding]);
 
   //for pagination
   const totalPages = Math.ceil(sortedProjects.length / projectsPerPage);
@@ -172,21 +203,20 @@ export default function CategoryPage({ selectedCategory }) {
       {filteredProjects.length >= 1 && (
         <div className={styles.title}>
           <div className={styles.headerTitle}>DISCOVER MORE</div>
-          <Box>
-            <IconButton onClick={handleMenuOpen} edge="end" color="inherit" aria-label="Sort">
-              <SortIcon />
-            </IconButton>
-            <Menu
-              anchor={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-              // anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-              // transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            >
-              <MenuItem onClick={() => handleSort('date')}>Sort by Date</MenuItem>
-              <MenuItem onClick={() => handleSort('funding')}>Sort by Funding</MenuItem>
-            </Menu>
-          </Box>
+
+          {filteredProjects.length > 1 && (
+            <Box>
+              <Button className={styles.sort} onClick={() => handleSort('date')}>
+                Date
+                {dateSortOption === 'asc' ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+              </Button>
+
+              <Button className={styles.sort} onClick={() => handleSort('funding')}>
+                Funding
+                {fundingSortOption === 'asc' ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+              </Button>
+            </Box>
+          )}
           <div className={styles.cardsContainer}>
             {projectsToDisplay.map((result) => (
               <Card
@@ -219,7 +249,8 @@ export default function CategoryPage({ selectedCategory }) {
                     passHref>
                     <Button size="small">View More</Button>
                   </Link>
-                  <Typography spacing={1}>Launched on: {result.date}</Typography>
+                  {/* <Typography spacing={1}>Launched on: {result.date}</Typography> */}
+                  <Typography spacing={1}>{result.funding}</Typography>
                 </CardActions>
               </Card>
             ))}
@@ -227,7 +258,7 @@ export default function CategoryPage({ selectedCategory }) {
         </div>
       )}
 
-      {projectsToDisplay.length >= 1 && (
+      {filteredProjects.length >= 1 && (
         <Stack spacing={2} className={styles.pagination}>
           <Pagination
             count={totalPages}
