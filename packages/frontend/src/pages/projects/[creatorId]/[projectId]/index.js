@@ -171,6 +171,9 @@ export default function ProjectPage() {
                     color: "white",
                     backgroundColor: "#21325E",
                     width: "100%",
+                    "&:hover": {
+                      backgroundColor: "#21325E",
+                    },
                   }}
                 >
                   Fund
@@ -223,6 +226,9 @@ export default function ProjectPage() {
                         marginTop: 3,
                         color: "black",
                         backgroundColor: "#F1D00A",
+                        "&:hover": {
+                          backgroundColor: "#F1D00A",
+                        },
                         width: "100%",
                       }}
                     >
@@ -238,33 +244,64 @@ export default function ProjectPage() {
                       border: "2px solid grey",
                     }}
                   >
-                    Funding options
-                    <br />
-                    Option 1: MEMBERSHIP. You get this and this and that
-                    benefits.
+                    <b>Funding options</b>
+                    <br /> <br />
+                    <b>MEMBERSHIP</b> <br />
+                    You get this and this and that benefits. Our membership
+                    program offers you exclusive benefits and discounts on our
+                    products and services. As a member, you will have access to
+                    a range of perks such as early access to new products,
+                    exclusive discounts, and special promotions. You will also
+                    receive personalized support from our team to help you make
+                    the most of your membership.
                     <br></br>
                     <Button
                       variant="contained"
                       sx={{
                         marginTop: 3,
-                        color: "black",
-                        backgroundColor: "#F0F0F0",
+                        marginBottom: 3,
+                        color: "white",
+                        backgroundColor: "#3E497A",
                         width: "100%",
+                        "&:hover": {
+                          backgroundColor: "#3E497A",
+                        },
                       }}
                       onClick={handleMembershipPurchaseClick}
                     >
                       Select
                     </Button>
                     <br></br>
-                    Option 2: EQUITY
+                    <b> EQUITY </b>
                     <br></br>
+                    Our investment plan offers you the opportunity to invest in
+                    our company and benefit from its growth potential. As an
+                    equity investor, you will become a part-owner of our company
+                    and share in its profits and losses. Here are some of the
+                    benefits of investing in our equity:
+                    <br></br>
+                    <ul>
+                      Potential for high returns on your investment Opportunity
+                      to share in the profits and losses of the company{" "}
+                    </ul>
+                    <ul>
+                      Ability to participate in the company's decision-making
+                      process
+                    </ul>
+                    <ul>
+                      Chance to support a growing company and help it achieve
+                      its goals
+                    </ul>
                     <Button
                       variant="contained"
                       sx={{
                         marginTop: 5,
-                        color: "black",
-                        backgroundColor: "#F0F0F0",
+                        color: "white",
+                        backgroundColor: "#3E497A",
                         width: "100%",
+                        "&:hover": {
+                          backgroundColor: "#3E497A",
+                        },
                       }}
                       onClick={handleEquityPurchaseClick}
                     >
