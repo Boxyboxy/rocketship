@@ -17,11 +17,15 @@ import FormLabel from "@mui/material/FormLabel";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-
+import { useAuth0 } from "@auth0/auth0-react";
+import { useUser } from "@auth0/nextjs-auth0/client";
 export default function EditProfilPage() {
   const router = useRouter();
   const { personalId } = router.query;
   const [presentUserSkills, setPresentUserSkills] = useState({});
+
+  const { user, error, isLoading } = useUser();
+  const [userId, setUserId] = useState();
 
   const [userSkillsCheckBox, setUserSkillsCheckBox] = useState({});
   const [formValues, setFormValues] = useState({
@@ -38,6 +42,30 @@ export default function EditProfilPage() {
     "User Profile failed. Please try again."
   );
 
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const response = await axios.get(
+          `${BACKEND_URL}/users?email=${user.email}`
+        );
+        setUserId(response.data[0].id);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUserId();
+  }, [user]);
+
+  useEffect(() => {
+    const handleRedirect = async () => {
+      if (userId != personalId) {
+        router.push({
+          pathname: `/profile/${userId}/personal`,
+        });
+      }
+    };
+    handleRedirect();
+  }, [userId]);
   const isNameValid = (name) =>
     name.trim().includes(" ") &&
     name.trim().length > 3 &&

@@ -6,11 +6,12 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import axios from "axios";
 import { BACKEND_URL } from "../constants/backendUrl";
 import { containerClasses } from "@mui/material";
+import { useAuth0 } from "@auth0/auth0-react";
 export default function App() {
   const [projects, setProjects] = useState(1234);
   const [contributors, setContributors] = useState(876);
   const [funded, setFunded] = useState("$543");
-
+  const { loginWithRedirect } = useAuth0();
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -64,13 +65,20 @@ export default function App() {
             src="/images/galaxy.jpg"
             alt="galaxy"
           />
-          <Button variant="contained" className={styles.login}>
+          <Button
+            variant="contained"
+            className={styles.login}
+            // onClick={() => loginWithRedirect()}
+          >
             <a
               href="/api/auth/login"
               style={{ textDecoration: "none", color: "white" }}
             >
               Sign Up / Login
             </a>
+            {/* <a style={{ textDecoration: "none", color: "white" }}>
+              Sign Up / Login
+            </a> */}
           </Button>
         </div>
 
