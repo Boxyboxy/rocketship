@@ -24,40 +24,40 @@ module.exports = {
         return;
       }
 
-      // console.log(event);
-      // Get the payment intent ID from the event
-      const paymentIntentId = event.data.object.id;
-      // console.log(paymentIntentId);
+      if (event.data.object.object === "payment_intent") {
+        // Get the payment intent ID from the event
+        const paymentIntentId = event.data.object.id;
 
-      // Get the payment intent from Stripe
-      const paymentIntent = await stripe.paymentIntents.retrieve(
-        paymentIntentId
-      );
+        // Get the payment intent from Stripe
+        const paymentIntent = await stripe.paymentIntents.retrieve(
+          paymentIntentId
+        );
 
-      console.log("paymentIntent status" + paymentIntent.status);
+        console.log("paymentIntent status" + paymentIntent.status);
 
-      // Check if the payment was successful
-      if (paymentIntent.status === "succeeded") {
-        // Get the relevant fields: amount, projectId, userId, incentive, equity
-        const amount = paymentIntent.amount;
-        const projectId = paymentIntent.metadata.projectId;
-        const userId = paymentIntent.metadata.userId;
-        const incentive = paymentIntent.metadata.incentive;
-        const equity = paymentIntent.metadata.equity;
+        // Check if the payment was successful
+        if (paymentIntent.status === "succeeded") {
+          // Get the relevant fields: amount, projectId, userId, incentive, equity
+          const amount = paymentIntent.amount;
+          const projectId = paymentIntent.metadata.projectId;
+          const userId = paymentIntent.metadata.userId;
+          const incentive = paymentIntent.metadata.incentive;
+          const equity = paymentIntent.metadata.equity;
 
-        // Create a new funding record in the database
-        const funding = await createFunding({
-          amount: amount,
-          projectId: projectId,
-          userId: userId,
-          incentive: incentive,
-          equity: equity,
-        });
+          // Create a new funding record in the database
+          const funding = await createFunding({
+            amount: amount,
+            projectId: projectId,
+            userId: userId,
+            incentive: incentive,
+            equity: equity,
+          });
 
-        // Return a success response to Stripe
-        res.json({ received: true });
-      } else {
-        console.log("Payment intent status is not successful.");
+          // Return a success response to Stripe
+          res.json({ received: true });
+        } else {
+          console.log("Payment intent status is not successful.");
+        }
       }
     } catch (err) {
       console.log(err);
