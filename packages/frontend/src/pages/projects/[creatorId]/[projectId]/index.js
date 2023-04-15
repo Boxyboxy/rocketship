@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Grid from "@mui/material/Unstable_Grid2";
 import { useEffect, useState } from "react";
-import { Typography, Button, Box } from "@mui/material";
+import { Typography, Button, Box, TextField } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CategoryIcon from "@mui/icons-material/Category";
@@ -9,9 +9,18 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import NavBar from "../../../../components/navbar";
 import Category from "../../../../components/category";
 import { useRouter } from "next/router";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import MenuItem from "@mui/material/MenuItem";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+
 import axios from "axios";
 
-// Will update margin/ spacing / design
+// PENDING: Will refactor into separate components
+// PENDING: Will update margin/ spacing / design
 
 export default function ProjectPage() {
   const router = useRouter();
@@ -25,6 +34,42 @@ export default function ProjectPage() {
   const [creatorId, setCreatorId] = useState();
   const [projectId, setProjectId] = useState();
   const [skills, setSkills] = useState([]);
+  const [formValues, setFormValues] = useState({});
+
+  // modal form
+  const [openContributeForm, setOpenContributeForm] = useState(false);
+
+  function handleOpenContributeForm() {
+    setOpenContributeForm(true);
+  }
+
+  function handleCloseContributeForm() {
+    setOpenContributeForm(false);
+  }
+
+  const handleInputChange = (e) => {
+    setFormValues({
+      ...formValues,
+      [e.target.name]: e.target.value,
+      projectId: projectId,
+      status: "pending",
+    });
+    console.log(formValues);
+  };
+
+  function handleSendContributeRequest(e) {
+    e.preventDefault();
+    axios
+      .post(`http://localhost:8080/contributions`, formValues)
+      .then(function (response) {
+        console.log(response);
+        // openSuccessNotification("top");
+      })
+      .catch(function (error) {
+        console.log(error);
+        // openFailureNotification("top");
+      });
+  }
 
   function handleEquityPurchaseClick() {
     router.push({
@@ -76,7 +121,15 @@ export default function ProjectPage() {
             await axios
               .get(`http://localhost:8080/skills/${skillNeeded.skillId}`)
               .then(function (response) {
-                skillArray.push(response.data.skill);
+                console.log(response);
+                // skillArray.push({
+                //   ...skillArray,
+                //   [skillNeeded.skillId]: response.data.skill,
+                // });
+                skillArray.push(...skills, {
+                  skillId: skillNeeded.skillId,
+                  skill: response.data.skill,
+                });
               })
               .catch(function (error) {
                 console.log(error);
@@ -93,6 +146,7 @@ export default function ProjectPage() {
           // }
 
           setSkills(skillArray);
+          console.log(skillArray);
 
           const editedProject = {
             ...projectResponse.data,
@@ -219,7 +273,9 @@ export default function ProjectPage() {
                     Skills Needed:
                     <br />
                     {skills &&
-                      skills.map((skill, index) => <p key={index}>{skill}</p>)}
+                      skills.map((skill) => (
+                        <p key={skill.skillId}>{skill.skill}</p>
+                      ))}
                     <Button
                       variant="contained"
                       sx={{
@@ -231,9 +287,79 @@ export default function ProjectPage() {
                         },
                         width: "100%",
                       }}
+                      onClick={handleOpenContributeForm}
                     >
                       Contribute
                     </Button>
+                    <Dialog
+                      open={openContributeForm}
+                      onClose={handleCloseContributeForm}
+                    >
+                      <DialogTitle>
+                        Want to contribute to this project?
+                      </DialogTitle>
+                      <DialogContent>
+                        <DialogContentText>
+                          Select the skill for contribution to the project.
+                        </DialogContentText>
+                        <Select
+                          id="Skill"
+                          label="Skill"
+                          fullWidth
+                          sx={{ marginTop: 2, marginBottom: 2 }}
+                          name="userSkillId"
+                          onChange={handleInputChange}
+                        >
+                          {skills.map((skill) => (
+                            <MenuItem key={skill.skillId} value={skill.skillId}>
+                              {skill.skill}
+                            </MenuItem>
+                          ))}
+                        </Select>
+
+                        <DialogContentText>
+                          Please kindly write in a message to the project owner
+                          here.
+                        </DialogContentText>
+                        <TextField
+                          multiline
+                          fullWidth
+                          margin="dense"
+                          rows={4}
+                          name="message"
+                          onChange={handleInputChange}
+                        />
+                      </DialogContent>
+                      <DialogActions>
+                        <Button
+                          onClick={handleCloseContributeForm}
+                          sx={{
+                            color: "#21325E",
+                            "&:hover": {
+                              backgroundColor: "white",
+                            },
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={
+                            (handleCloseContributeForm,
+                            handleSendContributeRequest)
+                          }
+                          sx={{
+                            variant: "primary",
+                            color: "white",
+                            backgroundColor: "#21325E",
+                            "&:hover": {
+                              backgroundColor: "#21325E",
+                            },
+                          }}
+                        >
+                          Send Request
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
                   </Box>
 
                   <Box
@@ -282,7 +408,7 @@ export default function ProjectPage() {
                     <br></br>
                     <ul>
                       Potential for high returns on your investment Opportunity
-                      to share in the profits and losses of the company{" "}
+                      to share in the profits and losses of the company
                     </ul>
                     <ul>
                       Ability to participate in the company's decision-making
