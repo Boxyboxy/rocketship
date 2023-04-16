@@ -99,9 +99,27 @@ export default function ProjectPage() {
       // will refactor all this
       const fetchProject = async () => {
         try {
-          const [projectResponse, userResponse] = await Promise.all([
-            axios.get(`http://localhost:8080/projects/${projectId}`),
-            axios.get(`http://localhost:8080/users/${creatorId}`),
+          const [projectResponse, userResponse, fundingSumResponse] =
+            await Promise.all([
+              axios.get(`http://localhost:8080/projects/${projectId}`),
+              axios.get(`http://localhost:8080/users/${creatorId}`),
+              axios.get(`http://localhost:8080/fundings/sum/${projectId}`),
+            ]);
+
+          let formattedSum;
+          //format funding sum response
+          if (fundingSumResponse.data > 10000) {
+            formattedSum = Intl.NumberFormat({
+              style: "currency",
+              currency: "SGD",
+            }).format(fundingSumResponse.data);
+          } else {
+            formattedSum = fundingSumResponse.data;
+          }
+
+          setStats([
+            { statName: "Contributers", sum: "9877" },
+            { statName: "Funded", sum: `$${formattedSum}` },
           ]);
 
           const [categoryResponse, skillsNeededResponse, allSkills] =
@@ -196,27 +214,28 @@ export default function ProjectPage() {
                 <p>{specificProject.summary}</p>
 
                 <Grid container sx={{ marginLeft: 0, marginRight: 20 }}>
-                  {stats.map((stat, index) => {
-                    return (
-                      <Grid
-                        xs={6}
-                        sm={6}
-                        md={6}
-                        lg={6}
-                        sx={{ textAlign: "left" }}
-                        key={index}
-                      >
-                        <Typography
-                          sx={{ fontSize: "1.5rem", color: "#3E497A" }}
+                  {stats &&
+                    stats.map((stat, index) => {
+                      return (
+                        <Grid
+                          xs={6}
+                          sm={6}
+                          md={6}
+                          lg={6}
+                          sx={{ textAlign: "left" }}
+                          key={index}
                         >
-                          {stat.sum}
-                        </Typography>
-                        <Typography sx={{ fontSize: "0.8rem" }}>
-                          {stat.statName}
-                        </Typography>
-                      </Grid>
-                    );
-                  })}
+                          <Typography
+                            sx={{ fontSize: "1.5rem", color: "#3E497A" }}
+                          >
+                            {stat.sum}
+                          </Typography>
+                          <Typography sx={{ fontSize: "0.8rem" }}>
+                            {stat.statName}
+                          </Typography>
+                        </Grid>
+                      );
+                    })}
                 </Grid>
                 <Button
                   variant="contained"
