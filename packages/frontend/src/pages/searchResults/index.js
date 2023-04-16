@@ -21,9 +21,42 @@ const SearchResults = () => {
   const { inputValue } = router.query;
   // console.log(inputValue);
   const [searchResults, setSearchResults] = useState([]);
+  const [projectsArray, setProjectsArray] = useState([]);
   const [topProjects, setTopProjects] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 6;
+
+  //fetch all projects
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const [projectsResponse, usersResponse] = await Promise.all([
+          axios.get('http://localhost:8080/projects'),
+          axios.get('http://localhost:8080/users')
+        ]);
+        const usersMap = new Map(usersResponse.data.map((user) => [user.id, user.name]));
+        const projects = projectsResponse.data.map((project) => {
+          return {
+            ...project,
+            userName: usersMap.get(project.userId)
+          };
+        });
+        const formattedData = projects.map((item) => ({
+          ...item,
+          date: new Date(item.createdAt).toLocaleDateString('en-US', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+          })
+        }));
+        setProjectsArray(formattedData);
+        console.log(projectsArray);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchProjects();
+  }, []);
 
   // Fetch data using the search query value and update searchResults state
   useEffect(() => {
@@ -44,7 +77,7 @@ const SearchResults = () => {
     fetch('http://localhost:8080/projects')
       .then((response) => response.json())
       .then((data) => {
-        const top3Projects = sortedProjects.slice(0, 3);
+        const top3Projects = projectsArray.slice(0, 3);
         // Set the top 3 projects to the state
         setTopProjects(top3Projects);
         console.log(top3Projects);
@@ -52,7 +85,7 @@ const SearchResults = () => {
       .catch((error) => {
         console.error('Error fetching projects:', error);
       });
-  }, []);
+  }, [projectsArray]);
 
   const totalPages = Math.ceil(searchResults.length / projectsPerPage);
 
@@ -80,7 +113,7 @@ const SearchResults = () => {
           {projectsToDisplay.map((result) => (
             <Grid item xs={12} sm={6} md={3} key={result.id}>
               <Card className={styles.card} sx={{ maxWidth: 345 }}>
-                <CardMedia sx={{ height: 140 }} image={result.coverImage} title="green iguana" />
+                <CardMedia sx={{ height: 140 }} image={result.coverImage} title={result.name} />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
                     {result.name}
@@ -114,9 +147,10 @@ const SearchResults = () => {
             justify="flex-start"
             alignItems="flex-start">
             {topProjects.map((result) => (
+              // <div className={styles.searchResultsContainer}>
               <Grid item xs={12} sm={6} md={3} key={result.id}>
                 <Card className={styles.card} sx={{ maxWidth: 345 }}>
-                  <CardMedia sx={{ height: 140 }} image={result.coverImage} title="green iguana" />
+                  <CardMedia sx={{ height: 140 }} image={result.coverImage} title={result.name} />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
                       {result.name}
@@ -135,6 +169,7 @@ const SearchResults = () => {
                   </CardActions>
                 </Card>
               </Grid>
+              // </div>
             ))}
           </Grid>
         </div>
