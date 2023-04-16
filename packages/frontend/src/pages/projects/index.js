@@ -11,6 +11,7 @@ import Button from '@mui/material/Button';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { Box } from '@mui/material';
+import Link from 'next/link';
 import styles from '../../styles/projects.module.css';
 
 export default function HomePage() {
@@ -162,33 +163,54 @@ export default function HomePage() {
         <Category />
       </div>
       <div>
-        <h3> Featured </h3>
+        <div className={styles.headerTitle}>FEATURED</div>
         {featuredProject && (
-          <Grid container spacing={2}>
-            <Grid xs={12} sm={12} md={7} lg={6}>
-              <img src={featuredProject.coverImage} width={500} />
-            </Grid>
-            <Grid xs={12} sm={12} md={5} lg={6}>
-              <div>
-                <h2>{featuredProject.name}</h2>
-                <p>{featuredProject.description}</p>
-                <p> To be created by: {featuredProject.userName}</p>
-              </div>
-            </Grid>
-          </Grid>
-        )}
-        <Grid container spacing={1} sx={{ margin: '10%' }}>
-          {stats.map((stat) => {
-            return (
-              <Grid key={stat.id} xs={12} sm={4} md={4} lg={4} sx={{ textAlign: 'center' }}>
-                <Typography sx={{ fontSize: '3rem', color: '#3E497A' }}>{stat.sum}</Typography>
-                <Typography sx={{ fontSize: 20 }}>{stat.statName}</Typography>
+          <div className={styles.title}>
+            <Grid container spacing={2}>
+              <Grid xs={12} sm={12} md={7} lg={6}>
+                <Link href={`/projects/${featuredProject.userId}/${featuredProject.id}`}>
+                  <img
+                    className={styles.featuredImg}
+                    src={featuredProject.coverImage}
+                    width={500}
+                    height={300}
+                  />
+                </Link>
               </Grid>
-            );
-          })}
-        </Grid>
-        <h1>Trending Projects</h1>
-        <Box>
+              <Grid xs={12} sm={12} md={5} lg={6}>
+                <div>
+                  <Link
+                    className={styles.linkName}
+                    href={`/projects/${featuredProject.userId}/${featuredProject.id}`}>
+                    <h2 className={styles.featuredHeader}>{featuredProject.name}</h2>
+                  </Link>
+                  <p className={styles.featuredTxt}>{featuredProject.details}</p>
+                  <Link className={styles.name} href={`/profile/${featuredProject.userId}`}>
+                    {featuredProject.userName}
+                  </Link>
+                </div>
+              </Grid>
+            </Grid>
+          </div>
+        )}
+        <div className={styles.container}>
+          <span className={styles.line}></span>
+          <Grid container spacing={1} sx={{ margin: '10%' }}>
+            {stats.map((stat) => {
+              return (
+                <Grid key={stat.id} xs={12} sm={4} md={4} lg={4} sx={{ textAlign: 'center' }}>
+                  <Typography sx={{ fontSize: '3rem', color: '#3E497A' }}>{stat.sum}</Typography>
+                  <Typography sx={{ fontSize: 20 }}>{stat.statName}</Typography>
+                </Grid>
+              );
+            })}
+          </Grid>
+        </div>
+        <div className={styles.container}>
+          <span className={styles.line}></span>
+        </div>
+        <h1 className={styles.headerTitle}>TRENDING PROJECTS</h1>
+        <Box className={styles.sortContainer}>
           <Button className={styles.sort} onClick={() => handleSort('date')}>
             Date
             {dateSortOption === 'asc' ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
@@ -199,20 +221,21 @@ export default function HomePage() {
             {fundingSortOption === 'asc' ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
           </Button>
         </Box>
-        <Grid container spacing={2}>
-          {projectsToDisplay.map((project) => {
-            return (
-              <Grid key={project.id} xs={12} sm={12} md={6} lg={4}>
-                <img src={project.coverImage} alt="blah" width={400} />
+        <div className={styles.title}>
+          <Grid container spacing={2}>
+            {projectsToDisplay.map((project) => {
+              return (
+                <Grid key={project.id} xs={12} sm={12} md={6} lg={4}>
+                  <img src={project.coverImage} alt="blah" width={400} />
 
-                <h2>{project.name} </h2>
-                <p>{project.summary}</p>
-                <p>To be created by: {project.userName}</p>
-              </Grid>
-            );
-          })}
-        </Grid>
-
+                  <h2>{project.name} </h2>
+                  <p>{project.summary}</p>
+                  <p>To be created by: {project.userName}</p>
+                </Grid>
+              );
+            })}
+          </Grid>
+        </div>
         {projectsToDisplay.length >= 1 && (
           <Stack spacing={2} className={styles.pagination}>
             <Pagination

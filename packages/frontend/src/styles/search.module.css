@@ -1,5 +1,5 @@
 .header {
-  margin: 20px;
+  margin: 50px;
 }
 
 .searchContainer {
@@ -40,4 +40,16 @@
   font-weight: bold;
   font-size: 20px;
   margin: 20px;
+}
+
+.pagination {
+  padding: 10px;
+  float: right;
+}
+
+.searchResultsContainer {
+  margin: 100px;
+  /* display: flex;
+  flex-wrap: wrap;
+  gap: 16px; */
 }
