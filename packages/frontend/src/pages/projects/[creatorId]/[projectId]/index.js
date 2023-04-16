@@ -25,10 +25,7 @@ import axios from "axios";
 export default function ProjectPage() {
   const router = useRouter();
 
-  const [stats, setStats] = useState([
-    { statName: "Backers", sum: "9877" },
-    { statName: "Funded", sum: "$124,600" },
-  ]);
+  const [stats, setStats] = useState([]);
 
   const [specificProject, setSpecificProject] = useState();
   const [creatorId, setCreatorId] = useState();
@@ -333,6 +330,7 @@ export default function ProjectPage() {
                         <DialogContentText>
                           Select the skill for contribution to the project.
                         </DialogContentText>
+                        {/* Need to update this to match user skills, can only add in when user Id is available */}
                         <Select
                           id="Skill"
                           label="Skill"
