@@ -26,4 +26,8 @@ module.exports = {
       where: { projectId: { [Op.eq]: projectId } },
     });
   },
+
+  async getUniqueBackersByProjectId(options) {
+    return funding.count(options);
+  },
 };

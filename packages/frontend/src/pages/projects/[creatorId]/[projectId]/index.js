@@ -26,7 +26,7 @@ export default function ProjectPage() {
   const router = useRouter();
 
   const [stats, setStats] = useState([
-    { statName: "Contributers", sum: "9877" },
+    { statName: "Backers", sum: "9877" },
     { statName: "Funded", sum: "$124,600" },
   ]);
 
@@ -99,13 +99,20 @@ export default function ProjectPage() {
       // will refactor all this
       const fetchProject = async () => {
         try {
-          const [projectResponse, userResponse, fundingSumResponse] =
-            await Promise.all([
-              axios.get(`http://localhost:8080/projects/${projectId}`),
-              axios.get(`http://localhost:8080/users/${creatorId}`),
-              axios.get(`http://localhost:8080/fundings/sum/${projectId}`),
-            ]);
-
+          const [
+            projectResponse,
+            userResponse,
+            fundingSumResponse,
+            backerSumResponse,
+          ] = await Promise.all([
+            axios.get(`http://localhost:8080/projects/${projectId}`),
+            axios.get(`http://localhost:8080/users/${creatorId}`),
+            axios.get(`http://localhost:8080/fundings/sum/${projectId}`),
+            axios.get(
+              `http://localhost:8080/fundings/backerSum?projectId=${projectId}`
+            ),
+          ]);
+          console.log(backerSumResponse.data);
           let formattedSum;
           //format funding sum response
           if (fundingSumResponse.data > 10000) {
@@ -118,7 +125,10 @@ export default function ProjectPage() {
           }
 
           setStats([
-            { statName: "Contributers", sum: "9877" },
+            {
+              statName: "Backers",
+              sum: `${backerSumResponse.data.uniqueBackers}`,
+            },
             { statName: "Funded", sum: `$${formattedSum}` },
           ]);
 

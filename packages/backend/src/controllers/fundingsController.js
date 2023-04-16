@@ -1,9 +1,12 @@
 const { project, user, category } = require("../db/models");
+const Sequelize = require("sequelize");
+
 const {
   getAllFundings,
   createFunding,
   sumAllFundings,
   sumFundingsByProjectId,
+  getUniqueBackersByProjectId,
 } = require("../repositories/fundingRepository");
 const { getProjectById } = require("../repositories/projectsRepository");
 
@@ -65,5 +68,23 @@ module.exports = {
     }
 
     return res.json(sum);
+  },
+
+  // FOR PERSONAL TESTING
+  async getUniqueBackersByProjectId({ query }, res) {
+    const { projectId } = query;
+    const options = {
+      include: [{ model: project, include: [{ model: category }], where: {} }],
+      attributes: [
+        [Sequelize.literal("COUNT(DISTINCT funding.user_id)"), "uniqueBackers"],
+      ],
+      group: ["project.id", "project->category.id"],
+    };
+
+    if (projectId) {
+      options.include[0].where.id = projectId;
+    }
+    const backers = await getUniqueBackersByProjectId(options);
+    return res.json(backers[0]);
   },
 };

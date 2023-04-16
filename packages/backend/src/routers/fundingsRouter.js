@@ -12,4 +12,9 @@ fundingsRouter.get(
   "/sum/:projectId",
   fundingsController.sumFundingsByProjectId
 );
+fundingsRouter.get(
+  "/backerSum",
+  fundingsController.getUniqueBackersByProjectId
+);
+
 module.exports = fundingsRouter;
