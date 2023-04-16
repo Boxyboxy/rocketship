@@ -247,20 +247,22 @@ export default function ProjectPage() {
                       );
                     })}
                 </Grid>
-                <Button
-                  variant="contained"
-                  sx={{
-                    marginTop: 3,
-                    color: "white",
-                    backgroundColor: "#21325E",
-                    width: "100%",
-                    "&:hover": {
+                <a href="#fund-membership">
+                  <Button
+                    variant="contained"
+                    sx={{
+                      marginTop: 3,
+                      color: "white",
                       backgroundColor: "#21325E",
-                    },
-                  }}
-                >
-                  Fund
-                </Button>
+                      width: "100%",
+                      "&:hover": {
+                        backgroundColor: "#21325E",
+                      },
+                    }}
+                  >
+                    Fund
+                  </Button>
+                </a>
                 <p>Project Owner</p>
                 <Grid container>
                   <Grid sx={{ marginRight: 1 }}>
@@ -399,7 +401,7 @@ export default function ProjectPage() {
                       border: "2px solid grey",
                     }}
                   >
-                    <b>Funding options</b>
+                    <b id="fund-membership">Funding options</b>
                     <br /> <br />
                     <b>MEMBERSHIP</b> <br />
                     You get this and this and that benefits. Our membership
