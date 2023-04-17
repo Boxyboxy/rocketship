@@ -212,14 +212,21 @@ export default function ProjectPage() {
     const fetchUserSkills = async () => {
       try {
         const response = await axios.get(`${BACKEND_URL}/users/${userId}`);
-        console.log(response.data.skills);
-        setUserSkills(response.data.skills);
+
+        setUserSkills(
+          response.data.skills.filter(
+            (userSkill) =>
+              skills.findIndex((skill) => {
+                return skill.skill == userSkill.skill;
+              }) >= 0
+          )
+        );
       } catch (err) {
         console.log(err);
       }
     };
-    if (userId) fetchUserSkills();
-  }, [userId]);
+    if (userId && skills.length > 0) fetchUserSkills();
+  }, [userId, skills]);
 
   return (
     <div>
@@ -349,8 +356,11 @@ export default function ProjectPage() {
                         width: "100%",
                       }}
                       onClick={handleOpenContributeForm}
+                      disabled={userSkills.length < 1}
                     >
-                      Contribute
+                      {userSkills.length < 1
+                        ? "You do not have the relevant skills to contribute"
+                        : "Contribute"}
                     </Button>
                     <Dialog
                       open={openContributeForm}
