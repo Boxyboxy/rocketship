@@ -301,7 +301,7 @@ export default function HomePage() {
                             {project.name}
                           </Typography>
                           {project.fundingHit && project.fundingGoal != null ? (
-                            <Chip label="fully funded!" color="success" />
+                            <Chip label="Fully funded!" color="success" />
                           ) : (
                             <></>
                           )}

@@ -10,7 +10,7 @@ import axios from "axios";
 import { BorderLinearProgress } from "./BorderLinearProgress";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-
+import Grid from "@mui/material/Grid";
 export default function ProjectCard({ project, ownerBoolean }) {
   const [funding, setFunding] = useState("not loaded");
   const [projectOwner, setProjectOwner] = useState({ name: "John Doe" });
@@ -75,12 +75,19 @@ export default function ProjectCard({ project, ownerBoolean }) {
         ""
       ) : (
         <CardActions>
-          Started by:
-          {
-            <Button size="small" href={`/profile/${projectOwner.id}`}>
-              {projectOwner.name}
-            </Button>
-          }
+          <Grid
+            container
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="center"
+          >
+            Started by:
+            {
+              <Button size="small" href={`/profile/${projectOwner.id}`}>
+                {projectOwner.name}
+              </Button>
+            }
+          </Grid>
         </CardActions>
       )}
 
