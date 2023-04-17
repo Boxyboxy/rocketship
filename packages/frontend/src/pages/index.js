@@ -1,16 +1,15 @@
-import Head from "next/head";
-import Button from "@mui/material/Button";
-import styles from "../styles/Home.module.css";
-import { useState, useEffect } from "react";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import axios from "axios";
-import { BACKEND_URL } from "../constants/backendUrl";
-import { containerClasses } from "@mui/material";
-import { useAuth0 } from "@auth0/auth0-react";
+import Head from 'next/head';
+import Button from '@mui/material/Button';
+import styles from '../styles/Home.module.css';
+import { useState, useEffect } from 'react';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import axios from 'axios';
+import { BACKEND_URL } from '../constants/backendUrl';
+import { useAuth0 } from '@auth0/auth0-react';
 export default function App() {
-  const [projects, setProjects] = useState(1234);
-  const [contributors, setContributors] = useState(876);
-  const [funded, setFunded] = useState("$543");
+  const [projects, setProjects] = useState(0);
+  const [contributors, setContributors] = useState(0);
+  const [funded, setFunded] = useState('$0');
   const { loginWithRedirect } = useAuth0();
   useEffect(() => {
     const fetchProjects = async () => {
@@ -18,7 +17,7 @@ export default function App() {
         const projects = await axios.get(`${BACKEND_URL}/projects`);
         setProjects(projects.data.length);
       } catch (error) {
-        console.error("Failed to fetch number of projects:", error);
+        console.error('Failed to fetch number of projects:', error);
       }
     };
 
@@ -31,7 +30,7 @@ export default function App() {
         const contributions = await axios.get(`${BACKEND_URL}/contributions`);
         setContributors(contributions.data.length);
       } catch (error) {
-        console.error("Failed to fetch amount dunded:", error);
+        console.error('Failed to fetch amount dunded:', error);
       }
     };
 
@@ -41,9 +40,9 @@ export default function App() {
     const fetchFunded = async () => {
       try {
         const fundingsSum = await axios.get(`${BACKEND_URL}/fundings/sumAll`);
-        setFunded("$" + fundingsSum.data);
+        setFunded('$' + fundingsSum.data);
       } catch (error) {
-        console.error("Failed to fetch amount dunded:", error);
+        console.error('Failed to fetch amount dunded:', error);
       }
     };
 
@@ -60,20 +59,13 @@ export default function App() {
       <div>
         <div className={styles.imgContainer}>
           <img className={styles.logo} src="/images/logo.png" alt="logo" />
-          <img
-            className={styles.landingImg}
-            src="/images/galaxy.jpg"
-            alt="galaxy"
-          />
+          <img className={styles.landingImg} src="/images/galaxy.jpg" alt="galaxy" />
           <Button
             variant="contained"
             className={styles.login}
             // onClick={() => loginWithRedirect()}
           >
-            <a
-              href="/api/auth/login"
-              style={{ textDecoration: "none", color: "white" }}
-            >
+            <a href="/api/auth/login" style={{ textDecoration: 'none', color: 'white' }}>
               Sign Up / Login
             </a>
             {/* <a style={{ textDecoration: "none", color: "white" }}>
@@ -86,16 +78,13 @@ export default function App() {
           <h1>Create and fund projects that are </h1>
           <h1>out of this world.</h1>
           <h2 className={styles.h2title}>
-            <span className={styles.bold}>RocketShip</span> is your ticket to
-            launch your wildest ideas into the orbit!
+            <span className={styles.bold}>RocketShip</span> is your ticket to launch your wildest
+            ideas into the orbit!
             <p>
-              Our cutting-edge crowdfunding platform is designed exclusively for
-              software engineers who want to take their creations to new heights
-              with the power of community support.
+              Our cutting-edge crowdfunding platform is designed exclusively for software engineers
+              who want to take their creations to new heights with the power of community support.
             </p>
-            <p>
-              Join us on this exhilarating journey to bring the future to life!
-            </p>
+            <p>Join us on this exhilarating journey to bring the future to life!</p>
             <p>
               <ArrowDownwardIcon />
             </p>
@@ -103,116 +92,103 @@ export default function App() {
         </div>
 
         <div className={styles.objects}>
-          <img
-            className={styles.objectRocket}
-            src="/images/rocket.png"
-            width="40px"
-          />
+          <img className={styles.objectRocket} src="/images/rocket.png" width="40px" />
           <div>
-            <img
-              className={styles.objectEarth}
-              src="/images/earth.png"
-              width="100px"
-            />
-            <img
-              className={styles.objectMoon}
-              src="/images/moon.png"
-              width="40px"
-            />
+            <img className={styles.objectEarth} src="/images/earth.png" width="100px" />
+            <img className={styles.objectMoon} src="/images/moon.png" width="40px" />
           </div>
           <div className={styles.boxAstronaut}>
-            <img
-              className={styles.objectAstronaut}
-              src="/images/astronaut.png"
-              width="140px"
-            />
+            <img className={styles.objectAstronaut} src="/images/astronaut.png" width="140px" />
           </div>
         </div>
       </div>
       {/* about section  */}
       <div className={styles.about}>
-        <div className={styles.gradient} />
         <h2 className={styles.h3title}>
-          You can be a project owner, contributor or funder at RocketShip:
+          You can be a project owner, contributor or backer at RocketShip!
         </h2>
         <div className={styles.cardContainer}>
-          <div className={styles.card}>
-            <img
-              className={styles.cardImg}
-              src="/images/planet-01.png"
-              alt="planet1"
-            />
-            <h2>Project Owner</h2>
-            <div className={styles.details}>
-              <p>More details about card 1</p>
+          <div className={styles.aboutCard}>
+            <div className={styles.front}>
+              <img className={styles.cardImg} src="/images/planet-01.png" alt="planet1" />
+              <h2>Project Owner</h2>
+            </div>
+            <div className={styles.back}>
+              <div className={styles.backTxt}>
+                <h2>Be the Captain of your own crowdfunding adventure!</h2>
+                <p>
+                  Create and launch your dream projects while connecting with talented individuals
+                  who can help you make it soar to new heights.
+                </p>
+              </div>
             </div>
           </div>
-          <div className={styles.card}>
-            <img
-              className={styles.cardImg}
-              src="/images/planet-02.png"
-              alt="planet2"
-            />
-            <h2>Contributor</h2>
-            <div class="details">
-              <p>More details about card 2</p>
+          <div className={styles.aboutCard}>
+            <div className={styles.front}>
+              <img className={styles.cardImg} src="/images/planet-02.png" alt="planet2" />
+              <h2>Contributor</h2>
+            </div>
+            <div className={styles.back}>
+              <div className={styles.backTxt}>
+                <h2>Join the Crew!</h2>
+                <p>
+                  Explore and collaborate on cutting-edge crowdfunding projects that align with your
+                  skills and passions, and be part of a dynamic team working towards a common goal.
+                </p>
+              </div>
             </div>
           </div>
-          <div className={styles.card}>
-            <img
-              className={styles.cardImg}
-              src="/images/planet-03.png"
-              alt="planet3"
-            />
-            <h2>Fund this Ship</h2>
-            <div class="details">
-              <p>More details about card 3</p>
+          <div className={styles.aboutCard}>
+            <div className={styles.front}>
+              <img className={styles.cardImg} src="/images/planet-03.png" alt="planet3" />
+              <h2>Backer</h2>
+            </div>
+            <div className={styles.back}>
+              <div className={styles.backTxt}>
+                <h2>Fuel the Innovation!</h2>
+                <p>
+                  Support groundbreaking projects by contributing funds and become a valued backer,
+                  playing a crucial role in bringing bold and innovative ideas to life.
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
       {/* map section  */}
       <div className={styles.mapContainer}>
-        <h2 className={styles.mapTitle}>
-          Together, we can make a greater impact.
-        </h2>
-        <h2 className={styles.mapTitle}>
-          Join your fellow astronauts on the RocketShip.
-        </h2>
+        <h2 className={styles.mapTitle}>Together, we can make a greater impact.</h2>
+        <h2 className={styles.mapTitle}>Join your fellow astronauts on the RocketShip.</h2>
         <div className={styles.mapNumbers}>
           <img className={styles.map} src="/images/map.png" alt="map" />
           <div className={styles.numbersContainer}>
             <div className={styles.numSummary}>
-              <p>{projects}</p>
+              <p className={styles.stats}>{projects}</p>
               <p>Projects</p>
             </div>
             <div className={styles.numSummary}>
-              <p>{contributors}</p>
+              <p className={styles.stats}>{contributors}</p>
               <p>Contributors</p>
             </div>
             <div className={styles.numSummary}>
-              <p>{funded}</p>
+              <p className={styles.stats}>{funded}</p>
               <p>Raised</p>
             </div>
           </div>
         </div>
       </div>
       {/* get started section  */}
-      <h2 className={styles.h3title}>Get started with just a few clicks</h2>
+      <h2 className={styles.h3title}>Get started with just a few clicks!</h2>
       <div className={styles.getStarted}>
         <ul className={styles.bullets}>
           <li className={styles.bulletpoint}>
             <p className={styles.number}>1</p>
-            <p className={styles.gsTxt}>
-              Sign up as an astronaut to enter the RocketShip
-            </p>
+            <p className={styles.gsTxt}>Sign up as an astronaut to enter the RocketShip</p>
           </li>
 
           <li className={styles.bulletpoint}>
             <p className={styles.number}>2</p>
-            <p className={styles.gsTxt}>
-              Explore the space for projects that interest you
-            </p>
+            <p className={styles.gsTxt}>Explore the space for projects that interest you</p>
           </li>
 
           <li className={styles.bulletpoint}>
@@ -222,12 +198,13 @@ export default function App() {
             </p>
           </li>
         </ul>
-        <img
-          className={styles.planet}
-          src="/images/get-started.png"
-          alt="get-started"
-        />
+        <img className={styles.planet} src="/images/get-started.png" alt="get-started" />
       </div>
+      <Button className={styles.bottomLogin} variant="contained">
+        <a href="/api/auth/login" style={{ textDecoration: 'none', color: 'white' }}>
+          🚀 Enter The Rocketship!
+        </a>
+      </Button>
       {/* footer */}
       <footer className={styles.footer}>Copyright © Rocketship 2023</footer>;
       <style js global>
