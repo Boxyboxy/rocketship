@@ -1,21 +1,21 @@
-import axios from "axios";
-import { useRouter } from "next/router";
-import NavBar from "../../components/navbar";
-import Category from "../../components/category";
-import Footer from "../../components/footer";
-import { useState, useEffect } from "react";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import styles from "../../styles/search.module.css";
-import Grid from "@mui/material/Unstable_Grid2";
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
-import Chip from "@mui/material/Chip";
-import Link from "next/link";
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import NavBar from '../../components/navbar';
+import Category from '../../components/category';
+import Footer from '../../components/footer';
+import { useState, useEffect } from 'react';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import styles from '../../styles/search.module.css';
+import Grid from '@mui/material/Unstable_Grid2';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+import Chip from '@mui/material/Chip';
+import Link from 'next/link';
 
 const SearchResults = () => {
   const router = useRouter();
@@ -26,31 +26,31 @@ const SearchResults = () => {
   const [topProjects, setTopProjects] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 6;
+  const [projectsFunding, setProjectsFunding] = useState([]);
+  const [filteredProjectswFunding, setFilteredProjectswFunding] = useState([]);
 
   //fetch all projects
   useEffect(() => {
     const fetchProjects = async () => {
       try {
         const [projectsResponse, usersResponse] = await Promise.all([
-          axios.get("http://localhost:8080/projects"),
-          axios.get("http://localhost:8080/users"),
+          axios.get('http://localhost:8080/projects'),
+          axios.get('http://localhost:8080/users')
         ]);
-        const usersMap = new Map(
-          usersResponse.data.map((user) => [user.id, user.name])
-        );
+        const usersMap = new Map(usersResponse.data.map((user) => [user.id, user.name]));
         const projects = projectsResponse.data.map((project) => {
           return {
             ...project,
-            userName: usersMap.get(project.userId),
+            userName: usersMap.get(project.userId)
           };
         });
         const formattedData = projects.map((item) => ({
           ...item,
-          date: new Date(item.createdAt).toLocaleDateString("en-US", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          }),
+          date: new Date(item.createdAt).toLocaleDateString('en-US', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+          })
         }));
         setProjectsArray(formattedData);
         console.log(projectsArray);
@@ -66,9 +66,9 @@ const SearchResults = () => {
     axios
       .get(`http://localhost:8080/projects`, {
         params: {
-          projectName: inputValue,
+          projectName: inputValue
           // categoryName: inputValue
-        },
+        }
       })
       .then((response) => {
         setSearchResults(response.data);
@@ -76,8 +76,48 @@ const SearchResults = () => {
       });
   }, [inputValue]);
 
+  //get funding
   useEffect(() => {
-    fetch("http://localhost:8080/projects")
+    const fetchFunding = async () => {
+      console.log(searchResults);
+      if (searchResults) {
+        for (const project of searchResults) {
+          try {
+            const fundingPromises = searchResults.map(async (project) => {
+              const response = await axios.get(`http://localhost:8080/fundings/sum/${project.id}`);
+              return { ...project, funding: response.data };
+            });
+
+            const fetchedFundings = await Promise.all(fundingPromises);
+            setProjectsFunding(fetchedFundings);
+            console.log(projectsFunding);
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      }
+    };
+
+    fetchFunding();
+  }, [searchResults]);
+
+  //logic to check if funding is hit
+  useEffect(() => {
+    // add in a new column - fundingHit inside filteredProjects array
+    const filteredProjectswFunding = projectsFunding.map((project) => {
+      return {
+        ...project,
+        fundingHit: project.funding >= project.fundingGoal
+      };
+    });
+
+    setFilteredProjectswFunding(filteredProjectswFunding);
+    console.log(filteredProjectswFunding);
+  }, [projectsFunding]);
+
+  // get top 3 projects
+  useEffect(() => {
+    fetch('http://localhost:8080/projects')
       .then((response) => response.json())
       .then((data) => {
         const top3Projects = projectsArray.slice(0, 3);
@@ -86,11 +126,12 @@ const SearchResults = () => {
         console.log(top3Projects);
       })
       .catch((error) => {
-        console.error("Error fetching projects:", error);
+        console.error('Error fetching projects:', error);
       });
   }, [projectsArray]);
 
-  const totalPages = Math.ceil(searchResults.length / projectsPerPage);
+  // for pagination
+  const totalPages = Math.ceil(filteredProjectswFunding.length / projectsPerPage);
 
   const handlePageChange = (e, value) => {
     setCurrentPage(value);
@@ -98,7 +139,7 @@ const SearchResults = () => {
 
   const startIndex = (currentPage - 1) * projectsPerPage;
   const endIndex = startIndex + projectsPerPage;
-  const projectsToDisplay = searchResults.slice(startIndex, endIndex);
+  const projectsToDisplay = filteredProjectswFunding.slice(startIndex, endIndex);
 
   return (
     <div>
@@ -112,31 +153,31 @@ const SearchResults = () => {
           spacing={2}
           direction="row"
           justify="flex-start"
-          alignItems="flex-start"
-        >
+          alignItems="flex-start">
           {projectsToDisplay.map((result) => (
             <Grid item xs={12} sm={6} md={3} key={result.id}>
               <Card className={styles.card} sx={{ maxWidth: 345 }}>
-                <CardMedia
-                  sx={{ height: 140 }}
-                  image={result.coverImage}
-                  title={result.name}
-                />
+                <CardMedia sx={{ height: 140 }} image={result.coverImage} title={result.name} />
                 <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {result.name}
-                  </Typography>
+                  <Stack direction="row" spacing={1}>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {result.name}
+                    </Typography>
+                    {result.fundingHit && result.fundingGoal != null ? (
+                      <Chip label="Fully funded!" color="success" />
+                    ) : (
+                      <></>
+                    )}
+                  </Stack>
                   <Typography variant="body2" color="text.secondary">
                     {result.summary}
                   </Typography>
-                  <Chip label="Fully funded!" color="success" />
                 </CardContent>
                 <CardActions>
                   <Link
                     className={styles.linkName}
                     href={`/projects/${result.userId}/${result.id}`}
-                    passHref
-                  >
+                    passHref>
                     <Button size="small">View More</Button>
                   </Link>
                 </CardActions>
@@ -146,34 +187,21 @@ const SearchResults = () => {
         </Grid>
       ) : (
         <div className={styles.header}>
-          <div className={styles.title}>
-            We can't find what you are looking for ☹️{" "}
-          </div>
-          <img
-            className={styles.icon}
-            src="/images/lostastronaut.png"
-            alt="noresults"
-          />
-          <div className={styles.title2}>
-            But you can continue exploring other rockets here:
-          </div>
+          <div className={styles.title}>We can't find what you are looking for ☹️ </div>
+          <img className={styles.icon} src="/images/lostastronaut.png" alt="noresults" />
+          <div className={styles.title2}>But you can continue exploring other rockets here:</div>
           <Grid
             className={styles.searchContainer}
             container
             spacing={2}
             direction="row"
             justify="flex-start"
-            alignItems="flex-start"
-          >
+            alignItems="flex-start">
             {topProjects.map((result) => (
               // <div className={styles.searchResultsContainer}>
               <Grid item xs={12} sm={6} md={3} key={result.id}>
                 <Card className={styles.card} sx={{ maxWidth: 345 }}>
-                  <CardMedia
-                    sx={{ height: 140 }}
-                    image={result.coverImage}
-                    title={result.name}
-                  />
+                  <CardMedia sx={{ height: 140 }} image={result.coverImage} title={result.name} />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
                       {result.name}
@@ -186,8 +214,7 @@ const SearchResults = () => {
                     <Link
                       className={styles.linkName}
                       href={`/projects/${result.userId}/${result.id}`}
-                      passHref
-                    >
+                      passHref>
                       <Button size="small">View More</Button>
                     </Link>
                   </CardActions>
@@ -198,7 +225,7 @@ const SearchResults = () => {
           </Grid>
         </div>
       )}
-      {searchResults.length >= 1 && (
+      {searchResults.length > projectsPerPage && (
         <Stack spacing={2} className={styles.pagination}>
           <Pagination
             count={totalPages}

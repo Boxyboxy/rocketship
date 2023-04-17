@@ -13,6 +13,7 @@ import { BACKEND_URL } from '../constants/categorydata';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { Box, Typography } from '@mui/material';
+import Chip from '@mui/material/Chip';
 import Link from 'next/link';
 
 const categoryMapping = {
@@ -37,6 +38,7 @@ export default function CategoryPage({ selectedCategory }) {
   const [dateSortOption, setDateSortOption] = useState('asc');
   const [fundingSortOption, setFundingSortOption] = useState('asc');
   const [projectOwner, setProjectOwner] = useState({});
+  const [filteredProjectswFunding, setFilteredProjectswFunding] = useState([]);
 
   useEffect(() => {
     const fetchFeaturedProject = async () => {
@@ -106,6 +108,20 @@ export default function CategoryPage({ selectedCategory }) {
     fetchFunding();
   }, [filteredProjects]);
 
+  //logic to check if funding is hit
+  useEffect(() => {
+    // add in a new column - fundingHit inside filteredProjects array
+    const filteredProjectswFunding = projectsFunding.map((project) => {
+      return {
+        ...project,
+        fundingHit: project.funding >= project.fundingGoal
+      };
+    });
+
+    setFilteredProjectswFunding(filteredProjectswFunding);
+    console.log(filteredProjectswFunding);
+  }, [projectsFunding]);
+
   //for sorting
   const handleSort = (button) => {
     if (button === 'date') {
@@ -117,7 +133,7 @@ export default function CategoryPage({ selectedCategory }) {
 
   //sorting logic
   useEffect(() => {
-    const sortedArray = [...projectsFunding];
+    const sortedArray = [...filteredProjectswFunding];
     sortedArray.sort((a, b) => {
       if (dateSortOption === 'desc' && fundingSortOption === 'desc') {
         if (new Date(b.date) < new Date(a.date)) {
@@ -136,7 +152,7 @@ export default function CategoryPage({ selectedCategory }) {
       }
     });
     setSortedProjects(sortedArray);
-  }, [dateSortOption, fundingSortOption, projectsFunding]);
+  }, [dateSortOption, fundingSortOption, filteredProjectswFunding]);
 
   //for pagination
   const totalPages = Math.ceil(sortedProjects.length / projectsPerPage);
@@ -197,6 +213,7 @@ export default function CategoryPage({ selectedCategory }) {
                 href={`/projects/${randomProject.userId}/${randomProject.id}`}>
                 <div className={styles.featuredHeader}>{randomProject.name}</div>
               </Link>
+
               <p className={styles.featuredTxt}>{randomProject.details}</p>
               <Link className={styles.name} href={`/profile/${randomProject.userId}`}>
                 {projectOwner.name}
@@ -245,9 +262,16 @@ export default function CategoryPage({ selectedCategory }) {
                   sx={{ objectFit: 'cover', maxHeight: '140px' }}
                 />
                 <CardContent sx={{ height: 120, overflow: 'hidden' }}>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {result.name}
-                  </Typography>
+                  <Stack direction="row" spacing={1}>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {result.name}
+                    </Typography>
+                    {result.fundingHit && result.fundingGoal != null ? (
+                      <Chip label="Fully funded!" color="success" />
+                    ) : (
+                      <></>
+                    )}
+                  </Stack>
                   <Typography spacing={10} variant="body2" color="text.secondary">
                     {result.summary}
                   </Typography>
@@ -268,7 +292,7 @@ export default function CategoryPage({ selectedCategory }) {
         </div>
       )}
 
-      {filteredProjects.length >= 1 && (
+      {filteredProjects.length > projectsPerPage && (
         <Stack spacing={2} className={styles.pagination}>
           <Pagination
             count={totalPages}
