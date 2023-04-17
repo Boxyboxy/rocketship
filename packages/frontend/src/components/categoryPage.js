@@ -182,11 +182,21 @@ export default function CategoryPage({ selectedCategory }) {
               className={styles.linkName}
               href={`/projects/${randomProject.userId}/${randomProject.id}`}
               passHref>
-              <img className={styles.featuredImg} src={randomProject.coverImage} alt="fintech" />
+              <img
+                // width={500}
+                height={400}
+                className={styles.featuredImg}
+                src={randomProject.coverImage}
+                alt={randomProject.name}
+              />
             </Link>
 
             <div className={styles.txtContainer}>
-              <div className={styles.featuredHeader}>{randomProject.name}</div>
+              <Link
+                className={styles.linkName}
+                href={`/projects/${randomProject.userId}/${randomProject.id}`}>
+                <div className={styles.featuredHeader}>{randomProject.name}</div>
+              </Link>
               <p className={styles.featuredTxt}>{randomProject.details}</p>
               <Link className={styles.name} href={`/profile/${randomProject.userId}`}>
                 {projectOwner.name}

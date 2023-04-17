@@ -14,6 +14,7 @@ import styles from '../../styles/search.module.css';
 import Grid from '@mui/material/Unstable_Grid2';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import Chip from '@mui/material/Chip';
 import Link from 'next/link';
 
 const SearchResults = () => {
@@ -121,6 +122,7 @@ const SearchResults = () => {
                   <Typography variant="body2" color="text.secondary">
                     {result.summary}
                   </Typography>
+                  <Chip label="fully funded!" color="success" />
                 </CardContent>
                 <CardActions>
                   <Link

@@ -94,6 +94,7 @@
 .linkName {
   text-decoration: none;
   font-size: small;
+  color: black;
 }
 
 .pagination {
