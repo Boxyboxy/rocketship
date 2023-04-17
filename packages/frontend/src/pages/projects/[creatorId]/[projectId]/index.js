@@ -16,6 +16,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { BACKEND_URL } from "../../../../constants/backendUrl";
 
 import axios from "axios";
 
@@ -32,6 +34,11 @@ export default function ProjectPage() {
   const [projectId, setProjectId] = useState();
   const [skills, setSkills] = useState([]);
   const [formValues, setFormValues] = useState({});
+
+  const { user, isLoading, error, getAccessTokenSilently, isAuthenticated } =
+    useUser();
+  const [userId, setUserId] = useState();
+  const [userSkills, setUserSkills] = useState([]);
 
   // modal form
   const [openContributeForm, setOpenContributeForm] = useState(false);
@@ -188,6 +195,32 @@ export default function ProjectPage() {
     }
   }, [creatorId, projectId]);
 
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const response = await axios.get(
+          `${BACKEND_URL}/users?email=${user.email}`
+        );
+        setUserId(response.data[0].id);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUserId();
+  }, [user]);
+  useEffect(() => {
+    const fetchUserSkills = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/users/${userId}`);
+        console.log(response.data.skills);
+        setUserSkills(response.data.skills);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if (userId) fetchUserSkills();
+  }, [userId]);
+
   return (
     <div>
       {specificProject && (
@@ -339,9 +372,9 @@ export default function ProjectPage() {
                           name="userSkillId"
                           onChange={handleInputChange}
                         >
-                          {skills.map((skill) => (
-                            <MenuItem key={skill.skillId} value={skill.skillId}>
-                              {skill.skill}
+                          {userSkills.map((userSkill) => (
+                            <MenuItem key={userSkill.id} value={userSkill.id}>
+                              {userSkill.skill}
                             </MenuItem>
                           ))}
                         </Select>

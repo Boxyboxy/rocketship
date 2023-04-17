@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { Input, Button } from '@material-ui/core';
+import { useState } from "react";
+import axios from "axios";
+import { Input, Button } from "@material-ui/core";
 
-export default function photoUpload() {
+export default function PhotoUpload() {
   const [file, setFile] = useState();
 
   const handleFileChange = (e) => {
@@ -16,13 +16,13 @@ export default function photoUpload() {
       return;
     }
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'rocketship');
-    let data = '';
+    formData.append("file", file);
+    formData.append("upload_preset", "rocketship");
+    let data = "";
     await axios
-      .post('https://api.cloudinary.com/v1_1/dbq7yg58d/image/upload/', formData)
+      .post("https://api.cloudinary.com/v1_1/dbq7yg58d/image/upload/", formData)
       .then((response) => {
-        data = response.data['secure_url'];
+        data = response.data["secure_url"];
       });
     console.log(data);
     return data;
