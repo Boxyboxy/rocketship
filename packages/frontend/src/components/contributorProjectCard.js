@@ -16,7 +16,6 @@ export default function ContributorProjectCard({ contribution }) {
   // TODO: Style the cards
   const [funding, setFunding] = useState(0);
   const [projectOwner, setProjectOwner] = useState({ name: "John Doe" });
-  const [sample, setSample] = useState({});
 
   useEffect(() => {
     const fetchFunding = async () => {
@@ -91,7 +90,7 @@ export default function ContributorProjectCard({ contribution }) {
         </Grid>
       </CardActions>
       {funding >= contribution.project.fundingGoal ? (
-        <Chip label="fully funded!" color="success" />
+        <Chip label="Fully funded!" color="success" />
       ) : (
         <>
           <Typography size="small">

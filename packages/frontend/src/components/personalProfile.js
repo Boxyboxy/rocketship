@@ -178,20 +178,17 @@ export default function PublicProfile({ personalId }) {
 
         <div>
           <h1>Projects Started</h1>
-
           <span className={styles.line}></span>
           <ProjectCardsContainer
             projects={profile.projects}
             ownerBoolean={true}
           />
         </div>
-        {/* to change the data input*/}
         <div>
           <h1>Projects Contributed</h1>
           <span className={styles.line}></span>
           <ContributorProjectCardsContainer userId={profile.id} />
         </div>
-        {/* to change the data input*/}
         <div>
           <h1>Funding History</h1>
           <span className={styles.line}></span>

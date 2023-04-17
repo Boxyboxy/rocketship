@@ -212,7 +212,6 @@ export default function ProjectPage() {
     const fetchUserSkills = async () => {
       try {
         const response = await axios.get(`${BACKEND_URL}/users/${userId}`);
-
         setUserSkills(
           response.data.skills.filter(
             (userSkill) =>
@@ -382,8 +381,12 @@ export default function ProjectPage() {
                           name="userSkillId"
                           onChange={handleInputChange}
                         >
+                          {/* The value is set to userSkill so you can submit this value in your post request */}
                           {userSkills.map((userSkill) => (
-                            <MenuItem key={userSkill.id} value={userSkill.id}>
+                            <MenuItem
+                              key={userSkill.id}
+                              value={userSkill.userSkill.id}
+                            >
                               {userSkill.skill}
                             </MenuItem>
                           ))}
