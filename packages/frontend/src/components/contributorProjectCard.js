@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../constants/backendUrl";
 import axios from "axios";
 import { BorderLinearProgress } from "./BorderLinearProgress";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 
 export default function ContributorProjectCard({ contribution }) {
   // TODO: Style the cards
@@ -63,24 +65,36 @@ export default function ContributorProjectCard({ contribution }) {
         alt="project1"
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {contribution.project.name}
-        </Typography>
+        <Stack direction="row" spacing={1}>
+          <Typography gutterBottom variant="h5" component="div">
+            {contribution.project.name}
+          </Typography>
+        </Stack>
         <Typography variant="body2" color="text.secondary">
           {contribution.project.summary}
         </Typography>
       </CardContent>
       <CardActions>
         Started by:
-        {<Button size="small">{projectOwner.name}</Button>}
+        {
+          <Button size="small" href={`/profile/${projectOwner.id}`}>
+            {projectOwner.name}
+          </Button>
+        }
       </CardActions>
-      <Typography size="small">
-        {` $${funding}/$${contribution.project.fundingGoal} raised`}
-      </Typography>
-      <BorderLinearProgress
-        variant="determinate"
-        value={(funding * 100) / contribution.project.fundingGoal}
-      />
+      {funding >= contribution.project.fundingGoal ? (
+        <Chip label="fully funded!" color="success" />
+      ) : (
+        <>
+          <Typography size="small">
+            {` $${funding}/$${contribution.project.fundingGoal} raised`}
+          </Typography>
+          <BorderLinearProgress
+            variant="determinate"
+            value={(funding * 100) / contribution.project.fundingGoal}
+          />
+        </>
+      )}
       <Typography size="small">
         {`Skill contributed: ${contribution.userSkill.skill.skill}`}
       </Typography>

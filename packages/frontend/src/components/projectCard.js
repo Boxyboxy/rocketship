@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../constants/backendUrl";
 import axios from "axios";
 import { BorderLinearProgress } from "./BorderLinearProgress";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 
 export default function ProjectCard({ project, ownerBoolean }) {
   const [funding, setFunding] = useState("not loaded");
@@ -33,8 +35,7 @@ export default function ProjectCard({ project, ownerBoolean }) {
         console.log(err);
       }
     };
-
-    fetchFunding();
+    if (project) fetchFunding();
   }, [project]);
 
   useEffect(() => {
@@ -49,7 +50,7 @@ export default function ProjectCard({ project, ownerBoolean }) {
         console.log(err);
       }
     };
-    fetchProjectOwner();
+    if (project) fetchProjectOwner();
   }, [project]);
 
   return (
@@ -61,9 +62,11 @@ export default function ProjectCard({ project, ownerBoolean }) {
         alt="project1"
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {project.name}
-        </Typography>
+        <Stack direction="row" spacing={1}>
+          <Typography gutterBottom variant="h5" component="div">
+            {project.name}
+          </Typography>
+        </Stack>
         <Typography variant="body2" color="text.secondary">
           {project.summary}
         </Typography>
@@ -73,16 +76,27 @@ export default function ProjectCard({ project, ownerBoolean }) {
       ) : (
         <CardActions>
           Started by:
-          {<Button size="small">{projectOwner.name}</Button>}
+          {
+            <Button size="small" href={`/profile/${projectOwner.id}`}>
+              {projectOwner.name}
+            </Button>
+          }
         </CardActions>
       )}
-      <Typography size="small">
-        {` $${funding}/$${project.fundingGoal} raised`}
-      </Typography>
-      <BorderLinearProgress
-        variant="determinate"
-        value={(funding * 100) / project.fundingGoal}
-      />
+
+      {funding >= project.fundingGoal ? (
+        <Chip label="Fully funded!" color="success" />
+      ) : (
+        <>
+          <Typography size="small">
+            {` $${funding}/$${project.fundingGoal} raised`}
+          </Typography>
+          <BorderLinearProgress
+            variant="determinate"
+            value={(funding * 100) / project.fundingGoal}
+          />
+        </>
+      )}
     </Card>
   );
 }
