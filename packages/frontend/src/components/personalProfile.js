@@ -19,12 +19,11 @@ import EmailIcon from "@mui/icons-material/Email";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import HandymanIcon from "@mui/icons-material/Handyman";
-import ProjectCard from "./projectCard";
 import ProjectCardsContainer from "./projectCardsContainer";
 import { BACKEND_URL } from "../constants/backendUrl";
 import ContributorProjectCardsContainer from "./contributorProjectCardsContainer";
 import FundingHistory from "./FundingHistory";
-
+import Button from "@mui/material/Button";
 export default function PublicProfile({ personalId }) {
   // TODO: add edit button that links to edit page.
   // Figure out a way to display funding, a table?
@@ -109,10 +108,27 @@ export default function PublicProfile({ personalId }) {
         direction="column"
         justifyContent="space-around"
         alignItems="center"
-        sx={{ minHeight: "100vh" }}
+        sx={{ minHeight: "80vh" }}
       >
         <div>
-          <h1>User info</h1>
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{ minWidth: "50vw" }}
+          >
+            <h1>User info</h1>
+
+            <Button variant="contained">
+              <a
+                href={`/profile/${personalId}/edit`}
+                style={{ textDecoration: "none", color: "white" }}
+              >
+                Edit information
+              </a>
+            </Button>
+          </Grid>
           <span className={styles.line}></span>
           <Grid
             container
@@ -162,6 +178,7 @@ export default function PublicProfile({ personalId }) {
 
         <div>
           <h1>Projects Started</h1>
+
           <span className={styles.line}></span>
           <ProjectCardsContainer
             projects={profile.projects}
