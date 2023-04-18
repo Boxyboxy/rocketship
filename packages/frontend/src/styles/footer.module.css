@@ -28,8 +28,8 @@
   /* position: relative;
   color: #21325e; */
   text-align: center;
-  height: 20px;
-  min-height: 100vh;
+  height: 50px;
+  /* min-height: 100vh; */
   display: flex;
   flex-direction: column;
 }
