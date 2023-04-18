@@ -398,7 +398,7 @@ export default function EditProfilPage() {
                   isEmailValid(formValues.email) &&
                   isGithubUrlValid(formValues.githubUrl) &&
                   isLinkedinUrlValid(formValues.linkedinUrl)
-                ) || !userId
+                )
               }
             >
               Submit
