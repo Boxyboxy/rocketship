@@ -124,7 +124,9 @@ export default function CheckoutForm({ incentive }) {
                       <TableCell component="th" scope="row">
                         {incentive === 'equity' ? <PaidIcon /> : <LoyaltyIcon />} {incentive}
                       </TableCell>
-                      <TableCell align="right">$10</TableCell>
+                      <TableCell align="right">
+                        {incentive === 'equity' ? '$14,000' : '$2,000'}
+                      </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
