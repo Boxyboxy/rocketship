@@ -1,5 +1,5 @@
 import * as React from "react";
-
+import axios from "axios";
 function initialState(args) {
   return {
     response: null,
@@ -9,27 +9,38 @@ function initialState(args) {
   };
 }
 
-const useApi = (url, options) => {
+const useApi = (url, requestType, data) => {
   const [state, setState] = React.useState(() => initialState({}));
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(url, {
-          ...options,
-        });
+        // const res = await fetch(url, {
+        //   ...options,
+        // });
+        console.log(requestType);
 
+        const res = await axios({
+          url,
+          responseType: "json",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: requestType,
+          data: data,
+        });
         if (res.status >= 400) {
           setState(
             initialState({
-              error: await res.json(),
+              error: res,
               isLoading: false,
             })
           );
         } else {
+          console.log(res);
           setState(
             initialState({
-              response: await res.json(),
+              response: res,
               isLoading: false,
             })
           );
