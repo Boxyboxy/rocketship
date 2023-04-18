@@ -43,8 +43,9 @@ export default function NavBar() {
     };
     fetchUserId();
   }, [user]);
-  // console.log(user);
-  // console.log(userId);
+  console.log(user);
+  console.log(userId);
+
   const handleChange = (e) => {
     setinputValue(e.target.value);
   };
@@ -100,14 +101,14 @@ export default function NavBar() {
           // Update the requests count in state
           setRequestsCount(pendingProjects.length);
           setPendingProjects(pendingProjects);
-          console.log(pendingRequests.length);
+          console.log(pendingProjects);
           console.log(pendingRequests);
         })
         .catch((error) => {
           console.error('Error fetching contributions:', error);
         });
     }
-  }, []);
+  }, [userId]);
 
   //control dialog component
   const handleOpen = () => setOpen(true);
