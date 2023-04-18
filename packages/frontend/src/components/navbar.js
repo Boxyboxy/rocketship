@@ -43,7 +43,8 @@ export default function NavBar() {
     };
     fetchUserId();
   }, [user]);
-  console.log(user);
+  // console.log(user);
+  // console.log(userId);
   const handleChange = (e) => {
     setinputValue(e.target.value);
   };
@@ -78,27 +79,34 @@ export default function NavBar() {
 
   //fetch contributions data
   useEffect(() => {
-    axios
-      // .get(`${BACKEND_URL}/contributions?userId=${userId}`)
-      .get(`${BACKEND_URL}/contributions?userId=1`)
-      .then((response) => {
-        const contributions = response.data;
+    if (userId) {
+      axios
+        // .get(`${BACKEND_URL}/contributions?userId=${userId}`)
+        .get(`${BACKEND_URL}/contributions`)
+        .then((response) => {
+          const contributions = response.data;
+          //project.userId -> project owner (the one that should be approving contributors' requests)
+          console.log(response.data);
+          // Filter contributions based on status and userId
+          const pendingRequests = contributions.filter(
+            (contribution) => contribution.status === 'pending'
+          );
 
-        console.log(response.data);
-        // Filter contributions based on status and userId
-        const pendingRequests = contributions.filter(
-          (contribution) => contribution.status === 'pending'
-        );
+          const pendingProjects = pendingRequests.filter(
+            (project) => project.project.userId === userId
+          );
+          console.log(pendingProjects);
 
-        // Update the requests count in state
-        setRequestsCount(pendingRequests.length);
-        setPendingProjects(pendingRequests);
-        console.log(pendingRequests.length);
-        console.log(pendingRequests);
-      })
-      .catch((error) => {
-        console.error('Error fetching contributions:', error);
-      });
+          // Update the requests count in state
+          setRequestsCount(pendingProjects.length);
+          setPendingProjects(pendingProjects);
+          console.log(pendingRequests.length);
+          console.log(pendingRequests);
+        })
+        .catch((error) => {
+          console.error('Error fetching contributions:', error);
+        });
+    }
   }, []);
 
   //control dialog component
@@ -166,56 +174,64 @@ export default function NavBar() {
             </Badge>
 
             <Dialog open={open} onClose={handleClose}>
-              <DialogTitle>Review contributors' requests!</DialogTitle>
-              <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: 300 }}>
-                <Tabs
-                  value={selectedTab}
-                  // onChange={handleTabChange}
-                  onChange={(event, newValue) => setSelectedTab(newValue)}
-                  variant="scrollable"
-                  scrollButtons="auto">
-                  {/* Render a tab for each request */}
-                  {pendingProjects.map((request, index) => (
-                    <Tab key={index} label={request.project.name} />
-                  ))}
-                </Tabs>
-                <Box sx={{ flexGrow: 1, p: 2 }}>
-                  {pendingProjects.map((request, index) => (
-                    <Typography
-                      key={index}
-                      component="div"
-                      role="tabpanel"
-                      hidden={selectedTab !== index}>
-                      {/* display request details only for the selected tab */}
-                      {selectedTab === index && (
-                        <DialogContent>
-                          <DialogContentText>
-                            Contributor:{' '}
-                            <Link
-                              className={styles.contributorName}
-                              href={`/profile/${request.userSkill.user.id}`}>
-                              {request.userSkill.user.name}
-                            </Link>
-                          </DialogContentText>
-                          <DialogContentText>
-                            Skill: {request.userSkill.skill.skill}
-                          </DialogContentText>
-                          <DialogContentText>Message: {request.message}</DialogContentText>
-                        </DialogContent>
-                      )}
-                    </Typography>
-                  ))}
-                  <DialogActions>
-                    <Button onClick={handleClose} color="success" variant="contained">
-                      Approve
-                    </Button>
-                    <Button onClick={handleClose} color="error" variant="contained">
-                      {' '}
-                      Reject
-                    </Button>
-                  </DialogActions>
+              {requestsCount === 0 ? (
+                <DialogTitle>No contributors' requests</DialogTitle>
+              ) : (
+                <DialogTitle>Review contributors' requests!</DialogTitle>
+              )}
+              {requestsCount === 0 ? (
+                <></>
+              ) : (
+                <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: 300 }}>
+                  <Tabs
+                    value={selectedTab}
+                    // onChange={handleTabChange}
+                    onChange={(event, newValue) => setSelectedTab(newValue)}
+                    variant="scrollable"
+                    scrollButtons="auto">
+                    {/* Render a tab for each request */}
+                    {pendingProjects.map((request, index) => (
+                      <Tab key={index} label={request.project.name} />
+                    ))}
+                  </Tabs>
+                  <Box sx={{ flexGrow: 1, p: 2 }}>
+                    {pendingProjects.map((request, index) => (
+                      <Typography
+                        key={index}
+                        component="div"
+                        role="tabpanel"
+                        hidden={selectedTab !== index}>
+                        {/* display request details only for the selected tab */}
+                        {selectedTab === index && (
+                          <DialogContent>
+                            <DialogContentText>
+                              Contributor:{' '}
+                              <Link
+                                className={styles.contributorName}
+                                href={`/profile/${request.userSkill.user.id}`}>
+                                {request.userSkill.user.name}
+                              </Link>
+                            </DialogContentText>
+                            <DialogContentText>
+                              Skill: {request.userSkill.skill.skill}
+                            </DialogContentText>
+                            <DialogContentText>Message: {request.message}</DialogContentText>
+                          </DialogContent>
+                        )}
+                      </Typography>
+                    ))}
+                    <DialogActions>
+                      <Button onClick={handleClose} color="success" variant="contained">
+                        Approve
+                      </Button>
+                      <Button onClick={handleClose} color="error" variant="contained">
+                        {' '}
+                        Reject
+                      </Button>
+                    </DialogActions>
+                  </Box>
                 </Box>
-              </Box>
+              )}
             </Dialog>
           </div>
           <li className={styles.navli}>
