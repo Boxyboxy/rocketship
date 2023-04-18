@@ -4,7 +4,7 @@ const axios = require("axios");
 
 function isAdmin(req, res, next) {
   axios
-    .get(`https://dev-v142ohfthr7u4kgs.au.auth0.com/userinfo`, {
+    .get(`https://dev-v04wep3w5lcfmqqx.us.auth0.com`, {
       headers: { Authorization: `${req.headers.authorization}` },
     })
     .then(({ data }) => {

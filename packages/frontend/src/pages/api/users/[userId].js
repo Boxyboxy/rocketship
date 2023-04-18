@@ -17,7 +17,6 @@ export default withApiAuthRequired(async function users(req, res) {
         },
       }
     );
-    console.log(response.data);
 
     const users = response.data;
 
