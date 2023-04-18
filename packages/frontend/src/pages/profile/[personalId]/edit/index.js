@@ -66,7 +66,7 @@ export default function EditProfilPage() {
     };
     handleRedirect();
   }, [userId]);
-  
+
   const isNameValid = (name) =>
     name.trim().includes(" ") &&
     name.trim().length > 3 &&
@@ -175,16 +175,46 @@ export default function EditProfilPage() {
       ),
     });
 
-    axios
-      .patch(`${BACKEND_URL}/users/${personalId}`, {
+    // axios
+    //   .patch(`${BACKEND_URL}/users/${personalId}`, {
+    //     ...formValues,
+    //     newSkills: Object.keys(userSkillsCheckBox).filter(
+    //       (key) => userSkillsCheckBox[key]
+    //     ),
+    //   })
+    //   .then(function (response) {
+    //     console.log(response);
+    //     setShowSuccess(true);
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error.response.data.error);
+    //     setShowFailure(true);
+    //     setErrorMessage(error.response.data.error);
+    //   });
+
+    axios({
+      url: `/api/users/${userId}`,
+      responseType: "json",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "patch",
+      data: {
         ...formValues,
         newSkills: Object.keys(userSkillsCheckBox).filter(
           (key) => userSkillsCheckBox[key]
         ),
-      })
+      },
+    })
       .then(function (response) {
         console.log(response);
         setShowSuccess(true);
+        const handleRedirect = async () => {
+          router.push({
+            pathname: `/profile/${userId}/personal`,
+          });
+        };
+        handleRedirect();
       })
       .catch(function (error) {
         console.log(error.response.data.error);
@@ -192,7 +222,7 @@ export default function EditProfilPage() {
         setErrorMessage(error.response.data.error);
       });
 
-    // TODO: redirect and add in autho layer
+    // TODO: userId is not captured when the page is redirected consistently
   };
 
   const handleSnackbarClose = (event, reason) => {
@@ -368,7 +398,7 @@ export default function EditProfilPage() {
                   isEmailValid(formValues.email) &&
                   isGithubUrlValid(formValues.githubUrl) &&
                   isLinkedinUrlValid(formValues.linkedinUrl)
-                )
+                ) || !userId
               }
             >
               Submit
