@@ -66,6 +66,7 @@ export default function EditProfilPage() {
     };
     handleRedirect();
   }, [userId]);
+  
   const isNameValid = (name) =>
     name.trim().includes(" ") &&
     name.trim().length > 3 &&

@@ -19,6 +19,7 @@ import Alert from '@mui/material/Alert';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { getNames } from 'country-list';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 import axios from 'axios';
 // import Loader from '../../components/loader';
@@ -40,10 +41,27 @@ export default function CreateProject() {
   const [activeStep, setActiveStep] = useState(0);
   const [formValues, setFormValues] = useState({});
   const [skills, setSkills] = useState([]);
-  // const countryList = require('country-list');
   const [country, setCountry] = useState('');
   const countryNames = getNames();
+  const { user } = useUser();
+  const [userId, setUserId] = useState();
 
+  //get userId with email
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/users?email=${user.email}`);
+        setUserId(response.data[0].id);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUserId();
+  }, [user]);
+  console.log(user);
+  console.log(userId);
+
+  //for country selection
   const changeCountry = (selectedCountry) => {
     setCountry(selectedCountry);
     console.log(selectedCountry);
