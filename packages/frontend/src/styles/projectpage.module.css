@@ -1,0 +1,12 @@
+.container {
+  margin: 0 50px 0 50px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.details {
+  padding-right: 50px;
+}
+
+.box {
+  margin: 0 15px 0 15px;
+}

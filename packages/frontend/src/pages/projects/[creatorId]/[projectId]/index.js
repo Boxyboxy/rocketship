@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useEffect, useState } from 'react';
-import { Typography, Button, Box, TextField } from '@mui/material';
+import { Typography, Button, Box, TextField, Chip, Stack } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CategoryIcon from '@mui/icons-material/Category';
@@ -19,6 +19,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { BACKEND_URL } from '../../../../constants/backendUrl';
 import Footer from '../../../../components/footer';
+import styles from '../../../../styles/projectpage.module.css';
 
 import axios from 'axios';
 
@@ -39,6 +40,20 @@ export default function ProjectPage() {
   const { user, isLoading, error, getAccessTokenSilently, isAuthenticated } = useUser();
   const [userId, setUserId] = useState();
   const [userSkills, setUserSkills] = useState([]);
+
+  //mapping for Chip color display
+  const categoryColorMap = {
+    Fintech: 'primary',
+    Healthtech: 'secondary',
+    'Social Media': 'error',
+    Games: 'info',
+    Agritech: 'success',
+    Edutech: 'warning',
+    Ecommerce: 'secondary',
+    FnB: 'default'
+
+    // Add more mappings as needed
+  };
 
   // modal form
   const [openContributeForm, setOpenContributeForm] = useState(false);
@@ -227,22 +242,39 @@ export default function ProjectPage() {
             <NavBar />
             <Category />
           </div>
-          <div>
-            <ArrowBackIcon /> Back
-            <Typography variant="h3"> {specificProject.name}</Typography>
-            <Grid container sx={{ marginBottom: 1 }}>
-              <LocationOnIcon />
-              {specificProject.location}
+          <div className={styles.container}>
+            {/* <ArrowBackIcon /> Back */}
+            <Stack direction="row" spacing={2} alignItems="center">
+              <Typography
+                variant="h3"
+                sx={{ marginTop: '15px', marginBottom: '15px', fontFamily: 'Montserrat' }}>
+                {specificProject.name}
+              </Typography>
+              <Typography sx={{ justifyContent: 'center', fontFamily: 'Montserrat' }}>
+                <LocationOnIcon />
+                {specificProject.location}
+              </Typography>
+
+              <Chip
+                sx={{ justifyContent: 'center', fontFamily: 'Montserrat' }}
+                label={specificProject.categoryName}
+                color={categoryColorMap[specificProject.categoryName] || 'default'}
+              />
+
+              {/* <Grid container sx={{ marginBottom: 1 }}> */}
+
               {/* need to finalise correct icon */}
-              <CategoryIcon />
-              {specificProject.categoryName}
-            </Grid>
+              {/* <CategoryIcon /> */}
+
+              {/* </Grid> */}
+            </Stack>
             <Grid container>
               <Grid xs={12} sm={12} md={7} lg={6}>
-                <img src={specificProject.coverImage} width={500} />
+                <img src={specificProject.coverImage} width={600} height={400} />
               </Grid>
               <Grid xs={12} sm={12} md={5} lg={6}>
-                <Typography variant="h6">About the project</Typography>
+                {/* <Typography variant="h6">About the project</Typography> */}
+                <h2>About the project</h2>
 
                 <p>{specificProject.summary}</p>
 
@@ -251,10 +283,14 @@ export default function ProjectPage() {
                     stats.map((stat, index) => {
                       return (
                         <Grid xs={6} sm={6} md={6} lg={6} sx={{ textAlign: 'left' }} key={index}>
-                          <Typography sx={{ fontSize: '1.5rem', color: '#3E497A' }}>
+                          <Typography
+                            sx={{ fontSize: '1.5rem', color: '#3E497A', fontFamily: 'Montserrat' }}>
                             {stat.sum}
                           </Typography>
-                          <Typography sx={{ fontSize: '0.8rem' }}>{stat.statName}</Typography>
+                          <Typography
+                            sx={{ fontSize: '0.8rem', color: '#3E497A', fontFamily: 'Montserrat' }}>
+                            {stat.statName}
+                          </Typography>
                         </Grid>
                       );
                     })}
@@ -274,7 +310,7 @@ export default function ProjectPage() {
                     Fund
                   </Button>
                 </a>
-                <p>Project Owner</p>
+                <h3>Project Owner</h3>
                 <Grid container>
                   <Grid sx={{ marginRight: 1 }}>
                     <Avatar />
@@ -288,7 +324,7 @@ export default function ProjectPage() {
                     sx={{
                       marginLeft: 'auto',
                       color: 'black',
-                      backgroundColor: '#F0F0F0',
+                      backgroundColor: '#F1D00A',
                       width: 100,
                       height: 30
                     }}>
@@ -299,19 +335,22 @@ export default function ProjectPage() {
               </Grid>
 
               <Grid container sx={{ marginTop: 2 }}>
-                <Grid xs={12} sm={12} md={7} lg={8}>
-                  <Typography variant="h5">Project Details</Typography>
-                  <p>{specificProject.details}</p>
+                <Grid xs={12} sm={12} md={7} lg={7}>
+                  <h2>Project Details</h2>
+                  <p className={styles.details}>{specificProject.details}</p>
+                  <>{specificProject.githubRepoUrl}</>
                 </Grid>
-                <Grid xs={12} sm={12} md={5} lg={4}>
+
+                <Grid xs={12} sm={12} md={5} lg={5}>
+                  <h3>SKILLS NEEDED</h3>
+                  {/* <br /> */}
                   <Box
                     sx={{
                       width: '100%',
                       minHeight: 100,
                       border: '2px solid grey'
+                      // border: '1px dashed grey'
                     }}>
-                    Skills Needed:
-                    <br />
                     {skills && skills.map((skill) => <p key={skill.skillId}>{skill.skill}</p>)}
                     <Button
                       variant="contained"
@@ -390,23 +429,26 @@ export default function ProjectPage() {
                       </DialogActions>
                     </Dialog>
                   </Box>
-
+                  <h3>FUNDING OPTIONS</h3>
                   <Box
                     sx={{
-                      marginTop: 5,
                       width: '100%',
                       minHeight: 100,
                       border: '2px solid grey'
                     }}>
-                    <b id="fund-membership">Funding options</b>
-                    <br /> <br />
-                    <b>MEMBERSHIP</b> <br />
-                    You get this and this and that benefits. Our membership program offers you
-                    exclusive benefits and discounts on our products and services. As a member, you
-                    will have access to a range of perks such as early access to new products,
-                    exclusive discounts, and special promotions. You will also receive personalized
-                    support from our team to help you make the most of your membership.
-                    <br></br>
+                    {/* <b id="fund-membership">Funding options</b>
+                    <br /> <br /> */}
+                    <div className={styles.box}>
+                      <h3 id="fund-membership">MEMBERSHIP</h3>
+                      <p>
+                        You get this and this and that benefits. Our membership program offers you
+                        exclusive benefits and discounts on our products and services. As a member,
+                        you will have access to a range of perks such as early access to new
+                        products, exclusive discounts, and special promotions. You will also receive
+                        personalized support from our team to help you make the most of your
+                        membership.
+                      </p>
+                    </div>
                     <Button
                       variant="contained"
                       sx={{
@@ -422,20 +464,25 @@ export default function ProjectPage() {
                       onClick={handleMembershipPurchaseClick}>
                       Select
                     </Button>
-                    <br></br>
-                    <b> EQUITY </b>
-                    <br></br>
-                    Our investment plan offers you the opportunity to invest in our company and
-                    benefit from its growth potential. As an equity investor, you will become a
-                    part-owner of our company and share in its profits and losses. Here are some of
-                    the benefits of investing in our equity:
-                    <br></br>
-                    <ul>
-                      Potential for high returns on your investment Opportunity to share in the
-                      profits and losses of the company
-                    </ul>
-                    <ul>Ability to participate in the company's decision-making process</ul>
-                    <ul>Chance to support a growing company and help it achieve its goals</ul>
+                    <div className={styles.box}>
+                      <h3> EQUITY </h3>
+                      <p>
+                        {' '}
+                        Our investment plan offers you the opportunity to invest in our company and
+                        benefit from its growth potential. As an equity investor, you will become a
+                        part-owner of our company and share in its profits and losses. Here are some
+                        of the benefits of investing in our equity:
+                      </p>
+
+                      <ul>
+                        <li>
+                          Potential for high returns on your investment Opportunity to share in the
+                          profits and losses of the company
+                        </li>
+                        <li>Ability to participate in the company's decision-making process</li>
+                        <li>Chance to support a growing company and help it achieve its goals</li>
+                      </ul>
+                    </div>
                     <Button
                       variant="contained"
                       sx={{
