@@ -16,6 +16,10 @@ npx sequelize model:generate --name skill --attributes skill:string --underscore
 npx sequelize model:generate --name requiredSkill --attributes skillId:integer,projectId:integer --underscored
 npx sequelize model:generate --name userSkill --attributes skillId:integer,userId:integer --underscored
 npx sequelize model:generate --name contribution --attributes projectId:integer,userId:integer,skillId:integer,status:enum:'{pending, accepted, cancelled}',message:text --underscored
+
+npx sequelize model:generate --name room --attributes name:string --underscored
+
+npx sequelize model:generate --name messages --attributes roomId:integer,sender:string,message:string --underscored
 #NOTE: Make sure to change migration files to snakecase and leave camel case in model files
 #NOTE: data attributes in seeder config file requires snake case
 
@@ -40,6 +44,13 @@ npx sequelize db:seed --seed 20230325083101-seed-user-skills.js
 
 npx sequelize seed:generate --name seed-contributions
 npx sequelize db:seed --seed 20230411110726-seed-contributions.js
+
+npx sequelize seed:generate --name seed-rooms
+npx sequelize db:seed --seed 20230419114306-seed-rooms.js
+
+npx sequelize seed:generate --name seed-messages
+npx sequelize db:seed --seed  20230419114315-seed-messages.js
+
 
 #RESET CODE:
 npx sequelize db:migrate:undo:all
