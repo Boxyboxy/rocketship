@@ -4,6 +4,7 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const { initializeSockets } = require("./sockets");
 
+const index = require("./db/models");
 const { initializeMiddleware, errorHandler } = require("./middleware");
 const { PORT } = require("./configs");
 const { SOCKETS_PORT } = require("./configs");
@@ -36,8 +37,8 @@ app.listen(PORT, () => {
 });
 
 const initializeApp = async () => {
-  // // Intialize Sequelize
-  // await initializeSequelize();
+  // trying to Intialize Sequelize but it doesn't work
+  await index.initializeSequelize();
 
   // Initialize sockets
   initializeSockets(io);

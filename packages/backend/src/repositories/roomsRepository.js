@@ -5,15 +5,15 @@ module.exports = {
   async getRoomByName(roomName) {
     console.log("Repository:" + roomName);
     try {
-      const room = await room.findOne({
+      const room_1 = await room.findOne({
         where: {
           name: roomName,
         },
       });
 
-      if (!room) return null;
+      if (!room_1) return null;
 
-      return room.toJSON();
+      return room_1.toJSON();
     } catch (err) {
       console.error(err);
     }

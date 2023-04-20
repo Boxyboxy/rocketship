@@ -34,7 +34,7 @@ module.exports = {
         );
         io.to(currentRoom.name).emit("chatMessage", {
           message,
-          userName,
+          username,
           currentRoom,
         });
       });
