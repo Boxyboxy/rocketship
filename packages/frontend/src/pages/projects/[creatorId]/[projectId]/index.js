@@ -20,6 +20,7 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import { BACKEND_URL } from '../../../../constants/backendUrl';
 import Footer from '../../../../components/footer';
 import styles from '../../../../styles/projectpage.module.css';
+import Link from 'next/link';
 
 import axios from 'axios';
 
@@ -40,6 +41,8 @@ export default function ProjectPage() {
   const { user, isLoading, error, getAccessTokenSilently, isAuthenticated } = useUser();
   const [userId, setUserId] = useState();
   const [userSkills, setUserSkills] = useState([]);
+  const [code, setCode] = useState('');
+  const [pitchSlides, setPitchSlides] = useState([]);
 
   //mapping for Chip color display
   const categoryColorMap = {
@@ -189,8 +192,9 @@ export default function ProjectPage() {
             creatorName: userResponse.data.name,
             categoryName: categoryResponse.data.name
           };
-          console.log(editedProject);
+          // console.log(editedProject);
           setSpecificProject(editedProject);
+          // console.log(specificProject);
         } catch (err) {
           console.log(err);
         }
@@ -228,6 +232,27 @@ export default function ProjectPage() {
     };
     if (userId && skills.length > 0) fetchUserSkills();
   }, [userId, skills]);
+
+  // useEffect(() => {
+  //   if (specificProject.pitchSlides) {
+  //     // added null check
+  //     const pitchSlidesArray = specificProject.pitchSlides.map((slide) => slide.urlString);
+  //     setPitchSlides(pitchSlidesArray);
+  //   }
+  // }, [specificProject]);
+  // useEffect(() => {
+  //   async function fetchCode() {
+  //     const response = await fetch(
+  //       'https://api.github.com/Boxyboxy/rocketship/blob/main/packages/frontend/src/components/category.js'
+  //     );
+  //     const data = await response.json();
+  //     // const decodedCode = atob(data.content);
+  //     // setCode(decodedCode);
+  //     console.log(response)
+  //   }
+
+  //   fetchCode();
+  // }, []);
 
   return (
     <div>
@@ -278,7 +303,7 @@ export default function ProjectPage() {
 
                 <p>{specificProject.summary}</p>
 
-                <Grid container sx={{ marginLeft: 0, marginRight: 20 }}>
+                <Grid container sx={{ marginLeft: 0, marginRight: 10 }}>
                   {stats &&
                     stats.map((stat, index) => {
                       return (
@@ -294,6 +319,16 @@ export default function ProjectPage() {
                         </Grid>
                       );
                     })}
+                  <Grid xs={6} sm={6} md={6} lg={6} sx={{ textAlign: 'left' }}>
+                    <Typography
+                      sx={{ fontSize: '1.5rem', color: '#3E497A', fontFamily: 'Montserrat' }}>
+                      ${specificProject.fundingGoal}
+                    </Typography>
+                    <Typography
+                      sx={{ fontSize: '0.8rem', color: '#3E497A', fontFamily: 'Montserrat' }}>
+                      Funding Goal
+                    </Typography>
+                  </Grid>
                 </Grid>
                 <a href="#fund-membership">
                   <Button
@@ -312,13 +347,12 @@ export default function ProjectPage() {
                 </a>
                 <h3>Project Owner</h3>
                 <Grid container>
-                  <Grid sx={{ marginRight: 1 }}>
+                  <Stack direction="row" spacing={2} alignItems="center">
                     <Avatar />
-                  </Grid>
-                  <Grid>
-                    <p> {specificProject.creatorName}</p>
-                  </Grid>
-                  {/* <Grid xs={4} sm={4} md={4} lg={4}> */}
+                    <Link className={styles.name} href={`/profile/${specificProject.userId}`}>
+                      {specificProject.creatorName}
+                    </Link>
+                  </Stack>
                   <Button
                     variant="contained"
                     sx={{
@@ -351,7 +385,12 @@ export default function ProjectPage() {
                       border: '2px solid grey'
                       // border: '1px dashed grey'
                     }}>
-                    {skills && skills.map((skill) => <p key={skill.skillId}>{skill.skill}</p>)}
+                    {skills &&
+                      skills.map((skill) => (
+                        <p className={styles.skills} key={skill.skillId}>
+                          {skill.skill}
+                        </p>
+                      ))}
                     <Button
                       variant="contained"
                       sx={{

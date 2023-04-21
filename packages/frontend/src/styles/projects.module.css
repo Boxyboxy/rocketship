@@ -81,3 +81,8 @@
   padding: 10px;
   float: right;
 }
+
+.stat {
+  font-size: 3rem;
+  color: #3e497a;
+}

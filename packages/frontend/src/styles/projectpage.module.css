@@ -10,3 +10,12 @@
 .box {
   margin: 0 15px 0 15px;
 }
+
+.skills {
+  margin-left: 10px;
+}
+
+.name {
+  text-decoration: none;
+  color: black;
+}
