@@ -39,6 +39,7 @@ export default function CategoryPage({ selectedCategory }) {
   const [fundingSortOption, setFundingSortOption] = useState('asc');
   const [projectOwner, setProjectOwner] = useState({});
   const [filteredProjectswFunding, setFilteredProjectswFunding] = useState([]);
+  const [randomProjectwFunding, setRandomProjectwFunding] = useState(null);
 
   useEffect(() => {
     const fetchFeaturedProject = async () => {
@@ -54,6 +55,7 @@ export default function CategoryPage({ selectedCategory }) {
         const randomIndex = Math.floor(Math.random() * response.data.length);
         // Use the random index to select a random project
         setRandomProject(response.data[randomIndex]);
+        console.log(randomProject);
       } catch (err) {
         console.log(err);
       }
@@ -86,7 +88,7 @@ export default function CategoryPage({ selectedCategory }) {
   //get funding
   useEffect(() => {
     const fetchFunding = async () => {
-      console.log(filteredProjects);
+      // console.log(filteredProjects);
       if (filteredProjects) {
         for (const project of filteredProjects) {
           try {
@@ -97,7 +99,7 @@ export default function CategoryPage({ selectedCategory }) {
 
             const fetchedFundings = await Promise.all(fundingPromises);
             setProjectsFunding(fetchedFundings);
-            console.log(projectsFunding);
+            // console.log(projectsFunding);
           } catch (err) {
             console.log(err);
           }
@@ -107,6 +109,26 @@ export default function CategoryPage({ selectedCategory }) {
 
     fetchFunding();
   }, [filteredProjects]);
+
+  //add funding to random project
+  useEffect(() => {
+    console.log('useEffect called');
+    (async () => {
+      if (randomProject) {
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/fundings/sum/${randomProject.id}`
+          );
+          console.log('fetchRandomFunding called');
+          const data = response.data;
+          setRandomFunding((prevState) => ({ ...prevState, ...data }));
+          console.log(randomProjectwFunding);
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    })();
+  }, [randomProject]);
 
   //logic to check if funding is hit
   useEffect(() => {
@@ -119,7 +141,7 @@ export default function CategoryPage({ selectedCategory }) {
     });
 
     setFilteredProjectswFunding(filteredProjectswFunding);
-    console.log(filteredProjectswFunding);
+    // console.log(filteredProjectswFunding);
   }, [projectsFunding]);
 
   //for sorting
@@ -213,8 +235,15 @@ export default function CategoryPage({ selectedCategory }) {
                 href={`/projects/${randomProject.userId}/${randomProject.id}`}>
                 <div className={styles.featuredHeader}>{randomProject.name}</div>
               </Link>
+              {/* {randomProjectwFunding.fundingGoal != null ? (
+                <Chip label="Fully funded!" color="success" />
+              ) : (
+                <></>
+              )} */}
 
-              <p className={styles.featuredTxt}>{randomProject.details}</p>
+              <p className={styles.featuredTxt}>
+                {randomProject.details} {randomProject.id}
+              </p>
               <Link className={styles.name} href={`/profile/${randomProject.userId}`}>
                 {projectOwner.name}
               </Link>
@@ -246,47 +275,51 @@ export default function CategoryPage({ selectedCategory }) {
           )}
           <div className={styles.cardsContainer}>
             {projectsToDisplay.map((result) => (
-              <Card
-                sx={{
-                  maxWidth: 345,
-                  transition: 'transform 0.2s',
-                  '&:hover': { transform: 'scale(1.05)' }
-                }}
-                key={result.id}>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  width="100%"
-                  image={result.coverImage}
-                  alt={result.name}
-                  sx={{ objectFit: 'cover', maxHeight: '140px' }}
-                />
-                <CardContent sx={{ height: 120, overflow: 'hidden' }}>
-                  <Stack direction="row" spacing={1}>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {result.name}
+              <Link
+                className={styles.linkName}
+                href={`/projects/${result.userId}/${result.id}`}
+                passHref>
+                <Card
+                  sx={{
+                    maxWidth: 345,
+                    transition: 'transform 0.2s',
+                    '&:hover': { transform: 'scale(1.05)' }
+                  }}
+                  key={result.id}>
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    width="100%"
+                    image={result.coverImage}
+                    alt={result.name}
+                    sx={{ objectFit: 'cover', maxHeight: '140px' }}
+                  />
+                  <CardContent sx={{ height: 120, overflow: 'hidden' }}>
+                    <Stack direction="row" spacing={1}>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {result.name}
+                      </Typography>
+                      {result.fundingHit && result.fundingGoal != null ? (
+                        <Chip label="Fully funded!" color="success" />
+                      ) : (
+                        <></>
+                      )}
+                    </Stack>
+                    <Typography spacing={10} variant="body2" color="text.secondary">
+                      {result.summary}
                     </Typography>
-                    {result.fundingHit && result.fundingGoal != null ? (
-                      <Chip label="Fully funded!" color="success" />
-                    ) : (
-                      <></>
-                    )}
-                  </Stack>
-                  <Typography spacing={10} variant="body2" color="text.secondary">
-                    {result.summary}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Link
-                    className={styles.linkName}
-                    href={`/projects/${result.userId}/${result.id}`}
-                    passHref>
+                  </CardContent>
+                  <CardActions>
+                    {/* <Link
+                      className={styles.linkName}
+                      href={`/projects/${result.userId}/${result.id}`}
+                      passHref> */}
                     <Button size="small">View More</Button>
-                  </Link>
-                  {/* <Typography spacing={1}>Launched on: {result.date}</Typography> */}
-                  <Typography spacing={1}>{result.funding}</Typography>
-                </CardActions>
-              </Card>
+                    {/* </Link> */}
+                    {/* <Typography spacing={1}>Launched on: {result.date}</Typography> */}
+                  </CardActions>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>

@@ -16,6 +16,7 @@ import {
   useStripe,
   useElements
 } from '@stripe/react-stripe-js';
+
 import { useState, useEffect } from 'react';
 import styles from '../styles/checkoutForm.module.css';
 
@@ -40,9 +41,23 @@ export default function CheckoutForm({ incentive }) {
       return;
     }
 
-    stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+    stripe.retrievePaymentIntent(clientSecret).then(async ({ paymentIntent }) => {
       switch (paymentIntent.status) {
         case 'succeeded':
+          const response = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              paymentIntentId: paymentIntent.id,
+              // email: user.email
+              email: 'test@gmail.com',
+              subject: 'Test email - payment successful',
+              message: 'Hello, this is a test email! '
+            })
+          });
+
           setMessage('Payment succeeded!');
           break;
         case 'processing':
@@ -55,6 +70,8 @@ export default function CheckoutForm({ incentive }) {
           setMessage('Something went wrong.');
           break;
       }
+      console.log(paymentIntentId);
+      console.log(clientSecret);
     });
   }, [stripe]);
 
@@ -95,13 +112,37 @@ export default function CheckoutForm({ incentive }) {
     layout: 'tabs'
   };
 
+  const handleEmailButtonClick = async () => {
+    const email = 'test@gmail.com';
+    const subject = 'Test Email';
+    const message = 'Hello, this is a test email!';
+
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, subject, message })
+      });
+
+      if (response.ok) {
+        console.log('Email sent successfully');
+      } else {
+        console.error('Error sending email');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div>
       <NavBar />
       <div className={styles.container}>
         <div className={styles.window}>
           <div className={styles.orderInfo}>
-            <div class="order-info-content">
+            <div>
               <h2>Order Summary</h2>
 
               <TableContainer component={Paper}>

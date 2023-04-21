@@ -352,10 +352,6 @@
 .stats {
   font-size: 100px;
   margin: 0;
-  animation-name: count;
-  animation-duration: 0.5s;
-  animation-timing-function: steps(0, end);
-  animation-fill-mode: forwards;
 }
 
 .backTxt {
@@ -370,23 +366,4 @@
   margin: auto;
   display: flex;
   margin-bottom: 80px;
-}
-
-@keyframes count {
-  from {
-    transform: scale(0.5);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-
-.count-animation {
-  animation-name: count;
-  animation-duration: 5s;
-  animation-timing-function: ease-in-out;
-}
-
-.count-transition {
-  transition: transform 0.5s ease-in-out;
 }
