@@ -6,10 +6,13 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import axios from 'axios';
 import { BACKEND_URL } from '../constants/backendUrl';
 import { useAuth0 } from '@auth0/auth0-react';
+import AnimateNumbers from '../components/animateNumbers';
+
 export default function App() {
   const [projects, setProjects] = useState(0);
   const [contributors, setContributors] = useState(0);
   const [funded, setFunded] = useState('$0');
+  const [fundAmt, setFundAmt] = useState(0);
   const { loginWithRedirect } = useAuth0();
   useEffect(() => {
     const fetchProjects = async () => {
@@ -41,6 +44,7 @@ export default function App() {
       try {
         const fundingsSum = await axios.get(`${BACKEND_URL}/fundings/sumAll`);
         setFunded('$' + fundingsSum.data);
+        setFundAmt(fundingsSum.data);
       } catch (error) {
         console.error('Failed to fetch amount dunded:', error);
       }
@@ -60,6 +64,7 @@ export default function App() {
         <div className={styles.imgContainer}>
           <img className={styles.logo} src="/images/logo.png" alt="logo" />
           <img className={styles.landingImg} src="/images/galaxy.jpg" alt="galaxy" />
+
           <Button
             variant="contained"
             className={styles.login}
@@ -105,13 +110,13 @@ export default function App() {
       {/* about section  */}
       <div className={styles.about}>
         <h2 className={styles.h3title}>
-          You can be a project owner, contributor or backer at RocketShip!
+          You can be an astronaut, contributor or backer at RocketShip!
         </h2>
         <div className={styles.cardContainer}>
           <div className={styles.aboutCard}>
             <div className={styles.front}>
               <img className={styles.cardImg} src="/images/planet-01.png" alt="planet1" />
-              <h2>Project Owner</h2>
+              <h2>Astronaut</h2>
             </div>
             <div className={styles.back}>
               <div className={styles.backTxt}>
@@ -163,16 +168,22 @@ export default function App() {
           <img className={styles.map} src="/images/map.png" alt="map" />
           <div className={styles.numbersContainer}>
             <div className={styles.numSummary}>
-              <p className={styles.stats}>{projects}</p>
-              <p>Projects</p>
+              <div className={styles.stats}>
+                <AnimateNumbers n={projects} />
+              </div>
+              <p>projects launched</p>
             </div>
             <div className={styles.numSummary}>
-              <p className={styles.stats}>{contributors}</p>
-              <p>Contributors</p>
+              <div className={styles.stats}>
+                <AnimateNumbers n={contributors} />
+              </div>
+              <p>contributors</p>
             </div>
             <div className={styles.numSummary}>
-              <p className={styles.stats}>{funded}</p>
-              <p>Raised</p>
+              <div className={styles.stats}>
+                <AnimateNumbers n={fundAmt} />
+              </div>
+              <p>dollars raised</p>
             </div>
           </div>
         </div>
