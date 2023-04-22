@@ -4,7 +4,7 @@ import styles from "../styles/Home.module.css";
 import { useState, useEffect } from "react";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import axios from "axios";
-import { config } from "../config";
+import config from "../config";
 import { useAuth0 } from "@auth0/auth0-react";
 import AnimateNumbers from "../components/animateNumbers";
 

@@ -17,7 +17,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { config } from "../../../../config";
+import config from "../../../../config";
 import Footer from "../../../../components/footer";
 import styles from "../../../../styles/projectpage.module.css";
 import Link from "next/link";
