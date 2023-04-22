@@ -59,7 +59,7 @@ export default function ContributorProjectCard({ contribution }) {
   }, [contribution]);
 
   return (
-    <Link className={styles.name} href={`/projects/${contribution.projectId}`}>
+    <Link className={styles.name} href={`/projects/${contribution.project.id}`}>
       <Card sx={{ minWidth: 345, maxWidth: 345, margin: 10 }}>
         <CardMedia
           component="img"
@@ -95,9 +95,13 @@ export default function ContributorProjectCard({ contribution }) {
           >
             Started by:
             {
-              <Button size="small" href={`/profile/${projectOwner.id}`}>
+              <Link
+                size="small"
+                href={`/profile/${projectOwner.id}`}
+                sx={{ fontFamily: "Montserrat" }}
+              >
                 {projectOwner.name}
-              </Button>
+              </Link>
             }
           </Grid>
         </CardActions>
@@ -123,6 +127,7 @@ export default function ContributorProjectCard({ contribution }) {
             />
           </>
         )}
+
         <Typography
           size="small"
           sx={{

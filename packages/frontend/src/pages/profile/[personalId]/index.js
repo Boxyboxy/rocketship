@@ -11,8 +11,7 @@ import config from "../../../config";
 export default function ProfilePage() {
   const router = useRouter();
   const { personalId } = router.query;
-  const { user, isLoading, error, getAccessTokenSilently, isAuthenticated } =
-    useUser();
+  const { user, isLoading, error } = useUser();
   const [userId, setUserId] = useState();
 
   useEffect(() => {

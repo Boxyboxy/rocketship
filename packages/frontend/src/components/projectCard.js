@@ -16,6 +16,7 @@ import styles from "../styles/projectcard.module.css";
 
 export default function ProjectCard({ project, ownerBoolean }) {
   const [funding, setFunding] = useState("0");
+
   const [projectOwner, setProjectOwner] = useState({ name: "John Doe" });
   // TODO: Style the card, set up href for owner profile button
 
@@ -102,14 +103,15 @@ export default function ProjectCard({ project, ownerBoolean }) {
                 justifyContent="flex-start"
                 alignItems="center"
               >
+                Started by:
                 {
-                  <Button
+                  <Link
                     size="small"
                     href={`/profile/${projectOwner.id}`}
                     sx={{ fontFamily: "Montserrat" }}
                   >
                     {projectOwner.name}
-                  </Button>
+                  </Link>
                 }
               </Grid>
             </CardActions>

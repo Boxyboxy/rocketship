@@ -1,93 +1,136 @@
-import Head from "next/head";
-import NavBar from "../../components/navbar";
-import Category from "../../components/category";
-import Footer from "../../components/footer";
-import { Stepper, Step, StepLabel } from "@material-ui/core";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import styles from "../../styles/createprofile.module.css";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import { useState, useEffect } from "react";
-import TextField from "@mui/material/TextField";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Snackbar, { SnackbarOrigin } from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
-import axios from "axios";
-import { useUser } from "@auth0/nextjs-auth0/client";
-import config from "../../config";
-const steps = ["Personal Details", "Social Links", "Skill Sets"];
+import Head from 'next/head';
+import NavBar from '../../components/navbar';
+import Category from '../../components/category';
+import Footer from '../../components/footer';
+import { Stepper, Step, StepLabel } from '@material-ui/core';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import styles from '../../styles/createprofile.module.css';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import { useState, useEffect } from 'react';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import axios from 'axios';
+import { useUser } from '@auth0/nextjs-auth0/client';
+import config from '../../config';
+import { useRouter } from 'next/router';
+
+const steps = ['Personal Details', 'Social Links', 'Skill Sets'];
 
 export default function CreateProfile() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#21325e", // Replace with your desired primary color
-      },
+        main: '#21325e' // Replace with your desired primary color
+      }
     },
     typography: {
-      fontFamily: "Montserrat, sans-serif", // Replace with your desired font family
-    },
+      fontFamily: 'Montserrat, sans-serif' // Replace with your desired font family
+    }
   });
 
   const [skills, setSkills] = useState([]);
-  const { user } = useUser();
-  const [userId, setUserId] = useState();
+  const [fullName, setFullName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
   const [userDetails, setUserDetails] = useState();
 
-  const isNameValid = (name) =>
-    name.trim().includes(" ") &&
-    name.trim().length > 3 &&
-    name.trim().split(" ").length == 2;
+  const router = useRouter();
+  const { personalId } = router.query;
+  const [presentUserSkills, setPresentUserSkills] = useState({});
 
-  const isMobileValid = (mobile) =>
-    mobile.length == 8 && mobile.match(/^\d{8}$/);
+  const { user, error, isLoading } = useUser();
+  const [userId, setUserId] = useState();
 
-  const isEmailValid = (email) =>
-    email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+  const [userSkillsCheckBox, setUserSkillsCheckBox] = useState({});
+  const [formValues, setFormValues] = useState({
+    name: fullName,
+    mobile: '',
+    email: '',
+    githubUrl: '',
+    linkedinUrl: ''
+  });
 
-  const isGithubUrlValid = (url) =>
-    url.length > 2 &&
-    url.includes(".") &&
-    url.startsWith("http") &&
-    url.includes("github");
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showFailure, setShowFailure] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('User Profile failed. Please try again.');
 
-  const isLinkedinUrlValid = (url) =>
-    url.length > 2 &&
-    url.includes(".") &&
-    url.startsWith("http") &&
-    url.includes("linkedin");
-
-  //get userId with email
+  //fetch userid
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await axios.get(
-          `${config.apiUrl}/users?email=${user.email}`
-        );
+        const response = await axios.get(`${config.apiUrl}/users?email=${user.email}`);
         setUserId(response.data[0].id);
-        // setUserDetails(response.data);
       } catch (err) {
         console.log(err);
       }
     };
     fetchUserId();
   }, [user]);
-  console.log(user);
-  console.log(userId);
+
+  //get full name
+  useEffect(() => {
+    if (user) {
+      const fullName = `${user.given_name} ${user.family_name}`;
+      setFullName(fullName);
+    }
+  }, [user]);
+
+  //get email
+  useEffect(() => {
+    if (user) {
+      const email = `${user.email}`;
+      setUserEmail(email);
+    }
+  }, [user]);
+
+  //data validation
+  const isNameValid = (name) =>
+    name.trim().includes(' ') && name.trim().length > 3 && name.trim().split(' ').length == 2;
+
+  const isMobileValid = (mobile) => mobile.length == 8 && mobile.match(/^\d{8}$/);
+
+  const isEmailValid = (email) => email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+
+  const isGithubUrlValid = (url) =>
+    url.length > 2 && url.includes('.') && url.startsWith('http') && url.includes('github');
+
+  const isLinkedinUrlValid = (url) =>
+    url.length > 2 && url.includes('.') && url.startsWith('http') && url.includes('linkedin');
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`${config.apiUrl}/users/${personalId}`);
+
+        setFormValues({
+          name: response.data.name,
+          // mobile: response.data.mobile,
+          email: response.data.email
+          // linkedinUrl: response.data.linkedinUrl,
+          // githubUrl: response.data.githubUrl
+        });
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+      }
+    };
+    fetchUserData();
+  }, [personalId]);
+  console.log(formValues);
+  console.log(fullName);
 
   //get skills
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/skills"); // Fetch data from the skills db route
+        const response = await fetch('http://localhost:8080/skills'); // Fetch data from the skills db route
         const data = await response.json();
         setSkills(data);
         console.log(data);
       } catch (error) {
-        console.error("Failed to fetch skills:", error);
+        console.error('Failed to fetch skills:', error);
       }
     };
     fetchData();
@@ -105,6 +148,7 @@ export default function CreateProfile() {
       setCheckedSkills(checkedSkills.filter((skill) => skill !== value));
     }
   };
+
   const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
@@ -115,11 +159,14 @@ export default function CreateProfile() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const [formValues, setFormValues] = useState({});
-
   const handleInputChange = (e) => {
     setFormValues({ ...formValues, [e.target.id]: e.target.value });
-    console.log(formValues);
+  };
+  const trimWhitespaces = (obj) => {
+    for (let [key, value] of Object.entries(obj)) {
+      obj[key] = value.trim();
+    }
+    return obj;
   };
 
   const handleSubmit = (e) => {
@@ -136,11 +183,8 @@ export default function CreateProfile() {
       });
   };
 
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showFailure, setShowFailure] = useState(false);
-
   const handleSnackbarClose = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
     setShowSuccess(false); // Close success snackbar
@@ -168,31 +212,31 @@ export default function CreateProfile() {
             alignItems="center"
             component="form"
             sx={{
-              "& .MuiTextField-root": { m: 1, width: "50ch" },
+              '& .MuiTextField-root': { m: 1, width: '50ch' }
             }}
             noValidate
-            autoComplete="off"
-          >
+            autoComplete="off">
             {activeStep === 0 && (
               // Render form content for step 1
               <div className={styles.stepsBox}>
                 <div className={styles.steps}>
                   <div className={styles.header}>Personal details</div>
-                  <p>Your Name</p>
                   <TextField
                     required
                     id="name"
                     onChange={handleInputChange}
-                    placeholder={user.given_name}
-                    // error={!isNameValid(formValues.name)}
-                    // helperText={
-                    //   isNameValid(formValues.name)
-                    //     ? ''
-                    //     : 'Please enter a full name with a space in between your first and last name'
-                    // }
-                    // defaultValue="" -> to pull from users database
+                    label="Name"
+                    value={formValues.name}
+                    placeholder={fullName}
+                    InputLabelProps={{ shrink: true }}
+                    error={!isNameValid(formValues.name)}
+                    helperText={
+                      isNameValid(formValues.name)
+                        ? ''
+                        : 'Please enter a full name with a space in between your first and last name'
+                    }
                   />
-                  <p>Contact Number</p>
+
                   <TextField
                     required
                     id="mobile"
@@ -200,21 +244,42 @@ export default function CreateProfile() {
                     onChange={handleInputChange}
                     inputProps={{
                       maxLength: 10,
-                      pattern: "^0[1-9]\\d{8}$", // Restrict input to only numbers
+                      inputMode: 'numeric',
+                      pattern: '[0-9]*'
                     }}
+                    value={formValues.mobile}
+                    InputLabelProps={{ shrink: true }}
+                    error={!isMobileValid(formValues.mobile)}
+                    helperText={
+                      isMobileValid(formValues.mobile)
+                        ? ''
+                        : 'Please enter an 8 digit mobile number'
+                    }
                   />
-                  <p>Email Address</p>
                   <TextField
                     required
                     id="email"
                     onChange={handleInputChange}
-                    // label="Email address"
-                    placeholder={user.email}
-                    // defaultValue="" -> to put from users database
+                    placeholder={userEmail}
+                    label="Email address"
+                    value={formValues.email}
+                    InputLabelProps={{ shrink: true }}
+                    error={!isEmailValid(formValues.email)}
+                    helperText={isEmailValid(formValues.email) ? '' : 'Email is not valid'}
                   />
                 </div>
                 <div className={styles.btn}>
-                  <Button onClick={handleNext}>Next</Button>
+                  <Button
+                    onClick={handleNext}
+                    disabled={
+                      !(
+                        isNameValid(formValues.name) &&
+                        isMobileValid(formValues.mobile) &&
+                        isEmailValid(formValues.email)
+                      )
+                    }>
+                    Next
+                  </Button>
                 </div>
               </div>
             )}
@@ -225,22 +290,43 @@ export default function CreateProfile() {
                 <div className={styles.steps}>
                   <div className={styles.header}>Social Links</div>
                   <TextField
-                    // required
                     id="githubUrl"
                     onChange={handleInputChange}
                     label="Github Link"
-                    // defaultValue="" -> to put from users database
+                    value={formValues.githubUrl}
+                    InputLabelProps={{ shrink: true }}
+                    error={!isGithubUrlValid(formValues.githubUrl)}
+                    helperText={
+                      isGithubUrlValid(formValues.githubUrl) ? '' : 'Github URL is not valid'
+                    }
                   />
                   <TextField
-                    // required
                     id="linkedinUrl"
                     onChange={handleInputChange}
                     label="LinkedIn Profile Link"
-                    // defaultValue="" -> to put from users database
+                    value={formValues.linkedinUrl}
+                    InputLabelProps={{ shrink: true }}
+                    error={!isLinkedinUrlValid(formValues.linkedinUrl)}
+                    helperText={
+                      isLinkedinUrlValid(formValues.linkedinUrl) ? '' : 'Linkedin URL is not valid'
+                    }
                   />
                 </div>
-                <Button onClick={handleBack}>Back</Button>
-                <Button onClick={handleNext}>Next</Button>
+                <div className={styles.btnGroup}>
+                  <Button onClick={handleBack} sx={{ marginRight: '20px' }}>
+                    Back
+                  </Button>
+                  <Button
+                    onClick={handleNext}
+                    disabled={
+                      !(
+                        isGithubUrlValid(formValues.githubUrl) &&
+                        isLinkedinUrlValid(formValues.linkedinUrl)
+                      )
+                    }>
+                    Next
+                  </Button>
+                </div>
               </div>
             )}
 
@@ -248,9 +334,10 @@ export default function CreateProfile() {
               // Render form content for step 3
               <div>
                 <div className={styles.steps}>
-                  <div className={styles.header}>Skill Sets</div>
+                  <div className={styles.header}>Tick all the skill sets that apply to you</div>
                   {skills.map((skill, index) => (
                     <FormControlLabel
+                      required
                       key={index}
                       control={<Checkbox />}
                       label={skill.skill} // Render the skill value as the label
@@ -259,26 +346,36 @@ export default function CreateProfile() {
                     />
                   ))}
                 </div>
-                <Button onClick={handleBack}>Back</Button>
-                <Button
-                  onClick={handleSubmit}
-                  type="submit"
-                  variant="contained"
-                >
-                  Submit
-                </Button>
+                <div className={styles.btnGroup}>
+                  <Button onClick={handleBack} sx={{ marginRight: '20px' }}>
+                    Back
+                  </Button>
+                  <Button
+                    onClick={handleSubmit}
+                    type="submit"
+                    variant="contained"
+                    disabled={
+                      !(
+                        isNameValid(formValues.name) &&
+                        isMobileValid(formValues.mobile) &&
+                        isEmailValid(formValues.email) &&
+                        isGithubUrlValid(formValues.githubUrl) &&
+                        isLinkedinUrlValid(formValues.linkedinUrl)
+                      )
+                    }>
+                    Submit
+                  </Button>
+                </div>
                 <Snackbar
                   open={showSuccess}
                   autoHideDuration={3000}
                   onClose={handleSnackbarClose}
-                  anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                >
+                  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
                   <Alert
                     elevation={6}
                     variant="filled"
                     onClose={handleSnackbarClose}
-                    severity="success"
-                  >
+                    severity="success">
                     User creation successful!
                   </Alert>
                 </Snackbar>
@@ -286,14 +383,12 @@ export default function CreateProfile() {
                   open={showFailure}
                   autoHideDuration={3000}
                   onClose={handleSnackbarClose}
-                  anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                >
+                  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
                   <Alert
                     elevation={6}
                     variant="filled"
                     onClose={handleSnackbarClose}
-                    severity="error"
-                  >
+                    severity="error">
                     User creation failed. Please try again.
                   </Alert>
                 </Snackbar>

@@ -14,7 +14,8 @@
 
 .steps {
   display: grid;
-  /* z-index: -1; */
+  align-items: center;
+  text-align: center;
 }
 
 .stepsBox {
@@ -25,11 +26,23 @@
 
 .btn {
   margin: auto;
-  position: relative;
+  text-align: center;
   padding-top: 20px;
 }
 
 .slidesUpload {
   margin: auto;
   position: relative;
+}
+
+.btnGroup {
+  margin-top: 40px;
+  align-items: center;
+  text-align: center;
+  /* position: relative; */
+}
+
+.skills {
+  text-align: center;
+  width: 350px;
 }
