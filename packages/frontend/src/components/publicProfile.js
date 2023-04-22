@@ -8,8 +8,6 @@ import {
   ListItemText,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
 import styles from "../styles/profile.module.css";
 import Link from "@mui/material/Link";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -20,7 +18,7 @@ import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import HandymanIcon from "@mui/icons-material/Handyman";
 import ProjectCardsContainer from "./projectCardsContainer";
 import ContributorProjectCardsContainer from "./contributorProjectCardsContainer";
-import { BACKEND_URL } from "../constants/backendUrl";
+import { config } from "../config";
 
 export default function PublicProfile({ personalId }) {
   // Should this be a reusable component???? To be shared across public and personal
@@ -40,7 +38,9 @@ export default function PublicProfile({ personalId }) {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/users/${personalId}`);
+        const response = await axios.get(
+          `${config.apiUrl}/users/${personalId}`
+        );
 
         setProfile(response.data);
       } catch (err) {
@@ -78,13 +78,7 @@ export default function PublicProfile({ personalId }) {
       children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
     };
   }
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-  }));
+
   function generateSkillsList(skills) {
     if (skills.length < 1) {
       return (

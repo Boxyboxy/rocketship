@@ -16,7 +16,7 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import TableHead from "@mui/material/TableHead";
-import { BACKEND_URL } from "../constants/backendUrl";
+import config from "../config";
 import axios from "axios";
 
 function TablePaginationActions(props) {
@@ -203,7 +203,7 @@ export default function FundingHistory({ personalId }) {
     const fetchFundings = async () => {
       try {
         const response = await axios.get(
-          `${BACKEND_URL}/fundings?userId=${personalId}`
+          `${config.apiUrl}/fundings?userId=${personalId}`
         );
         setFundings(response.data);
       } catch (err) {

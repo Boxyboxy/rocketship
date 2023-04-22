@@ -5,7 +5,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
-import { BACKEND_URL } from "../constants/backendUrl";
+import { config } from "../config";
 import axios from "axios";
 import { BorderLinearProgress } from "./BorderLinearProgress";
 import Chip from "@mui/material/Chip";
@@ -19,7 +19,7 @@ export default function ProjectCard({ project, ownerBoolean }) {
     const fetchFunding = async () => {
       try {
         const response = await axios.get(
-          `${BACKEND_URL}/fundings/sum/${project.id}`
+          `${config.apiUrl}/fundings/sum/${project.id}`
         );
 
         if (
@@ -42,7 +42,7 @@ export default function ProjectCard({ project, ownerBoolean }) {
     const fetchProjectOwner = async () => {
       try {
         const response = await axios.get(
-          `${BACKEND_URL}/users/${project.userId}`
+          `${config.apiUrl}/users/${project.userId}`
         );
 
         setProjectOwner(response.data);
