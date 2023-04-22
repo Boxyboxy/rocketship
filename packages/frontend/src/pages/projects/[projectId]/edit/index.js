@@ -2,8 +2,8 @@ import Head from "next/head";
 import Grid from "@mui/material/Unstable_Grid2";
 import { useEffect, useState } from "react";
 import { Typography, Button, Box, Checkbox } from "@mui/material";
-import NavBar from "../../../../../components/navbar";
-import Category from "../../../../../components/category";
+import NavBar from "../../../../components/navbar";
+import Category from "../../../../components/category";
 import { useRouter } from "next/router";
 import axios from "axios";
 import TextField from "@mui/material/TextField";
@@ -22,15 +22,12 @@ export default function EditProjectPage() {
   const [specificProject, setSpecificProject] = useState();
   const [formData, setFormData] = useState({});
 
-  const [creatorId, setCreatorId] = useState();
   const [projectId, setProjectId] = useState();
+  const [allCategories, setAllCategories] = useState();
   const [skills, setSkills] = useState([]);
   const [allSkills, setAllSkills] = useState();
 
   useEffect(() => {
-    if (router.query.creatorId) {
-      setCreatorId(router.query.creatorId);
-    }
     if (router.query.projectId) {
       setProjectId(router.query.projectId);
     }
@@ -38,74 +35,78 @@ export default function EditProjectPage() {
 
   useEffect(() => {
     // To be refactored and shared between project page and edit project page
-    const fetchProject = async () => {
-      try {
-        const [projectResponse, userResponse] = await Promise.all([
-          axios.get(`http://localhost:8080/projects/${projectId}`),
-          axios.get(`http://localhost:8080/users/${creatorId}`),
-        ]);
-
-        const [categoryResponse, skillsNeededResponse, allSkillsDB] =
-          await Promise.all([
-            axios.get(
-              `http://localhost:8080/categories/${projectResponse.data.categoryId}`
-            ),
-            axios.get(
-              `http://localhost:8080/requiredSkills?projectId=${projectId}`
-            ),
-            axios.get(`http://localhost:8080/skills`),
+    if (projectId) {
+      const fetchProject = async () => {
+        try {
+          const [projectResponse, allCategoriesResponse] = await Promise.all([
+            axios.get(`http://localhost:8080/projects/${projectId}`),
+            // axios.get(`http://localhost:8080/users/${creatorId}`),
+            axios.get("http://localhost:8080/categories"),
           ]);
 
-        const skillArray = [];
+          setAllCategories(allCategoriesResponse.data);
 
-        for (const skillNeeded of skillsNeededResponse.data) {
-          await axios
-            .get(`http://localhost:8080/skills/${skillNeeded.skillId}`)
-            .then(function (response) {
-              skillArray.push(response.data.skill);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
+          const [categoryResponse, skillsNeededResponse, allSkillsDB] =
+            await Promise.all([
+              axios.get(
+                `http://localhost:8080/categories/${projectResponse.data.categoryId}`
+              ),
+              axios.get(
+                `http://localhost:8080/requiredSkills?projectId=${projectId}`
+              ),
+              axios.get(`http://localhost:8080/skills`),
+            ]);
+
+          const skillArray = [];
+
+          for (const skillNeeded of skillsNeededResponse.data) {
+            await axios
+              .get(`http://localhost:8080/skills/${skillNeeded.skillId}`)
+              .then(function (response) {
+                skillArray.push(response.data.skill);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          }
+          const allSkillsArrayDB = allSkillsDB.data.map((skill) => skill.skill);
+
+          setAllSkills(allSkillsArrayDB);
+          setSkills(skillArray);
+
+          const editedProject = {
+            ...projectResponse.data,
+            categoryName: categoryResponse.data.name,
+            categoryId: categoryResponse.data.id,
+          };
+
+          setSpecificProject(editedProject);
+
+          setFormData({
+            name: editedProject.name,
+            location: editedProject.location,
+            summary: editedProject.summary,
+            details: editedProject.details,
+            categoryId: editedProject.categoryId,
+          });
+        } catch (err) {
+          console.log(err);
         }
-        const allSkillsArrayDB = allSkillsDB.data.map((skill) => skill.skill);
-
-        console.log(allSkillsArrayDB);
-        console.log(skillArray);
-        setAllSkills(allSkillsArrayDB);
-        setSkills(skillArray);
-
-        const editedProject = {
-          ...projectResponse.data,
-          creatorName: userResponse.data.name,
-          categoryName: categoryResponse.data.name,
-        };
-
-        setSpecificProject(editedProject);
-
-        setFormData({
-          name: editedProject.name,
-          location: editedProject.location,
-          summary: editedProject.summary,
-          details: editedProject.details,
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchProject().then(console.log(specificProject));
-  }, [creatorId, projectId]);
+      };
+      fetchProject().then(console.log(formData));
+    }
+  }, [projectId]);
 
   const handleChange = (e) => {
-    console.log(e.target.name);
+    console.log(e.target.name + " value is " + e.target.value);
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    console.log(formData.name);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData); // handle form submission logic here
+    console.log(formData);
   };
+
   return (
     <div>
       <NavBar />
@@ -145,17 +146,29 @@ export default function EditProjectPage() {
             onChange={handleChange}
             value={formData.details}
           />
+
           <br />
           <p>Project Category</p>
-          <Select onChange={handleChange}>
-            <MenuItem value="">Select an option</MenuItem>
-            <MenuItem value="fintech">Fintech</MenuItem>
-            <MenuItem value="healthtech">Health Tech</MenuItem>
-            <MenuItem value="fnb">F&B</MenuItem>
-            <MenuItem value="socialmedia">Social Media</MenuItem>
-            <MenuItem value="games">Games</MenuItem>
-            <MenuItem value="agritech">Agritech</MenuItem>
-          </Select>
+
+          {formData.categoryId && (
+            <Select
+              onChange={handleChange}
+              id="categoryId"
+              name="categoryId"
+              value={formData.categoryId}
+              fullWidth
+            >
+              {allCategories &&
+                allCategories.map((category) => {
+                  return (
+                    <MenuItem key={category.id} value={category.id}>
+                      {category.name}
+                    </MenuItem>
+                  );
+                })}
+            </Select>
+          )}
+
           <br />
           <FormLabel component="legend">Skills</FormLabel>
           <FormGroup>
