@@ -62,7 +62,7 @@
 }
 
 .sort {
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
   margin-right: 20px;
   background-color: #f1d00a;
   border: 1px solid #f1d00a;
@@ -85,4 +85,10 @@
 .stat {
   font-size: 3rem;
   color: #3e497a;
+}
+
+.projectsContainer {
+  /* margin: 20px; */
+  display: flex;
+  flex-wrap: wrap;
 }

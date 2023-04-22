@@ -2,11 +2,6 @@ import Head from 'next/head';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useEffect, useState } from 'react';
 import { Typography } from '@mui/material';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Chip from '@mui/material/Chip';
 import NavBar from '../../components/navbar';
 import Category from '../../components/category';
 import axios from 'axios';
@@ -20,6 +15,7 @@ import Link from 'next/link';
 import Footer from '../../components/footer';
 import styles from '../../styles/projects.module.css';
 import AnimateNumbers from '../../components/animateNumbers';
+import ProjectCardsContainer from '../../components/projectCardsContainer';
 
 export default function HomePage() {
   // const [numOfProjects, setNumOfProjects] = useState(1238);
@@ -29,7 +25,7 @@ export default function HomePage() {
   const [featuredProject, setFeaturedProject] = useState();
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const projectsPerPage = 9;
+  const projectsPerPage = 8;
   const [dateSortOption, setDateSortOption] = useState('asc');
   const [fundingSortOption, setFundingSortOption] = useState('asc');
   const [projectsFunding, setProjectsFunding] = useState([]);
@@ -250,45 +246,7 @@ export default function HomePage() {
           </Button>
         </Box>
         <div className={styles.title}>
-          <Grid container spacing={2}>
-            {projectsToDisplay.map((project) => {
-              return (
-                <Grid key={project.id} xs={12} sm={12} md={6} lg={4}>
-                  <Link className={styles.name} href={`/projects/${project.id}`}>
-                    <Card
-                      sx={{
-                        maxWidth: 345,
-                        height: 350,
-                        transition: 'transform 0.2s',
-                        '&:hover': { transform: 'scale(1.05)' }
-                      }}>
-                      <CardMedia
-                        sx={{ height: 140 }}
-                        image={project.coverImage}
-                        title={project.name}
-                      />
-                      <CardContent>
-                        <Stack direction="row" spacing={1}>
-                          <Typography gutterBottom variant="h5" component="div">
-                            {project.name}
-                          </Typography>
-                          {project.fundingHit && project.fundingGoal != null ? (
-                            <Chip label="Fully funded!" color="success" />
-                          ) : (
-                            <></>
-                          )}
-                        </Stack>
-                        <Typography variant="body2">{project.summary}</Typography>
-                      </CardContent>
-                      <CardActions>
-                        <Button href={`/profile/${project.userId}`}>{project.userName}</Button>
-                      </CardActions>
-                    </Card>
-                  </Link>
-                </Grid>
-              );
-            })}
-          </Grid>
+          <ProjectCardsContainer projects={projectsToDisplay} />
         </div>
         {projectsToDisplay.length >= 1 && (
           <Stack spacing={2} className={styles.pagination}>
@@ -297,6 +255,7 @@ export default function HomePage() {
               color="primary"
               page={currentPage}
               onChange={handlePageChange}
+              sx={{ marginRight: '20px' }}
             />
           </Stack>
         )}

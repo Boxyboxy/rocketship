@@ -192,9 +192,8 @@ export default function ProjectPage() {
             creatorName: userResponse.data.name,
             categoryName: categoryResponse.data.name
           };
-          // console.log(editedProject);
+
           setSpecificProject(editedProject);
-          // console.log(specificProject);
         } catch (err) {
           console.log(err);
         }
@@ -202,6 +201,7 @@ export default function ProjectPage() {
       fetchProject().then(console.log(specificProject));
     }
   }, [creatorId, projectId]);
+  console.log(specificProject);
 
   useEffect(() => {
     const fetchUserId = async () => {
