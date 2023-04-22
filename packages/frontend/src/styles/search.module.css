@@ -1,12 +1,13 @@
 .header {
-  margin: 50px;
+  margin: 30px 50px 0 50px;
 }
 
 .searchContainer {
+  margin-left: 50px;
   margin: 20px;
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  /* gap: 5px; */
 }
 
 .card {
@@ -45,11 +46,4 @@
 .pagination {
   padding: 10px;
   float: right;
-}
-
-.searchResultsContainer {
-  margin: 100px;
-  /* display: flex;
-  flex-wrap: wrap;
-  gap: 16px; */
 }

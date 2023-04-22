@@ -16,6 +16,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import Link from 'next/link';
+import ProjectCardsContainer from '../../components/projectCardsContainer';
 
 const SearchResults = () => {
   const router = useRouter();
@@ -25,7 +26,7 @@ const SearchResults = () => {
   const [projectsArray, setProjectsArray] = useState([]);
   const [topProjects, setTopProjects] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const projectsPerPage = 6;
+  const projectsPerPage = 8;
   const [projectsFunding, setProjectsFunding] = useState([]);
   const [filteredProjectswFunding, setFilteredProjectswFunding] = useState([]);
 
@@ -72,7 +73,7 @@ const SearchResults = () => {
       })
       .then((response) => {
         setSearchResults(response.data);
-        console.log(response.data);
+        // console.log(response);
       });
   }, [inputValue]);
 
@@ -123,7 +124,7 @@ const SearchResults = () => {
         const top3Projects = projectsArray.slice(0, 3);
         // Set the top 3 projects to the state
         setTopProjects(top3Projects);
-        console.log(top3Projects);
+        // console.log(top3Projects);
       })
       .catch((error) => {
         console.error('Error fetching projects:', error);
@@ -145,46 +146,16 @@ const SearchResults = () => {
     <div>
       <NavBar />
       <Category />
-      <h1 className={styles.header}>Search Results for "{inputValue}"</h1>
       {searchResults.length ? (
-        <Grid
-          className={styles.searchContainer}
-          container
-          spacing={2}
-          direction="row"
-          justify="flex-start"
-          alignItems="flex-start">
-          {projectsToDisplay.map((result) => (
-            <Grid item xs={12} sm={6} md={3} key={result.id}>
-              <Card className={styles.card} sx={{ maxWidth: 345 }}>
-                <CardMedia sx={{ height: 140 }} image={result.coverImage} title={result.name} />
-                <CardContent>
-                  <Stack direction="row" spacing={1}>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {result.name}
-                    </Typography>
-                    {result.fundingHit && result.fundingGoal != null ? (
-                      <Chip label="Fully funded!" color="success" />
-                    ) : (
-                      <></>
-                    )}
-                  </Stack>
-                  <Typography variant="body2" color="text.secondary">
-                    {result.summary}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Link
-                    className={styles.linkName}
-                    href={`/projects/${result.userId}/${result.id}`}
-                    passHref>
-                    <Button size="small">View More</Button>
-                  </Link>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+        <h1 className={styles.header}>Search Results for "{inputValue}"</h1>
+      ) : (
+        <h1 className={styles.header}>No search results for "{inputValue}"</h1>
+      )}
+      
+      {searchResults.length ? (
+        <div className={styles.searchContainer}>
+        <ProjectCardsContainer projects={projectsToDisplay} /></div>
+        
       ) : (
         <div className={styles.header}>
           <div className={styles.title}>We can't find what you are looking for ☹️ </div>
@@ -200,25 +171,33 @@ const SearchResults = () => {
             {topProjects.map((result) => (
               // <div className={styles.searchResultsContainer}>
               <Grid item xs={12} sm={6} md={3} key={result.id}>
-                <Card className={styles.card} sx={{ maxWidth: 345 }}>
-                  <CardMedia sx={{ height: 140 }} image={result.coverImage} title={result.name} />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {result.name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {result.summary}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Link
-                      className={styles.linkName}
-                      href={`/projects/${result.userId}/${result.id}`}
-                      passHref>
-                      <Button size="small">View More</Button>
-                    </Link>
-                  </CardActions>
-                </Card>
+                <Link
+                  className={styles.linkName}
+                  href={`/projects/${result.userId}/${result.id}`}
+                  passHref>
+                  <Card
+                    className={styles.card}
+                    sx={{
+                      maxWidth: 345,
+                      transition: 'transform 0.2s',
+                      '&:hover': { transform: 'scale(1.05)' }
+                    }}>
+                    <CardMedia sx={{ height: 140 }} image={result.coverImage} title={result.name} />
+                    <CardContent sx={{ height: 120, overflow: 'hidden' }}>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {result.name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {result.summary}
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Link className={styles.linkName} href={`/profile/${result.userId}`} passHref>
+                        <Button size="small">{result.userName}</Button>
+                      </Link>
+                    </CardActions>
+                  </Card>{' '}
+                </Link>
               </Grid>
               // </div>
             ))}
@@ -232,6 +211,7 @@ const SearchResults = () => {
             color="primary"
             page={currentPage}
             onChange={handlePageChange}
+            sx={{ marginRight: '20px' }}
           />
         </Stack>
       )}
