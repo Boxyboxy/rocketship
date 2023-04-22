@@ -2,7 +2,7 @@ import styles from "../styles/projectCardsContainer.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ContributorProjectCard from "./contributorProjectCard";
-import { BACKEND_URL } from "../constants/backendUrl";
+import { config } from "../config";
 export default function ContributorProjectCardsContainer({ userId }) {
   // TODO: Display message if there are no contributions
   const [contributions, setContributions] = useState([]);
@@ -10,7 +10,7 @@ export default function ContributorProjectCardsContainer({ userId }) {
     const fetchContributions = async () => {
       try {
         const response = await axios.get(
-          `${BACKEND_URL}/contributions?userId=${userId}`
+          `${config.apiUrl}/contributions?userId=${userId}`
         );
 
         setContributions(response.data);

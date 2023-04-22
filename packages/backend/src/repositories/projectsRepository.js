@@ -1,6 +1,6 @@
 const { project } = require("../db/models");
 const logger = require("../middleware/logger");
-const { pitchSlide, requiredSkill } = require("../db/models");
+const { pitchSlide, category, skill } = require("../db/models");
 const {
   deletePitchSlidesByProjectId,
 } = require("../repositories/pitchSlidesRepository");
@@ -15,7 +15,13 @@ module.exports = {
   },
 
   getProjectById(id) {
-    const options = {};
+    const options = {
+      include: [
+        { model: pitchSlide },
+        { model: category, where: {} },
+        { model: skill },
+      ],
+    };
     if (id) options.where = { id: id };
     return project.findOne(options);
   },

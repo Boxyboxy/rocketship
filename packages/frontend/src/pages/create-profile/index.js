@@ -1,35 +1,35 @@
-import Head from 'next/head';
-import NavBar from '../../components/navbar';
-import Category from '../../components/category';
-import Footer from '../../components/footer';
-import { Stepper, Step, StepLabel } from '@material-ui/core';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import styles from '../../styles/createprofile.module.css';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
-import axios from 'axios';
-import { useUser } from '@auth0/nextjs-auth0/client';
-
-const steps = ['Personal Details', 'Social Links', 'Skill Sets'];
+import Head from "next/head";
+import NavBar from "../../components/navbar";
+import Category from "../../components/category";
+import Footer from "../../components/footer";
+import { Stepper, Step, StepLabel } from "@material-ui/core";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import styles from "../../styles/createprofile.module.css";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import { useState, useEffect } from "react";
+import TextField from "@mui/material/TextField";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Snackbar, { SnackbarOrigin } from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import axios from "axios";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import config from "../../config";
+const steps = ["Personal Details", "Social Links", "Skill Sets"];
 
 export default function CreateProfile() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: '#21325e' // Replace with your desired primary color
-      }
+        main: "#21325e", // Replace with your desired primary color
+      },
     },
     typography: {
-      fontFamily: 'Montserrat, sans-serif' // Replace with your desired font family
-    }
+      fontFamily: "Montserrat, sans-serif", // Replace with your desired font family
+    },
   });
 
   const [skills, setSkills] = useState([]);
@@ -38,23 +38,35 @@ export default function CreateProfile() {
   const [userDetails, setUserDetails] = useState();
 
   const isNameValid = (name) =>
-    name.trim().includes(' ') && name.trim().length > 3 && name.trim().split(' ').length == 2;
+    name.trim().includes(" ") &&
+    name.trim().length > 3 &&
+    name.trim().split(" ").length == 2;
 
-  const isMobileValid = (mobile) => mobile.length == 8 && mobile.match(/^\d{8}$/);
+  const isMobileValid = (mobile) =>
+    mobile.length == 8 && mobile.match(/^\d{8}$/);
 
-  const isEmailValid = (email) => email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+  const isEmailValid = (email) =>
+    email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 
   const isGithubUrlValid = (url) =>
-    url.length > 2 && url.includes('.') && url.startsWith('http') && url.includes('github');
+    url.length > 2 &&
+    url.includes(".") &&
+    url.startsWith("http") &&
+    url.includes("github");
 
   const isLinkedinUrlValid = (url) =>
-    url.length > 2 && url.includes('.') && url.startsWith('http') && url.includes('linkedin');
+    url.length > 2 &&
+    url.includes(".") &&
+    url.startsWith("http") &&
+    url.includes("linkedin");
 
   //get userId with email
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/users?email=${user.email}`);
+        const response = await axios.get(
+          `${config.apiUrl}/users?email=${user.email}`
+        );
         setUserId(response.data[0].id);
         // setUserDetails(response.data);
       } catch (err) {
@@ -70,12 +82,12 @@ export default function CreateProfile() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8080/skills'); // Fetch data from the skills db route
+        const response = await fetch("http://localhost:8080/skills"); // Fetch data from the skills db route
         const data = await response.json();
         setSkills(data);
         console.log(data);
       } catch (error) {
-        console.error('Failed to fetch skills:', error);
+        console.error("Failed to fetch skills:", error);
       }
     };
     fetchData();
@@ -128,7 +140,7 @@ export default function CreateProfile() {
   const [showFailure, setShowFailure] = useState(false);
 
   const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setShowSuccess(false); // Close success snackbar
@@ -156,10 +168,11 @@ export default function CreateProfile() {
             alignItems="center"
             component="form"
             sx={{
-              '& .MuiTextField-root': { m: 1, width: '50ch' }
+              "& .MuiTextField-root": { m: 1, width: "50ch" },
             }}
             noValidate
-            autoComplete="off">
+            autoComplete="off"
+          >
             {activeStep === 0 && (
               // Render form content for step 1
               <div className={styles.stepsBox}>
@@ -187,7 +200,7 @@ export default function CreateProfile() {
                     onChange={handleInputChange}
                     inputProps={{
                       maxLength: 10,
-                      pattern: '^0[1-9]\\d{8}$' // Restrict input to only numbers
+                      pattern: "^0[1-9]\\d{8}$", // Restrict input to only numbers
                     }}
                   />
                   <p>Email Address</p>
@@ -247,19 +260,25 @@ export default function CreateProfile() {
                   ))}
                 </div>
                 <Button onClick={handleBack}>Back</Button>
-                <Button onClick={handleSubmit} type="submit" variant="contained">
+                <Button
+                  onClick={handleSubmit}
+                  type="submit"
+                  variant="contained"
+                >
                   Submit
                 </Button>
                 <Snackbar
                   open={showSuccess}
                   autoHideDuration={3000}
                   onClose={handleSnackbarClose}
-                  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                  anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                >
                   <Alert
                     elevation={6}
                     variant="filled"
                     onClose={handleSnackbarClose}
-                    severity="success">
+                    severity="success"
+                  >
                     User creation successful!
                   </Alert>
                 </Snackbar>
@@ -267,12 +286,14 @@ export default function CreateProfile() {
                   open={showFailure}
                   autoHideDuration={3000}
                   onClose={handleSnackbarClose}
-                  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                  anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                >
                   <Alert
                     elevation={6}
                     variant="filled"
                     onClose={handleSnackbarClose}
-                    severity="error">
+                    severity="error"
+                  >
                     User creation failed. Please try again.
                   </Alert>
                 </Snackbar>

@@ -1,30 +1,30 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { categorydata } from '../constants/categorydata';
-import styles from '../styles/categorypage.module.css';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
-import { BACKEND_URL } from '../constants/categorydata';
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { Box, Typography } from '@mui/material';
-import Chip from '@mui/material/Chip';
-import Link from 'next/link';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { categorydata } from "../constants/categorydata";
+import styles from "../styles/categorypage.module.css";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Button from "@mui/material/Button";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import { config } from "../config";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { Box, Typography } from "@mui/material";
+import Chip from "@mui/material/Chip";
+import Link from "next/link";
 
 const categoryMapping = {
-  fintech: 'Fintech',
-  healthtech: 'Healthtech',
-  socialmedia: 'Social Media',
-  games: 'Games',
-  agritech: 'Agritech',
-  edutech: 'Edutech',
-  ecommerce: 'Ecommerce',
-  fnb: 'FnB'
+  fintech: "Fintech",
+  healthtech: "Healthtech",
+  socialmedia: "Social Media",
+  games: "Games",
+  agritech: "Agritech",
+  edutech: "Edutech",
+  ecommerce: "Ecommerce",
+  fnb: "FnB",
 };
 
 export default function CategoryPage({ selectedCategory }) {
@@ -35,8 +35,8 @@ export default function CategoryPage({ selectedCategory }) {
   const projectsPerPage = 6;
   const [sortedProjects, setSortedProjects] = useState(filteredProjects); // initial sorted projects array
   const [projectsFunding, setProjectsFunding] = useState([]);
-  const [dateSortOption, setDateSortOption] = useState('asc');
-  const [fundingSortOption, setFundingSortOption] = useState('asc');
+  const [dateSortOption, setDateSortOption] = useState("asc");
+  const [fundingSortOption, setFundingSortOption] = useState("asc");
   const [projectOwner, setProjectOwner] = useState({});
   const [filteredProjectswFunding, setFilteredProjectswFunding] = useState([]);
   const [randomProjectwFunding, setRandomProjectwFunding] = useState(null);
@@ -44,10 +44,10 @@ export default function CategoryPage({ selectedCategory }) {
   useEffect(() => {
     const fetchFeaturedProject = async () => {
       try {
-        const mappedCategoryName = categoryMapping[selectedCategory.name] || selectedCategory.name;
+        const mappedCategoryName =
+          categoryMapping[selectedCategory.name] || selectedCategory.name;
         const response = await axios.get(
-          // `${BACKEND_URL}/projects?categoryName=${mappedCategoryName}`
-          `http://localhost:8080/projects?categoryName=${mappedCategoryName}`
+          `${config.apiUrl}/projects?categoryName=${mappedCategoryName}`
         );
 
         setFeaturedProjects(response.data);
@@ -72,11 +72,11 @@ export default function CategoryPage({ selectedCategory }) {
     // Format the date in the desired format "DD-MMM-YYYY"
     const formattedData = filteredProjects.map((item) => ({
       ...item,
-      date: new Date(item.createdAt).toLocaleDateString('en-US', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric'
-      })
+      date: new Date(item.createdAt).toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }),
     }));
 
     setFilteredProjects(formattedData);
@@ -93,7 +93,9 @@ export default function CategoryPage({ selectedCategory }) {
         for (const project of filteredProjects) {
           try {
             const fundingPromises = filteredProjects.map(async (project) => {
-              const response = await axios.get(`http://localhost:8080/fundings/sum/${project.id}`);
+              const response = await axios.get(
+                `http://localhost:8080/fundings/sum/${project.id}`
+              );
               return { ...project, funding: response.data };
             });
 
@@ -112,14 +114,14 @@ export default function CategoryPage({ selectedCategory }) {
 
   //add funding to random project
   useEffect(() => {
-    console.log('useEffect called');
+    console.log("useEffect called");
     (async () => {
       if (randomProject) {
         try {
           const response = await axios.get(
             `http://localhost:8080/fundings/sum/${randomProject.id}`
           );
-          console.log('fetchRandomFunding called');
+          console.log("fetchRandomFunding called");
           const data = response.data;
           setRandomFunding((prevState) => ({ ...prevState, ...data }));
           console.log(randomProjectwFunding);
@@ -136,7 +138,7 @@ export default function CategoryPage({ selectedCategory }) {
     const filteredProjectswFunding = projectsFunding.map((project) => {
       return {
         ...project,
-        fundingHit: project.funding >= project.fundingGoal
+        fundingHit: project.funding >= project.fundingGoal,
       };
     });
 
@@ -146,10 +148,10 @@ export default function CategoryPage({ selectedCategory }) {
 
   //for sorting
   const handleSort = (button) => {
-    if (button === 'date') {
-      setDateSortOption(dateSortOption === 'asc' ? 'desc' : 'asc');
-    } else if (button === 'funding') {
-      setFundingSortOption(fundingSortOption === 'asc' ? 'desc' : 'asc');
+    if (button === "date") {
+      setDateSortOption(dateSortOption === "asc" ? "desc" : "asc");
+    } else if (button === "funding") {
+      setFundingSortOption(fundingSortOption === "asc" ? "desc" : "asc");
     }
   };
 
@@ -157,7 +159,7 @@ export default function CategoryPage({ selectedCategory }) {
   useEffect(() => {
     const sortedArray = [...filteredProjectswFunding];
     sortedArray.sort((a, b) => {
-      if (dateSortOption === 'desc' && fundingSortOption === 'desc') {
+      if (dateSortOption === "desc" && fundingSortOption === "desc") {
         if (new Date(b.date) < new Date(a.date)) {
           return -1;
         } else if (new Date(b.date) > new Date(a.date)) {
@@ -165,9 +167,9 @@ export default function CategoryPage({ selectedCategory }) {
         } else {
           return b.funding - a.funding; // if dates are equal, sort by funding descending
         }
-      } else if (dateSortOption === 'desc') {
+      } else if (dateSortOption === "desc") {
         return new Date(b.date) - new Date(a.date); // sort by date descending
-      } else if (fundingSortOption === 'desc') {
+      } else if (fundingSortOption === "desc") {
         return b.funding - a.funding; // sort by funding descending
       } else {
         return 0; // no sorting applied
@@ -191,7 +193,9 @@ export default function CategoryPage({ selectedCategory }) {
   useEffect(() => {
     const fetchProjectOwner = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/users/${randomProject.userId}`);
+        const response = await axios.get(
+          `http://localhost:8080/users/${randomProject.userId}`
+        );
 
         setProjectOwner(response.data);
       } catch (err) {
@@ -219,7 +223,8 @@ export default function CategoryPage({ selectedCategory }) {
             <Link
               className={styles.linkName}
               href={`/projects/${randomProject.userId}/${randomProject.id}`}
-              passHref>
+              passHref
+            >
               <img
                 // width={500}
                 height={400}
@@ -232,8 +237,11 @@ export default function CategoryPage({ selectedCategory }) {
             <div className={styles.txtContainer}>
               <Link
                 className={styles.linkName}
-                href={`/projects/${randomProject.userId}/${randomProject.id}`}>
-                <div className={styles.featuredHeader}>{randomProject.name}</div>
+                href={`/projects/${randomProject.userId}/${randomProject.id}`}
+              >
+                <div className={styles.featuredHeader}>
+                  {randomProject.name}
+                </div>
               </Link>
               {/* {randomProjectwFunding.fundingGoal != null ? (
                 <Chip label="Fully funded!" color="success" />
@@ -244,7 +252,10 @@ export default function CategoryPage({ selectedCategory }) {
               <p className={styles.featuredTxt}>
                 {randomProject.details} {randomProject.id}
               </p>
-              <Link className={styles.name} href={`/profile/${randomProject.userId}`}>
+              <Link
+                className={styles.name}
+                href={`/profile/${randomProject.userId}`}
+              >
                 {projectOwner.name}
               </Link>
             </div>
@@ -262,14 +273,28 @@ export default function CategoryPage({ selectedCategory }) {
 
           {filteredProjects.length > 1 && (
             <Box>
-              <Button className={styles.sort} onClick={() => handleSort('date')}>
+              <Button
+                className={styles.sort}
+                onClick={() => handleSort("date")}
+              >
                 Date
-                {dateSortOption === 'asc' ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+                {dateSortOption === "asc" ? (
+                  <ArrowDropUpIcon />
+                ) : (
+                  <ArrowDropDownIcon />
+                )}
               </Button>
 
-              <Button className={styles.sort} onClick={() => handleSort('funding')}>
+              <Button
+                className={styles.sort}
+                onClick={() => handleSort("funding")}
+              >
                 Funding
-                {fundingSortOption === 'asc' ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+                {fundingSortOption === "asc" ? (
+                  <ArrowDropUpIcon />
+                ) : (
+                  <ArrowDropDownIcon />
+                )}
               </Button>
             </Box>
           )}
@@ -278,23 +303,25 @@ export default function CategoryPage({ selectedCategory }) {
               <Link
                 className={styles.linkName}
                 href={`/projects/${result.userId}/${result.id}`}
-                passHref>
+                passHref
+              >
                 <Card
                   sx={{
                     maxWidth: 345,
-                    transition: 'transform 0.2s',
-                    '&:hover': { transform: 'scale(1.05)' }
+                    transition: "transform 0.2s",
+                    "&:hover": { transform: "scale(1.05)" },
                   }}
-                  key={result.id}>
+                  key={result.id}
+                >
                   <CardMedia
                     component="img"
                     height="140"
                     width="100%"
                     image={result.coverImage}
                     alt={result.name}
-                    sx={{ objectFit: 'cover', maxHeight: '140px' }}
+                    sx={{ objectFit: "cover", maxHeight: "140px" }}
                   />
-                  <CardContent sx={{ height: 120, overflow: 'hidden' }}>
+                  <CardContent sx={{ height: 120, overflow: "hidden" }}>
                     <Stack direction="row" spacing={1}>
                       <Typography gutterBottom variant="h5" component="div">
                         {result.name}
@@ -305,7 +332,11 @@ export default function CategoryPage({ selectedCategory }) {
                         <></>
                       )}
                     </Stack>
-                    <Typography spacing={10} variant="body2" color="text.secondary">
+                    <Typography
+                      spacing={10}
+                      variant="body2"
+                      color="text.secondary"
+                    >
                       {result.summary}
                     </Typography>
                   </CardContent>

@@ -1,4 +1,9 @@
-const { pitchSlide, category, skill, funding } = require("../db/models");
+const {
+  pitchSlide,
+  category,
+  requiredSkill,
+  funding,
+} = require("../db/models");
 const {
   getAllProjects,
   getProjectById,
