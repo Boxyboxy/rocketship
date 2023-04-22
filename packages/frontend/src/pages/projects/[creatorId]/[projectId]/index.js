@@ -1,29 +1,28 @@
+import Head from 'next/head';
+import Grid from '@mui/material/Unstable_Grid2';
+import { useEffect, useState } from 'react';
+import { Typography, Button, Box, TextField, Chip, Stack } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import CategoryIcon from '@mui/icons-material/Category';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import NavBar from '../../../../components/navbar';
+import Category from '../../../../components/category';
+import { useRouter } from 'next/router';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { config } from '../../../../config';
+import Footer from '../../../../components/footer';
+import styles from '../../../../styles/projectpage.module.css';
+import Link from 'next/link';
 
-import Head from "next/head";
-import Grid from "@mui/material/Unstable_Grid2";
-import { useEffect, useState } from "react";
-import { Typography, Button, Box, TextField, Chip, Stack } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import CategoryIcon from "@mui/icons-material/Category";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import NavBar from "../../../../components/navbar";
-import Category from "../../../../components/category";
-import { useRouter } from "next/router";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import MenuItem from "@mui/material/MenuItem";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { useUser } from "@auth0/nextjs-auth0/client";
-import config from "../../../../config";
-import Footer from "../../../../components/footer";
-import styles from "../../../../styles/projectpage.module.css";
-import Link from "next/link";
-import axios from "axios";
-
+import axios from 'axios';
 
 // PENDING: Will refactor into separate components
 // PENDING: Will update margin/ spacing / design

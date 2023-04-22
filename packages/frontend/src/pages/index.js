@@ -1,14 +1,12 @@
-
-import Head from "next/head";
-import Button from "@mui/material/Button";
-import styles from "../styles/Home.module.css";
-import { useState, useEffect } from "react";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import axios from "axios";
-import config from "../config";
-import { useAuth0 } from "@auth0/auth0-react";
-import AnimateNumbers from "../components/animateNumbers";
-
+import Head from 'next/head';
+import Button from '@mui/material/Button';
+import styles from '../styles/Home.module.css';
+import { useState, useEffect } from 'react';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import axios from 'axios';
+import config from '../config';
+import { useAuth0 } from '@auth0/auth0-react';
+import AnimateNumbers from '../components/animateNumbers';
 
 export default function App() {
   const [projects, setProjects] = useState(0);
