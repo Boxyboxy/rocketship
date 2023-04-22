@@ -18,7 +18,6 @@ module.exports = {
     const options = {
       include: [
         { model: pitchSlide },
-
         { model: category, where: {} },
         { model: skill },
       ],

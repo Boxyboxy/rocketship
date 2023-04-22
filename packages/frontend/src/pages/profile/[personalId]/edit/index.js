@@ -11,14 +11,13 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { useState, useEffect } from "react";
 import styles from "../../../../styles/editprofile.module.css";
-import { BACKEND_URL } from "../../../../constants/backendUrl";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import { useAuth0 } from "@auth0/auth0-react";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import config from "../../../../config";
 export default function EditProfilPage() {
   const router = useRouter();
   const { personalId } = router.query;
@@ -46,7 +45,7 @@ export default function EditProfilPage() {
     const fetchUserId = async () => {
       try {
         const response = await axios.get(
-          `${BACKEND_URL}/users?email=${user.email}`
+          `${config.apiUrl}/users?email=${user.email}`
         );
         setUserId(response.data[0].id);
       } catch (err) {
@@ -101,7 +100,7 @@ export default function EditProfilPage() {
     },
   });
   useEffect(() => {
-    axios.get(`${BACKEND_URL}/skills`).then(({ data }) => {
+    axios.get(`${config.apiUrl}/skills`).then(({ data }) => {
       let skillObjectsArray = Object.values(data);
       const checkBoxBoolean = {};
       skillObjectsArray
@@ -114,7 +113,9 @@ export default function EditProfilPage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/users/${personalId}`);
+        const response = await axios.get(
+          `${config.apiUrl}/users/${personalId}`
+        );
 
         setFormValues({
           name: response.data.name,
@@ -174,23 +175,6 @@ export default function EditProfilPage() {
         (key) => userSkillsCheckBox[key]
       ),
     });
-
-    // axios
-    //   .patch(`${BACKEND_URL}/users/${personalId}`, {
-    //     ...formValues,
-    //     newSkills: Object.keys(userSkillsCheckBox).filter(
-    //       (key) => userSkillsCheckBox[key]
-    //     ),
-    //   })
-    //   .then(function (response) {
-    //     console.log(response);
-    //     setShowSuccess(true);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error.response.data.error);
-    //     setShowFailure(true);
-    //     setErrorMessage(error.response.data.error);
-    //   });
 
     axios({
       url: `/api/users/${userId}`,
