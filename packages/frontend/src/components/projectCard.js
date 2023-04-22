@@ -1,16 +1,17 @@
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import { useEffect, useState } from "react";
-import { config } from "../config";
-import axios from "axios";
-import { BorderLinearProgress } from "./BorderLinearProgress";
-import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
-import Grid from "@mui/material/Grid";
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import { useEffect, useState } from 'react';
+import config from '../config';
+import axios from 'axios';
+import { BorderLinearProgress } from './BorderLinearProgress';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Grid';
+import Link from 'next/link';
+import styles from '../styles/projectcard.module.css';
 
 export default function ProjectCard({ project, ownerBoolean }) {
   const [funding, setFunding] = useState('not loaded');
@@ -19,11 +20,7 @@ export default function ProjectCard({ project, ownerBoolean }) {
   useEffect(() => {
     const fetchFunding = async () => {
       try {
-
-        const response = await axios.get(
-          `${config.apiUrl}/fundings/sum/${project.id}`
-        );
-
+        const response = await axios.get(`${config.apiUrl}/fundings/sum/${project.id}`);
 
         if (
           isNaN(response.data) ||
@@ -44,10 +41,7 @@ export default function ProjectCard({ project, ownerBoolean }) {
   useEffect(() => {
     const fetchProjectOwner = async () => {
       try {
-
-        const response = await axios.get(
-          `${config.apiUrl}/users/${project.userId}`
-        );
+        const response = await axios.get(`${config.apiUrl}/users/${project.userId}`);
 
         setProjectOwner(response.data);
       } catch (err) {
@@ -86,14 +80,9 @@ export default function ProjectCard({ project, ownerBoolean }) {
           ) : (
             <CardActions>
               <Grid container direction="row" justifyContent="flex-start" alignItems="center">
-                {
-                  <Button
-                    size="small"
-                    href={`/profile/${projectOwner.id}`}
-                    sx={{ fontFamily: 'Montserrat' }}>
-                    {projectOwner.name}
-                  </Button>
-                }
+                <Link className={styles.name} href={`/profile/${project.userId}`}>
+                  {projectOwner.name}
+                </Link>
               </Grid>
             </CardActions>
           )}
