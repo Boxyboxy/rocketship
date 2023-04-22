@@ -1,26 +1,24 @@
-
-import Link from "next/link";
-import SmsRoundedIcon from "@mui/icons-material/SmsRounded";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import styles from "../styles/navbar.module.css";
-import axios from "axios";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import config from "../config";
-import Badge from "@mui/material/Badge";
-import MailIcon from "@mui/icons-material/Mail";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import { useUser } from "@auth0/nextjs-auth0/client";
-
+import Link from 'next/link';
+import SmsRoundedIcon from '@mui/icons-material/SmsRounded';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import styles from '../styles/navbar.module.css';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { config } from '../config';
+import Badge from '@mui/material/Badge';
+import MailIcon from '@mui/icons-material/Mail';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 export default function NavBar() {
   const [searchResults, setSearchResults] = useState([]);

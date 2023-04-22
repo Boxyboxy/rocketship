@@ -11,7 +11,8 @@ import config from "../../../config";
 export default function ProfilePage() {
   const router = useRouter();
   const { personalId } = router.query;
-  const { user, isLoading, error } = useUser();
+  const { user, isLoading, error, getAccessTokenSilently, isAuthenticated } =
+    useUser();
   const [userId, setUserId] = useState();
 
   useEffect(() => {
@@ -27,6 +28,9 @@ export default function ProfilePage() {
     };
     fetchUserId();
   }, [user]);
+  console.log(user);
+  console.log(isLoading);
+  console.log(error);
 
   useEffect(() => {
     const handleRedirect = async () => {

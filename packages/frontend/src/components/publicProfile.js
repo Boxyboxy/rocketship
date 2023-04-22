@@ -18,7 +18,7 @@ import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import HandymanIcon from "@mui/icons-material/Handyman";
 import ProjectCardsContainer from "./projectCardsContainer";
 import ContributorProjectCardsContainer from "./contributorProjectCardsContainer";
-import config from "../config";
+import { config } from "../config";
 
 export default function PublicProfile({ personalId }) {
   // Should this be a reusable component???? To be shared across public and personal
