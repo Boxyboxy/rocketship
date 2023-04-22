@@ -159,7 +159,7 @@ export default function EditProfilPage() {
       ...userSkillsCheckBox,
       [event.target.name]: event.target.checked,
     });
-    console.log(userSkillsCheckBox);
+
     // Maps checkbox boolean object into an array of skills to interface with backend
     Object.keys(userSkillsCheckBox).filter(
       (skill) => userSkillsCheckBox[skill]
@@ -169,12 +169,6 @@ export default function EditProfilPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formValuesTrimmed = trimWhitespaces(formValues);
-    console.log({
-      ...formValuesTrimmed,
-      newSkills: Object.keys(userSkillsCheckBox).filter(
-        (key) => userSkillsCheckBox[key]
-      ),
-    });
 
     axios({
       url: `/api/users/${userId}`,
@@ -184,14 +178,13 @@ export default function EditProfilPage() {
       },
       method: "patch",
       data: {
-        ...formValues,
+        ...formValuesTrimmed,
         newSkills: Object.keys(userSkillsCheckBox).filter(
           (key) => userSkillsCheckBox[key]
         ),
       },
     })
       .then(function (response) {
-        console.log(response);
         setShowSuccess(true);
         const handleRedirect = async () => {
           router.push({

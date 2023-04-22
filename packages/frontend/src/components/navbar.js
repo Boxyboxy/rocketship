@@ -5,7 +5,7 @@ import styles from "../styles/navbar.module.css";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { config } from "../config";
+import config from "../config";
 import Badge from "@mui/material/Badge";
 import MailIcon from "@mui/icons-material/Mail";
 import Dialog from "@mui/material/Dialog";

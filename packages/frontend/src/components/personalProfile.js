@@ -19,7 +19,7 @@ import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import HandymanIcon from "@mui/icons-material/Handyman";
 import ProjectCardsContainer from "./projectCardsContainer";
-import { config } from "../config";
+import config from "../config";
 import ContributorProjectCardsContainer from "./contributorProjectCardsContainer";
 import FundingHistory from "./FundingHistory";
 import Button from "@mui/material/Button";

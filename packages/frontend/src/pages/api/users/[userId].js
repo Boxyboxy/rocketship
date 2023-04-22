@@ -6,7 +6,6 @@ export default withApiAuthRequired(async function users(req, res) {
   try {
     const { accessToken } = await getAccessToken(req, res);
 
-    console.log(accessToken);
     // This is a contrived example, normally your external API would exist on another domain.
     const response = await axios.patch(
       `${config.apiUrl}/users/${req.query.userId}`,

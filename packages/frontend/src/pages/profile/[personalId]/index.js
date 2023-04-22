@@ -28,9 +28,6 @@ export default function ProfilePage() {
     };
     fetchUserId();
   }, [user]);
-  console.log(user);
-  console.log(isLoading);
-  console.log(error);
 
   useEffect(() => {
     const handleRedirect = async () => {
