@@ -24,6 +24,15 @@
 
 .btn {
   margin: auto;
+  align-items: center;
+  text-align: center;
   position: relative;
-  padding-top: 20px;
+  /* padding-top: 20px; */
+}
+
+.btnGroup {
+  margin-top: 40px;
+  align-items: center;
+  text-align: center;
+  /* position: relative; */
 }
