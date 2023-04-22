@@ -1,3 +1,4 @@
+
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -14,17 +15,16 @@ import Grid from "@mui/material/Grid";
 import Link from "next/link";
 import styles from "../styles/projectcard.module.css";
 
+
 export default function ContributorProjectCard({ contribution }) {
   // TODO: Style the cards
   const [funding, setFunding] = useState(0);
-  const [projectOwner, setProjectOwner] = useState({ name: "John Doe" });
+  const [projectOwner, setProjectOwner] = useState({ name: 'John Doe' });
 
   useEffect(() => {
     const fetchFunding = async () => {
       try {
-        const response = await axios.get(
-          `${config.apiUrl}/fundings/sum/${contribution.projectId}`
-        );
+        const response = await axios.get(`${config.apiUrl}/fundings/sum/${contribution.projectId}`);
 
         if (
           isNaN(response.data) ||
@@ -46,9 +46,7 @@ export default function ContributorProjectCard({ contribution }) {
   useEffect(() => {
     const fetchProjectOwner = async () => {
       try {
-        const response = await axios.get(
-          `${config.apiUrl}/users/${contribution.project.userId}`
-        );
+        const response = await axios.get(`${config.apiUrl}/users/${contribution.project.userId}`);
 
         setProjectOwner(response.data);
       } catch (err) {
@@ -59,6 +57,7 @@ export default function ContributorProjectCard({ contribution }) {
   }, [contribution]);
 
   return (
+
     <Link className={styles.name} href={`/projects/${contribution.project.id}`}>
       <Card sx={{ minWidth: 345, maxWidth: 345, margin: 10 }}>
         <CardMedia
@@ -123,5 +122,6 @@ export default function ContributorProjectCard({ contribution }) {
         </Typography>
       </Card>
     </Link>
+
   );
 }

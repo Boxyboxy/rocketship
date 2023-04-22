@@ -1,3 +1,4 @@
+
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -14,6 +15,7 @@ import Grid from "@mui/material/Grid";
 import Link from "next/link";
 import styles from "../styles/projectcard.module.css";
 
+
 export default function ProjectCard({ project, ownerBoolean }) {
   const [funding, setFunding] = useState("not loaded");
   const [projectOwner, setProjectOwner] = useState({ name: "John Doe" });
@@ -21,9 +23,11 @@ export default function ProjectCard({ project, ownerBoolean }) {
   useEffect(() => {
     const fetchFunding = async () => {
       try {
+
         const response = await axios.get(
           `${config.apiUrl}/fundings/sum/${project.id}`
         );
+
 
         if (
           isNaN(response.data) ||
@@ -44,9 +48,11 @@ export default function ProjectCard({ project, ownerBoolean }) {
   useEffect(() => {
     const fetchProjectOwner = async () => {
       try {
+
         const response = await axios.get(
           `${config.apiUrl}/users/${project.userId}`
         );
+
 
         setProjectOwner(response.data);
       } catch (err) {
@@ -90,6 +96,7 @@ export default function ProjectCard({ project, ownerBoolean }) {
             ""
           ) : (
             <CardActions>
+
               <Grid
                 container
                 direction="row"
@@ -106,6 +113,7 @@ export default function ProjectCard({ project, ownerBoolean }) {
                     {projectOwner.name}
                   </Link>
                 }
+
               </Grid>
             </CardActions>
           )}
