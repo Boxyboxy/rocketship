@@ -9,7 +9,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import config from "../config";
+import { config } from "../config";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Box, Typography } from "@mui/material";
