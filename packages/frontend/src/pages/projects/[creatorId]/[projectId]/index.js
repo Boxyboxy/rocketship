@@ -41,8 +41,6 @@ export default function ProjectPage() {
   const { user, isLoading, error, getAccessTokenSilently, isAuthenticated } = useUser();
   const [userId, setUserId] = useState();
   const [userSkills, setUserSkills] = useState([]);
-  const [code, setCode] = useState('');
-  const [pitchSlides, setPitchSlides] = useState([]);
 
   //mapping for Chip color display
   const categoryColorMap = {
