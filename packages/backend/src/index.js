@@ -4,7 +4,7 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const { initializeSockets } = require("./sockets");
 
-const index = require("./db/models");
+// const seqIndex = require("./db/models");
 const { initializeMiddleware, errorHandler } = require("./middleware");
 const { PORT } = require("./configs");
 const { SOCKETS_PORT } = require("./configs");
@@ -32,19 +32,15 @@ app.use("/", appRouter);
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Express app listening on port ${PORT}!`);
-});
-
 const initializeApp = async () => {
   // trying to Intialize Sequelize but it doesn't work
-  await index.initializeSequelize();
+  // await seqIndex.initializeSequelize();
 
   // Initialize sockets
   initializeSockets(io);
 
-  http.listen(SOCKETS_PORT, () => {
-    console.log(`🚀 App listening on the port ${SOCKETS_PORT}`);
+  http.listen(PORT, () => {
+    console.log(`🚀 App listening on the port ${PORT}`);
   });
 };
 
