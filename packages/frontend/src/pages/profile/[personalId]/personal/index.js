@@ -31,9 +31,10 @@ export default function PersonalProfilePage() {
 
   useEffect(() => {
     const handleRedirect = async () => {
-      if (userId != personalId) {
+      if (userId && userId != personalId) {
+        let preConstructPath = `/profile/${userId}/personal`;
         router.push({
-          pathname: `/profile/${userId}/personal`,
+          pathname: preConstructPath,
         });
       }
     };

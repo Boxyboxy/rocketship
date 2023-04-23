@@ -82,8 +82,8 @@ export default function PublicProfile({ personalId }) {
   function generateSkillsList(skills) {
     if (skills.length < 1) {
       return (
-        <ListItem>
-          <ListItemText key={1} primary="No skills to display" />
+        <ListItem key={1}>
+          <ListItemText primary="No skills to display" />
         </ListItem>
       );
     }
