@@ -83,13 +83,13 @@ export default function PublicProfile({ personalId }) {
   function generateSkillsList(skills) {
     if (skills.length < 1) {
       return (
-        <ListItem>
+        <ListItem key={1}>
           <ListItemText primary="No skills to display" />
         </ListItem>
       );
     }
-    return skills.map((element) => (
-      <ListItem>
+    return skills.map((element, index) => (
+      <ListItem key={index + 1}>
         <ListItemText primary={element.skill} />
       </ListItem>
     ));
@@ -157,7 +157,7 @@ export default function PublicProfile({ personalId }) {
             </div>
             <div>
               <List>
-                <ListItem>
+                <ListItem key={0}>
                   <ListItemAvatar>
                     <Avatar>
                       <HandymanIcon />
