@@ -6,8 +6,8 @@ import Avatar from "@mui/material/Avatar";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CategoryIcon from "@mui/icons-material/Category";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import NavBar from "../../../../components/navbar";
-import Category from "../../../../components/category";
+import NavBar from "../../../components/navbar";
+import Category from "../../../components/category";
 import { useRouter } from "next/router";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -17,9 +17,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import config from "../../../../config";
-import Footer from "../../../../components/footer";
-import styles from "../../../../styles/projectpage.module.css";
+import config from "../../../config/index";
+import Footer from "../../../components/footer";
+import styles from "../../../styles/projectpage.module.css";
 import Link from "next/link";
 
 import axios from "axios";
@@ -94,29 +94,26 @@ export default function ProjectPage() {
 
   function handleEquityPurchaseClick() {
     router.push({
-      pathname: `/projects/${projectId}/${creatorId}/checkout`,
+      pathname: `/projects/${projectId}/checkout`,
       query: { type: "equity" },
     });
   }
 
   function handleMembershipPurchaseClick() {
     router.push({
-      pathname: `/projects/${projectId}/${creatorId}/checkout`,
+      pathname: `/projects/${projectId}/checkout`,
       query: { type: "membership" },
     });
   }
 
   useEffect(() => {
-    if (router.query.creatorId) {
-      setCreatorId(router.query.creatorId);
-    }
     if (router.query.projectId) {
       setProjectId(router.query.projectId);
     }
-  }, [router.query.creatorId, router.query.projectId]);
+  }, [router.query.projectId]);
 
   useEffect(() => {
-    if (projectId && creatorId) {
+    if (projectId) {
       // will refactor all this
       const fetchProject = async () => {
         try {
@@ -127,7 +124,7 @@ export default function ProjectPage() {
             backerSumResponse,
           ] = await Promise.all([
             axios.get(`http://localhost:8080/projects/${projectId}`),
-            axios.get(`http://localhost:8080/users/${creatorId}`),
+            // axios.get(`http://localhost:8080/users/${creatorId}`),
             axios.get(`http://localhost:8080/fundings/sum/${projectId}`),
             axios.get(
               `http://localhost:8080/fundings/backerSum?projectId=${projectId}`
