@@ -142,7 +142,7 @@ export default function EditProjectPage() {
       <NavBar />
       <div className={styles.formContainer}>
         <form onSubmit={handleSubmit}>
-          <p>Project Name</p>
+          <div className={styles.header}>Project Name</div>
           <TextField
             required
             id="name"
@@ -153,7 +153,9 @@ export default function EditProjectPage() {
             variant="standard"
             fullWidth
           />
-          <p>Give a brief summary of what your Rocket is about</p>
+          <div className={styles.header}>
+            Give a brief summary of what your Rocket is about
+          </div>
           <TextField
             id="summary"
             name="summary"
@@ -162,7 +164,7 @@ export default function EditProjectPage() {
             fullWidth
             value={formData.summary}
           />
-          <p>Location</p>
+          <div className={styles.header}>Location</div>
           <TextField
             required
             id="location"
@@ -172,7 +174,9 @@ export default function EditProjectPage() {
             fullWidth
             variant="standard"
           />
-          <p>Share all the details about your project here:</p>
+          <div className={styles.header}>
+            Share all the details about your project here
+          </div>
           <TextField
             id="details"
             name="details"
@@ -184,7 +188,7 @@ export default function EditProjectPage() {
           />
 
           <br />
-          <p>Project Category</p>
+          <div className={styles.header}>Project Category</div>
 
           {formData.categoryId && (
             <Select
@@ -207,7 +211,8 @@ export default function EditProjectPage() {
 
           <br />
           <br />
-          <p>Skills</p>
+          <div className={styles.header}>Skills</div>
+
           <FormControl component="fieldset" variant="standard">
             <FormLabel component="legend">Current Required Skills</FormLabel>
             <FormGroup>
