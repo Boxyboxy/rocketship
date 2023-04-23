@@ -1,17 +1,19 @@
-import { useState, useEffect } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements } from '@stripe/react-stripe-js';
-import CheckoutForm from '../../../../../components/checkoutForm';
-import { useRouter } from 'next/router';
+import { useState, useEffect } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import CheckoutForm from "../../../../components/checkoutForm";
+import { useRouter } from "next/router";
 
 // Make sure to call loadStripe outside of a component’s render to avoid
 // recreating the Stripe object on every render.
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+);
 
 export default function CustomCheckout() {
   const router = useRouter();
 
-  const [clientSecret, setClientSecret] = useState('');
+  const [clientSecret, setClientSecret] = useState("");
   const [projectId, setProjectId] = useState();
   const [incentive, setIncentive] = useState();
   const [equity, setEquity] = useState();
@@ -22,7 +24,7 @@ export default function CustomCheckout() {
     }
     if (router.query.type) {
       setIncentive(router.query.type);
-      if (router.query.type === 'equity') {
+      if (router.query.type === "equity") {
         setEquity(10);
       }
     }
@@ -31,12 +33,14 @@ export default function CustomCheckout() {
   useEffect(() => {
     if (projectId) {
       // Create PaymentIntent as soon as the page loads
-      fetch('/api/create-payment-intent', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      fetch("/api/create-payment-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          product: [{ projectId: projectId, incentive: incentive, equity: equity }]
-        })
+          product: [
+            { projectId: projectId, incentive: incentive, equity: equity },
+          ],
+        }),
       })
         .then((res) => res.json())
         .then((data) => setClientSecret(data.clientSecret));
@@ -44,14 +48,14 @@ export default function CustomCheckout() {
   }, [projectId]);
 
   const appearance = {
-    theme: 'stripe',
+    theme: "stripe",
     variables: {
-      colorPrimary: '#21325e'
-    }
+      colorPrimary: "#21325e",
+    },
   };
   const options = {
     clientSecret,
-    appearance
+    appearance,
   };
 
   return (
