@@ -16,11 +16,17 @@ import styles from "../../../../styles/editproject.module.css";
 import config from "../../../../config";
 import CircularProgress from "@mui/material/CircularProgress";
 import { getNames } from "country-list";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function EditProjectPage() {
   const router = useRouter();
+
+  const { user, error, isLoading } = useUser();
+  const [userId, setUserId] = useState();
+
   const [specificProject, setSpecificProject] = useState();
   const [formData, setFormData] = useState({});
+  const [projectOwnerId, setProjectOwnerId] = useState();
 
   const [projectId, setProjectId] = useState();
   const [allCategories, setAllCategories] = useState();
@@ -47,10 +53,31 @@ export default function EditProjectPage() {
   //   }
   // };
 
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const response = await axios.get(
+          `${config.apiUrl}/users?email=${user.email}`
+        );
+        setUserId(response.data[0].id);
+        console.log(response.data[0].id);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUserId();
+  }, [user]);
+
   const handleCoverImageChange = (e) => {
     if (e.target.files) {
       setCoverImage(e.target.files[0]);
     }
+  };
+
+  const handleBackButtonClick = () => {
+    router.push({
+      pathname: `/projects`,
+    });
   };
 
   useEffect(() => {
@@ -71,8 +98,6 @@ export default function EditProjectPage() {
   }, []);
 
   useEffect(() => {
-    // To be refactored and shared between project page and edit project page
-
     const fetchProject = async () => {
       try {
         const [projectResponse, allCategoriesResponse] = await Promise.all([
@@ -111,6 +136,8 @@ export default function EditProjectPage() {
           fundingGoal: editedProject.fundingGoal,
           githubRepoUrl: editedProject.githubRepoUrl,
         });
+
+        setProjectOwnerId(editedProject.userId);
       } catch (err) {
         console.log(err);
       }
@@ -193,185 +220,212 @@ export default function EditProjectPage() {
   return (
     <div>
       <NavBar />
-      <div className={styles.formContainer}>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <p>Cover Image</p>
-            <img src={formData.coverImage} width="200" />
+      {projectOwnerId === userId ? (
+        <div className={styles.formContainer}>
+          <form onSubmit={handleSubmit}>
             <div>
-              <Input type="file" onChange={handleCoverImageChange} />
+              <p>Cover Image</p>
+              <img src={formData.coverImage} width="200" />
+              <div>
+                <Input type="file" onChange={handleCoverImageChange} />
+                <Button
+                  sx={{
+                    variant: "primary",
+                    margin: "0px 20px",
+                    color: "white",
+                    backgroundColor: "#21325E",
+                    "&:hover": {
+                      backgroundColor: "#21325E",
+                    },
+                  }}
+                  onClick={handleUploadClick}
+                >
+                  Upload
+                </Button>
+                {uploadLoading && <CircularProgress />}
+              </div>
+            </div>
+            <div className={styles.header}>Project Name</div>
+            <TextField
+              required
+              id="name"
+              name="name"
+              onChange={handleChange}
+              // label="Project Name"
+              value={formData.name}
+              variant="standard"
+              fullWidth
+            />
+            <div className={styles.header}>
+              Give a brief summary of what your Rocket is about
+            </div>
+            <TextField
+              id="summary"
+              name="summary"
+              multiline
+              rows={4}
+              fullWidth
+              value={formData.summary}
+              onChange={handleChange}
+            />
+
+            <div className={styles.header}>
+              Share all the details about your project here
+            </div>
+            <TextField
+              id="details"
+              name="details"
+              multiline
+              rows={10}
+              onChange={handleChange}
+              value={formData.details}
+              fullWidth
+            />
+            <br />
+            <div className={styles.header}>Project Category</div>
+            {formData.categoryId && (
+              <Select
+                onChange={handleChange}
+                id="categoryId"
+                name="categoryId"
+                value={formData.categoryId}
+                fullWidth
+              >
+                {allCategories &&
+                  allCategories.map((category) => {
+                    return (
+                      <MenuItem key={category.id} value={category.id}>
+                        {category.name}
+                      </MenuItem>
+                    );
+                  })}
+              </Select>
+            )}
+            <div className={styles.header}>Location</div>
+            {formData.location && (
+              <Select
+                required
+                value={formData.location}
+                defaultValue={formData.location}
+                onChange={handleChange}
+                id="location"
+                name="location"
+                fullWidth
+              >
+                {countryNames.map((country) => (
+                  <MenuItem key={country} value={country}>
+                    {country}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+            <div className={styles.header}>Funding Goal</div>
+            <TextField
+              required
+              id="fundingGoal"
+              name="fundingGoal"
+              onChange={handleChange}
+              value={parseInt(formData.fundingGoal)}
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              InputProps={{
+                startAdornment: <div>$</div>,
+              }}
+              // error={!isFundingGoalValid(formData.fundingGoal)}
+              // helperText={
+              //   isFundingGoalValid(formData.fundingGoal)
+              //     ? ""
+              //     : "Please enter only numbers"
+              // }
+              variant="standard"
+            />
+            <div className={styles.header}>Github Repo URL</div>
+            <TextField
+              required
+              id="githubRepoUrl"
+              name="githubRepoUrl"
+              onChange={handleChange}
+              value={formData.githubRepoUrl}
+              fullWidth
+              variant="standard"
+            />
+            <br />
+            <br />
+            <div className={styles.header}>Skills</div>
+            <FormControl component="fieldset" variant="standard">
+              <FormLabel component="legend">Select more skills</FormLabel>
+              <FormGroup>
+                {Object.keys(requiredSkillsCheckbox).length > 0 ? (
+                  Object.entries(requiredSkillsCheckbox).map(([k, v]) => (
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={v}
+                          onChange={handleCheckboxChange}
+                          name={k}
+                          key={k}
+                        />
+                      }
+                      label={k}
+                    />
+                  ))
+                ) : (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={false}
+                        onChange={handleCheckboxChange}
+                        name="rendering"
+                      />
+                    }
+                    label="Rendering"
+                  />
+                )}
+              </FormGroup>
+            </FormControl>
+            <br />
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                variant: "primary",
+                color: "white",
+                backgroundColor: "#21325E",
+                "&:hover": {
+                  backgroundColor: "#21325E",
+                },
+              }}
+            >
+              Update
+            </Button>
+          </form>
+        </div>
+      ) : (
+        <div>
+          <Grid container>
+            <Grid sx={{ margin: "auto", marginTop: 20 }}>
+              <Grid sx={{ justifyItems: "center" }}></Grid>
+              <br />
+              Oops you don't have permission to do this. <br />
               <Button
+                variant="primary"
                 sx={{
-                  variant: "primary",
-                  margin: "0px 20px",
                   color: "white",
                   backgroundColor: "#21325E",
+                  marginTop: 5,
+                  width: "100%",
                   "&:hover": {
                     backgroundColor: "#21325E",
                   },
                 }}
-                onClick={handleUploadClick}
+                onClick={handleBackButtonClick}
               >
-                Upload
+                Back to projects
               </Button>
-              {uploadLoading && <CircularProgress />}
-            </div>
-          </div>
-          <div className={styles.header}>Project Name</div>
-          <TextField
-            required
-            id="name"
-            name="name"
-            onChange={handleChange}
-            // label="Project Name"
-            value={formData.name}
-            variant="standard"
-            fullWidth
-          />
-          <div className={styles.header}>
-            Give a brief summary of what your Rocket is about
-          </div>
-          <TextField
-            id="summary"
-            name="summary"
-            multiline
-            rows={4}
-            fullWidth
-            value={formData.summary}
-            onChange={handleChange}
-          />
-
-          <div className={styles.header}>
-            Share all the details about your project here
-          </div>
-          <TextField
-            id="details"
-            name="details"
-            multiline
-            rows={10}
-            onChange={handleChange}
-            value={formData.details}
-            fullWidth
-          />
-          <br />
-          <div className={styles.header}>Project Category</div>
-          {formData.categoryId && (
-            <Select
-              onChange={handleChange}
-              id="categoryId"
-              name="categoryId"
-              value={formData.categoryId}
-              fullWidth
-            >
-              {allCategories &&
-                allCategories.map((category) => {
-                  return (
-                    <MenuItem key={category.id} value={category.id}>
-                      {category.name}
-                    </MenuItem>
-                  );
-                })}
-            </Select>
-          )}
-          <div className={styles.header}>Location</div>
-          {formData.location && (
-            <Select
-              required
-              value={formData.location}
-              defaultValue={formData.location}
-              onChange={handleChange}
-              id="location"
-              name="location"
-              fullWidth
-            >
-              {countryNames.map((country) => (
-                <MenuItem key={country} value={country}>
-                  {country}
-                </MenuItem>
-              ))}
-            </Select>
-          )}
-          <div className={styles.header}>Funding Goal</div>
-          <TextField
-            required
-            id="fundingGoal"
-            name="fundingGoal"
-            onChange={handleChange}
-            value={parseInt(formData.fundingGoal)}
-            fullWidth
-            InputLabelProps={{ shrink: true }}
-            InputProps={{
-              startAdornment: <div>$</div>,
-            }}
-            // error={!isFundingGoalValid(formData.fundingGoal)}
-            // helperText={
-            //   isFundingGoalValid(formData.fundingGoal)
-            //     ? ""
-            //     : "Please enter only numbers"
-            // }
-            variant="standard"
-          />
-          <div className={styles.header}>Github Repo URL</div>
-          <TextField
-            required
-            id="githubRepoUrl"
-            name="githubRepoUrl"
-            onChange={handleChange}
-            value={formData.githubRepoUrl}
-            fullWidth
-            variant="standard"
-          />
-          <br />
-          <br />
-          <div className={styles.header}>Skills</div>
-          <FormControl component="fieldset" variant="standard">
-            <FormLabel component="legend">Select more skills</FormLabel>
-            <FormGroup>
-              {Object.keys(requiredSkillsCheckbox).length > 0 ? (
-                Object.entries(requiredSkillsCheckbox).map(([k, v]) => (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={v}
-                        onChange={handleCheckboxChange}
-                        name={k}
-                        key={k}
-                      />
-                    }
-                    label={k}
-                  />
-                ))
-              ) : (
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={false}
-                      onChange={handleCheckboxChange}
-                      name="rendering"
-                    />
-                  }
-                  label="Rendering"
-                />
-              )}
-            </FormGroup>
-          </FormControl>
-          <br />
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{
-              variant: "primary",
-              color: "white",
-              backgroundColor: "#21325E",
-              "&:hover": {
-                backgroundColor: "#21325E",
-              },
-            }}
-          >
-            Update
-          </Button>
-        </form>
-      </div>
+            </Grid>
+          </Grid>
+        </div>
+      )}
     </div>
   );
 }

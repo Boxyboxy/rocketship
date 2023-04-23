@@ -14,6 +14,7 @@ import Link from "next/link";
 import styles from "../styles/projectcard.module.css";
 import { Button } from "@mui/material";
 import { useRouter } from "next/router";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function ProjectCard({ project, ownerBoolean }) {
   const [funding, setFunding] = useState("0");
@@ -21,6 +22,23 @@ export default function ProjectCard({ project, ownerBoolean }) {
   const [projectOwner, setProjectOwner] = useState({ name: "John Doe" });
 
   const router = useRouter();
+  const { user, error, isLoading } = useUser();
+  const [userId, setUserId] = useState();
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const response = await axios.get(
+          `${config.apiUrl}/users?email=${user.email}`
+        );
+        setUserId(response.data[0].id);
+        console.log(response.data[0].id);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUserId();
+  }, [user]);
 
   useEffect(() => {
     const fetchFunding = async () => {
@@ -102,7 +120,7 @@ export default function ProjectCard({ project, ownerBoolean }) {
           {project.summary}
         </Typography>
       </CardContent>
-      {ownerBoolean ? (
+      {project.userId === userId && (
         <div>
           <br />
           <Button
@@ -120,6 +138,9 @@ export default function ProjectCard({ project, ownerBoolean }) {
             Edit
           </Button>
         </div>
+      )}
+      {ownerBoolean ? (
+        ""
       ) : (
         <CardActions>
           <Grid
