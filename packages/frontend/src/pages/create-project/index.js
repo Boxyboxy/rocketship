@@ -1,77 +1,86 @@
-import Head from 'next/head';
-import NavBar from '../../components/navbar';
-import Category from '../../components/category';
-import Footer from '../../components/footer';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import styles from '../../styles/createproject.module.css';
-import Box from '@mui/material/Box';
-import { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
-import { Stepper, Step, StepLabel, Select, MenuItem, Button } from '@material-ui/core';
-import InputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputAdornment from '@mui/material/InputAdornment';
-import PhotoUpload from '../../components/photoUpload';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import { getNames } from 'country-list';
-import { useUser } from '@auth0/nextjs-auth0/client';
-import config from '../../config';
-import axios from 'axios';
-import { useRouter } from 'next/router';
+import Head from "next/head";
+import NavBar from "../../components/navbar";
+import Category from "../../components/category";
+import Footer from "../../components/footer";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import styles from "../../styles/createproject.module.css";
+import Box from "@mui/material/Box";
+import { useState, useEffect } from "react";
+import TextField from "@mui/material/TextField";
+import {
+  Stepper,
+  Step,
+  StepLabel,
+  Select,
+  MenuItem,
+  Button,
+  Input,
+} from "@material-ui/core";
+
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
+import FormGroup from "@mui/material/FormGroup";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import { getNames } from "country-list";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import config from "../../config";
+import axios from "axios";
+import { useRouter } from "next/router";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const steps = [
-  'Project name & Summary',
-  'Category & Skills Required',
-  'Upload images',
-  'Project details'
+  "Project name & Summary",
+  "Category & Skills Required",
+  "Upload images",
+  "Project details",
 ];
 
 export default function CreateProject() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: '#21325e' // Replace with your desired primary color
-      }
+        main: "#21325e", // Replace with your desired primary color
+      },
     },
     typography: {
-      fontFamily: 'Montserrat, sans-serif' // Replace with your desired font family
-    }
+      fontFamily: "Montserrat, sans-serif", // Replace with your desired font family
+    },
   });
 
   const [activeStep, setActiveStep] = useState(0);
   const [skills, setSkills] = useState([]);
-  const [country, setCountry] = useState('');
-  const countryNames = getNames();
-  const { user, error, isLoading } = useUser();
-  const [userId, setUserId] = useState();
+
   const router = useRouter();
   const { personalId } = router.query;
 
   const [formValues, setFormValues] = useState({
-    name: '',
-    categoryId: '',
-    summary: '',
-    coverImage: '',
-    detail: '',
-    bankAccountId: '',
-    status: 'active',
-    location: '',
-    githubRepoUrl: '',
+    name: "",
+    summary: "",
+    coverImage: "",
+    details: "",
+    bankAccountNumber: "",
+    bank: "",
+    status: "active",
+
+    githubRepoUrl: "",
     fundingGoal: 0,
     pitchSlidesUrlStrings: [],
-    requiredSkills: []
+    requiredSkills: [],
   });
 
   //get userId with email
+  const { user, error, isLoading } = useUser();
+  const [userId, setUserId] = useState();
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await axios.get(`${config.apiUrl}/users?email=${user.email}`);
+        const response = await axios.get(
+          `${config.apiUrl}/users?email=${user.email}`
+        );
         setUserId(response.data[0].id);
       } catch (err) {
         console.log(err);
@@ -86,42 +95,51 @@ export default function CreateProject() {
   const isFundingGoalValid = (fundingGoal) =>
     fundingGoal.length >= 1 && /^[1-9][0-9]*(\.[0-9]+)?$/.test(fundingGoal);
 
-  const isNumberValid = (bankNo) => bankNo.length === 1 && /^[1-9][0-9]*(\.[0-9]+)?$/.test(bankNo);
+  const isNumberValid = (bankNo) =>
+    bankNo.length === 10 && /^[1-9][0-9]*(\.[0-9]+)?$/.test(bankNo);
 
   const isGithubUrlValid = (url) =>
-    url.length > 2 && url.includes('.') && url.startsWith('http') && url.includes('github');
-
-  //for country selection
-  const changeCountry = (selectedCountry) => {
-    setCountry(selectedCountry);
-    console.log(selectedCountry);
+    url.length > 2 &&
+    url.includes(".") &&
+    url.startsWith("http") &&
+    url.includes("github");
+  // project category
+  const [categoryId, setCategoryId] = useState("");
+  const handleCategoryChange = (e) => {
+    const categoryId = e.target.value;
+    setCategoryId(categoryId);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://localhost:8080/skills'); // Fetch data from the skills db route
-        const data = await response.json();
-        setSkills(data);
-        console.log(data);
-      } catch (error) {
-        console.error('Failed to fetch skills:', error);
-      }
-    };
-    fetchData();
-  }, []);
+  //for country selection
+  const countryNames = getNames();
+  const [country, setCountry] = useState("");
+  const changeCountry = (selectedCountry) => {
+    setCountry(selectedCountry);
+  };
 
-  const [checkedSkills, setCheckedSkills] = useState([]);
+  // requiredSkills
+  const [requiredSkillsCheckbox, setRequiredSkillsCheckbox] = useState({});
+
+  useEffect(() => {
+    axios.get(`${config.apiUrl}/skills`).then(({ data }) => {
+      let skillObjectsArray = Object.values(data);
+      const checkBoxBoolean = {};
+      skillObjectsArray
+        .map((item) => item.skill)
+        .map((element, index) => (checkBoxBoolean[element] = false));
+      setRequiredSkillsCheckbox(checkBoxBoolean);
+    });
+  }, []);
   const handleCheckboxChange = (event) => {
-    const { value, checked } = event.target;
-    if (checked) {
-      // Add the skill to the checkedSkills array if it's checked
-      setCheckedSkills([...checkedSkills, value]);
-      console.log(checkedSkills);
-    } else {
-      // Remove the skill from the checkedSkills array if it's unchecked
-      setCheckedSkills(checkedSkills.filter((skill) => skill !== value));
-    }
+    setRequiredSkillsCheckbox({
+      ...requiredSkillsCheckbox,
+      [event.target.name]: event.target.checked,
+    });
+    console.log(requiredSkillsCheckbox);
+    // Maps checkbox boolean object into an array of skills to interface with backend
+    Object.keys(requiredSkillsCheckbox).filter(
+      (skill) => requiredSkillsCheckbox[skill]
+    );
   };
 
   const handleNext = () => {
@@ -132,37 +150,152 @@ export default function CreateProject() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const [categoryId, setCategoryId] = useState('');
-
-  const handleOptionChange = (e) => {
-    const categoryId = e.target.value;
-    setCategoryId(categoryId);
-    console.log(categoryId);
+  // upload specific components
+  const [coverImage, setCoverImage] = useState();
+  const [pitchSlide1, setPitchSlide1] = useState();
+  const [pitchSlide2, setPitchSlide2] = useState();
+  const [pitchSlide3, setPitchSlide3] = useState();
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const handleCoverImageChange = (e) => {
+    if (e.target.files) {
+      setCoverImage(e.target.files[0]);
+    }
   };
 
+  const handlePitchSlide1Change = (e) => {
+    if (e.target.files) {
+      setPitchSlide1(e.target.files[0]);
+    }
+  };
+
+  const handlePitchSlide2Change = (e) => {
+    if (e.target.files) {
+      setPitchSlide2(e.target.files[0]);
+    }
+  };
+
+  const handlePitchSlide3Change = (e) => {
+    if (e.target.files) {
+      setPitchSlide3(e.target.files[0]);
+    }
+  };
+
+  const [showUploadSuccess, setShowUploadSuccess] = useState(false);
+  const [showUploadFailure, setShowUploadFailure] = useState(false);
+  const handleUploadSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setShowUploadSuccess(false); // Close success snackbar
+    setShowUploadFailure(false); // Close failure snackbar
+  };
+
+  const handleUploadClick = async () => {
+    if (!coverImage || !pitchSlide1 || !pitchSlide2 || !pitchSlide3) {
+      return;
+    }
+    setUploadLoading(true);
+    const coverImageFD = new FormData();
+    coverImageFD.append("file", coverImage);
+    coverImageFD.append("upload_preset", "rocketship");
+
+    const pitchSlide1FD = new FormData();
+    pitchSlide1FD.append("file", pitchSlide1);
+    pitchSlide1FD.append("upload_preset", "rocketship");
+
+    const pitchSlide2FD = new FormData();
+    pitchSlide2FD.append("file", pitchSlide2);
+    pitchSlide2FD.append("upload_preset", "rocketship");
+
+    const pitchSlide3FD = new FormData();
+    pitchSlide3FD.append("file", pitchSlide3);
+    pitchSlide3FD.append("upload_preset", "rocketship");
+    try {
+      const [
+        coverImageResponse,
+        pitchSlide1Response,
+        pitchSlide2Response,
+        pitchSlide3Response,
+      ] = await Promise.all([
+        await axios.post(
+          "https://api.cloudinary.com/v1_1/dbq7yg58d/image/upload/",
+          coverImageFD
+        ),
+        await axios.post(
+          "https://api.cloudinary.com/v1_1/dbq7yg58d/image/upload/",
+          pitchSlide1FD
+        ),
+        await axios.post(
+          "https://api.cloudinary.com/v1_1/dbq7yg58d/image/upload/",
+          pitchSlide2FD
+        ),
+        await axios.post(
+          "https://api.cloudinary.com/v1_1/dbq7yg58d/image/upload/",
+          pitchSlide3FD
+        ),
+      ]);
+
+      setFormValues({
+        ...formValues,
+        coverImage: pitchSlide1Response.data["secure_url"],
+        pitchSlidesUrlStrings: [
+          pitchSlide1Response.data["secure_url"],
+          pitchSlide2Response.data["secure_url"],
+          pitchSlide3Response.data["secure_url"],
+        ],
+      });
+
+      setShowUploadSuccess(true);
+      console.log({
+        ...formValues,
+        coverImage: pitchSlide1Response.data["secure_url"],
+        pitchSlidesUrlStrings: [
+          pitchSlide1Response.data["secure_url"],
+          pitchSlide2Response.data["secure_url"],
+          pitchSlide3Response.data["secure_url"],
+        ],
+      });
+      setUploadLoading(false);
+    } catch (err) {
+      console.log(err);
+      setUploadLoading(false);
+      setShowUploadFailure(true);
+    }
+  };
+
+  // form input change
   const handleInputChange = (e) => {
     setFormValues({ ...formValues, [e.target.id]: e.target.value });
     console.log(formValues);
   };
-
+  // form submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    let formData = {
+      ...formValues,
+      location: country,
+      categoryId: categoryId,
+      userId: userId,
+      requiredSkills: Object.keys(requiredSkillsCheckbox).filter(
+        (skill) => requiredSkillsCheckbox[skill]
+      ),
+    };
     axios
-      .post(`http://localhost:8080/createproject`, formValues, config)
+      .post(`http://localhost:8080/projects`, { ...formData })
       .then(function (response) {
         console.log(response);
-        // openSuccessNotification('top');
       })
       .catch(function (error) {
         console.log(error);
-        // openFailureNotification('top');
       });
   };
+
+  // snackbar
   const [showSuccess, setShowSuccess] = useState(false);
   const [showFailure, setShowFailure] = useState(false);
 
   const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setShowSuccess(false); // Close success snackbar
@@ -193,10 +326,11 @@ export default function CreateProject() {
             alignItems="center"
             component="form"
             sx={{
-              '& .MuiTextField-root': { m: 1, width: '50ch' }
+              "& .MuiTextField-root": { m: 1, width: "50ch" },
             }}
             noValidate
-            autoComplete="off">
+            autoComplete="off"
+          >
             {activeStep === 0 && (
               // Render form content for step 1
               <div className={styles.stepsBox}>
@@ -211,7 +345,9 @@ export default function CreateProject() {
                     InputLabelProps={{ shrink: true }}
                     error={!isNameValid(formValues.name)}
                     helperText={
-                      isNameValid(formValues.name) ? '' : 'Please enter your project name'
+                      isNameValid(formValues.name)
+                        ? ""
+                        : "Please enter your project name"
                     }
                   />
                   <TextField
@@ -219,14 +355,15 @@ export default function CreateProject() {
                     id="summary"
                     label="Give a brief summary of what your project is about"
                     onChange={handleInputChange}
+                    value={formValues.summary}
                     multiline
                     rows={4}
                     InputLabelProps={{ shrink: true }}
                     error={!isNameValid(formValues.summary)}
                     helperText={
                       isNameValid(formValues.summary)
-                        ? ''
-                        : 'Please enter a short description of your project'
+                        ? ""
+                        : "Please enter a short description of your project"
                     }
                   />
 
@@ -234,36 +371,59 @@ export default function CreateProject() {
                     required
                     id="fundingGoal"
                     label="Funding Goal"
+                    value={formValues.fundingGoal}
                     onChange={handleInputChange}
                     InputLabelProps={{ shrink: true }}
                     InputProps={{
-                      startAdornment: <div>$</div>
+                      startAdornment: <div>$</div>,
                     }}
                     error={!isFundingGoalValid(formValues.fundingGoal)}
                     helperText={
-                      isFundingGoalValid(formValues.fundingGoal) ? '' : 'Please enter only numbers'
+                      isFundingGoalValid(formValues.fundingGoal)
+                        ? ""
+                        : "Please enter only numbers"
                     }
                   />
                   <TextField
                     required
                     id="githubRepoUrl"
                     label="GitHub Repository URL"
+                    value={formValues.githubRepoUrl}
                     onChange={handleInputChange}
                     InputLabelProps={{ shrink: true }}
                     error={!isGithubUrlValid(formValues.githubRepoUrl)}
                     helperText={
-                      isGithubUrlValid(formValues.githubRepoUrl) ? '' : 'Github URL is not valid'
+                      isGithubUrlValid(formValues.githubRepoUrl)
+                        ? ""
+                        : "Github URL is not valid"
                     }
                   />
                   <TextField
                     required
-                    id="bankAccountId"
+                    id="bankAccountNumber"
                     label="Bank Account Number"
+                    value={formValues.bankAccountNumber}
                     onChange={handleInputChange}
                     InputLabelProps={{ shrink: true }}
-                    error={!isNumberValid(formValues.bankAccountId)}
+                    error={!isNumberValid(formValues.bankAccountNumber)}
                     helperText={
-                      isNumberValid(formValues.bankAccountId) ? '' : 'Please enter only numbers'
+                      isNumberValid(formValues.bankAccountNumber)
+                        ? ""
+                        : "Please enter a valid 10 digit bank account number without hyphens"
+                    }
+                  />
+                  <TextField
+                    required
+                    id="bank"
+                    label="Bank"
+                    value={formValues.bank}
+                    onChange={handleInputChange}
+                    InputLabelProps={{ shrink: true }}
+                    error={!isNameValid(formValues.bank)}
+                    helperText={
+                      isNameValid(formValues.bank)
+                        ? ""
+                        : "Please enter your bank"
                     }
                   />
                 </div>
@@ -278,9 +438,11 @@ export default function CreateProject() {
                         isNameValid(formValues.summary) &&
                         isFundingGoalValid(formValues.fundingGoal) &&
                         isGithubUrlValid(formValues.githubRepoUrl) &&
-                        isNumberValid(formValues.bankAccountId)
+                        isNumberValid(formValues.bankAccountNumber) &&
+                        isNameValid(formValues.bank)
                       )
-                    }>
+                    }
+                  >
                     Next
                   </Button>
                 </div>
@@ -291,19 +453,22 @@ export default function CreateProject() {
               // Render form content for step 2
               <div>
                 <div className={styles.steps}>
-                  <div className={styles.header}>Category & Skills Required</div>
+                  <div className={styles.header}>
+                    Category & Skills Required
+                  </div>
 
                   <div className={styles.category}>
                     <FormControl sx={{ minWidth: 350 }}>
-                      {' '}
+                      {" "}
                       <p>Select a Category</p>
                       <Select
                         required
                         id="categoryId"
                         label="Category"
                         value={categoryId}
-                        onChange={handleOptionChange}
-                        InputLabelProps={{ shrink: true }}>
+                        onChange={handleCategoryChange}
+                        InputLabelProps={{ shrink: true }}
+                      >
                         <MenuItem value="">Select an option</MenuItem>
                         <MenuItem value="1">Fintech</MenuItem>
                         <MenuItem value="2">Health Tech</MenuItem>
@@ -313,38 +478,72 @@ export default function CreateProject() {
                         <MenuItem value="6">Edutech</MenuItem>
                         <MenuItem value="7">E-Commerce</MenuItem>
                         <MenuItem value="8">F&B</MenuItem>
-                      </Select>{' '}
-                      {!categoryId && <FormHelperText>Please select an option</FormHelperText>}
+                      </Select>{" "}
+                      {!categoryId && (
+                        <FormHelperText>Please select an option</FormHelperText>
+                      )}
                       <p>Where is this project based in?</p>
                       <Select
                         required
                         value={country}
-                        onChange={(e) => changeCountry(e.target.value)}>
+                        onChange={(e) => changeCountry(e.target.value)}
+                      >
                         {countryNames.map((country) => (
                           <MenuItem key={country} value={country}>
                             {country}
                           </MenuItem>
                         ))}
-                      </Select>{' '}
-                      {!country && <FormHelperText>Please select an option</FormHelperText>}
+                      </Select>{" "}
+                      {!country && (
+                        <FormHelperText>Please select an option</FormHelperText>
+                      )}
                     </FormControl>
                     <p>Required Skill Sets</p>
                     <div className={styles.skills}>
-                      {skills.map((skill, index) => (
-                        <FormControlLabel
-                          key={index}
-                          control={<Checkbox />}
-                          label={skill.skill} // Render the skill value as the label
-                          value={skill.skill}
-                          onChange={handleCheckboxChange}
-                        />
-                      ))}
+                      <FormControl component="fieldset" variant="standard">
+                        <FormLabel component="legend">
+                          Select required skills
+                        </FormLabel>
+                        <FormGroup>
+                          {Object.keys(requiredSkillsCheckbox).length > 0 ? (
+                            Object.entries(requiredSkillsCheckbox).map(
+                              ([k, v]) => (
+                                <FormControlLabel
+                                  control={
+                                    <Checkbox
+                                      checked={v}
+                                      onChange={handleCheckboxChange}
+                                      name={k}
+                                      key={k}
+                                    />
+                                  }
+                                  label={k}
+                                />
+                              )
+                            )
+                          ) : (
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={false}
+                                  onChange={handleCheckboxChange}
+                                  name="rendering"
+                                />
+                              }
+                              label="Rendering"
+                            />
+                          )}
+                        </FormGroup>
+                      </FormControl>
                     </div>
                   </div>
                 </div>
                 <div className={styles.btnGroup}>
                   <Button onClick={handleBack}>Back</Button>
-                  <Button onClick={handleNext} disabled={!(categoryId && country)}>
+                  <Button
+                    onClick={handleNext}
+                    disabled={!(categoryId && country)}
+                  >
                     Next
                   </Button>
                 </div>
@@ -360,20 +559,90 @@ export default function CreateProject() {
 
                 <div className={styles.slidesUpload}>
                   <p>Cover Image</p>
-                  <PhotoUpload />
+                  <div>
+                    <Input type="file" onChange={handleCoverImageChange} />
+
+                    <div>
+                      {coverImage && `${coverImage.name} - ${coverImage.type}`}
+                    </div>
+                  </div>
                   <p>Pitch Slide #1</p>
-                  <PhotoUpload />
+                  <div>
+                    <Input type="file" onChange={handlePitchSlide1Change} />
+
+                    <div>
+                      {pitchSlide1 &&
+                        `${pitchSlide1.name} - ${pitchSlide1.type}`}
+                    </div>
+                  </div>
 
                   <p>Pitch Slide #2</p>
-                  <PhotoUpload />
+                  <div>
+                    <Input type="file" onChange={handlePitchSlide2Change} />
+
+                    <div>
+                      {pitchSlide2 &&
+                        `${pitchSlide2.name} - ${pitchSlide2.type}`}
+                    </div>
+                  </div>
 
                   <p>Pitch Slide #3</p>
-                  <PhotoUpload />
+                  <div>
+                    <Input type="file" onChange={handlePitchSlide3Change} />
+
+                    <div>
+                      {pitchSlide3 &&
+                        `${pitchSlide3.name} - ${pitchSlide3.type}`}
+                    </div>
+
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleUploadClick}
+                    >
+                      Upload
+                    </Button>
+                  </div>
+                  <div>{uploadLoading && <CircularProgress />}</div>
+                  <Snackbar
+                    open={showUploadSuccess}
+                    autoHideDuration={3000}
+                    onClose={handleUploadSnackbarClose}
+                    anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                  >
+                    <Alert
+                      elevation={6}
+                      variant="filled"
+                      onClose={handleSnackbarClose}
+                      severity="success"
+                    >
+                      Upload of images successful.
+                    </Alert>
+                  </Snackbar>
+                  <Snackbar
+                    open={showUploadFailure}
+                    autoHideDuration={3000}
+                    onClose={handleUploadSnackbarClose}
+                    anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                  >
+                    <Alert
+                      elevation={6}
+                      variant="filled"
+                      onClose={handleUploadSnackbarClose}
+                      severity="error"
+                    >
+                      Failed to upload images.
+                    </Alert>
+                  </Snackbar>
                 </div>
 
                 <div className={styles.btnGroup}>
-                  <Button onClick={handleBack}>Back</Button>
-                  <Button onClick={handleNext}>Next</Button>
+                  <Button onClick={handleBack} disabled={uploadLoading}>
+                    Back
+                  </Button>
+                  <Button onClick={handleNext} disabled={uploadLoading}>
+                    Next
+                  </Button>
                 </div>
               </div>
             )}
@@ -397,7 +666,11 @@ export default function CreateProject() {
                 {/* <div className={styles.btn}> */}
                 <div className={styles.btnGroup}>
                   <Button onClick={handleBack}>Back</Button>
-                  <Button type="submit" variant="contained" onClick={handleSubmit}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    onClick={handleSubmit}
+                  >
                     Submit
                   </Button>
                 </div>
@@ -405,26 +678,30 @@ export default function CreateProject() {
                   open={showSuccess}
                   autoHideDuration={3000}
                   onClose={handleSnackbarClose}
-                  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                  anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                >
                   <Alert
                     elevation={6}
                     variant="filled"
                     onClose={handleSnackbarClose}
-                    severity="success">
-                    User creation successful!
+                    severity="success"
+                  >
+                    Project creation successful!
                   </Alert>
                 </Snackbar>
                 <Snackbar
                   open={showFailure}
                   autoHideDuration={3000}
                   onClose={handleSnackbarClose}
-                  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                  anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                >
                   <Alert
                     elevation={6}
                     variant="filled"
                     onClose={handleSnackbarClose}
-                    severity="error">
-                    User creation failed. Please try again.
+                    severity="error"
+                  >
+                    Project creation failed. Please try again.
                   </Alert>
                 </Snackbar>
                 {/* </div> */}
