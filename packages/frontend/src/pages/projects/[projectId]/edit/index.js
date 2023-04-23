@@ -14,7 +14,7 @@ import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-
+import styles from "../../../../styles/editproject.module.css";
 // pending image update, category update function + displaying skills required
 
 export default function EditProjectPage() {
@@ -31,7 +31,7 @@ export default function EditProjectPage() {
     if (router.query.projectId) {
       setProjectId(router.query.projectId);
     }
-  }, [router.query.creatorId, router.query.projectId]);
+  }, [router.query.projectId]);
 
   useEffect(() => {
     // To be refactored and shared between project page and edit project page
@@ -58,19 +58,18 @@ export default function EditProjectPage() {
             ]);
 
           const skillArray = [];
+          // console.log(skillsNeededResponse.data);
 
           for (const skillNeeded of skillsNeededResponse.data) {
-            await axios
-              .get(`http://localhost:8080/skills/${skillNeeded.skillId}`)
-              .then(function (response) {
-                skillArray.push(response.data.skill);
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
+            skillArray.push(skillNeeded.skill);
           }
-          const allSkillsArrayDB = allSkillsDB.data.map((skill) => skill.skill);
+          // console.log(allSkillsDB.data);
+          const allSkillsArrayDB = allSkillsDB.data.map((skill) => {
+            return { id: skill.id, skill: skill.skill };
+          });
 
+          console.log(skillArray);
+          console.log(allSkillsArrayDB);
           setAllSkills(allSkillsArrayDB);
           setSkills(skillArray);
 
@@ -102,6 +101,8 @@ export default function EditProjectPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // const handleSkillCheckboxChange = (e = {});
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
@@ -110,7 +111,7 @@ export default function EditProjectPage() {
   return (
     <div>
       <NavBar />
-      <div>
+      <div className={styles.formContainer}>
         <form onSubmit={handleSubmit}>
           <p>Project Name</p>
           <TextField
@@ -120,6 +121,7 @@ export default function EditProjectPage() {
             onChange={handleChange}
             // label="Project Name"
             value={formData.name}
+            fullWidth
           />
           <p>Give a brief summary of what your Rocket is about</p>
           <TextField
@@ -127,6 +129,7 @@ export default function EditProjectPage() {
             name="summary"
             multiline
             rows={4}
+            fullWidth
             value={formData.summary}
           />
           <p>Location</p>
@@ -136,6 +139,7 @@ export default function EditProjectPage() {
             name="location"
             onChange={handleChange}
             value={formData.location}
+            fullWidth
           />
           <p>Share all the details about your project here:</p>
           <TextField
@@ -145,6 +149,7 @@ export default function EditProjectPage() {
             rows={10}
             onChange={handleChange}
             value={formData.details}
+            fullWidth
           />
 
           <br />
@@ -170,20 +175,30 @@ export default function EditProjectPage() {
           )}
 
           <br />
-          <FormLabel component="legend">Skills</FormLabel>
+          <br />
+          <p>Skills</p>
           <FormGroup>
             {allSkills &&
-              allSkills.map((skill, index) => (
+              allSkills.map((skill) => (
                 <FormControlLabel
-                  key={index}
+                  key={skill.id}
                   control={
                     <Checkbox
-                      checked={skills.includes(skill)}
+                      checked={
+                        skills &&
+                        skills.map((neededSkill) => {
+                          return neededSkill.id === skill.id;
+                          // if (neededSkill.id === skill.id) {
+                          //   console.log("yea");
+                          //   return true;
+                          // }
+                        })
+                      }
                       onChange={handleChange}
-                      name="Web Development"
+                      value={skill.id}
                     />
                   }
-                  label={skill}
+                  label={skill.skill}
                 />
               ))}
           </FormGroup>
