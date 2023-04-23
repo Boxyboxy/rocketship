@@ -50,12 +50,9 @@ export default function CreateProject() {
       fontFamily: "Montserrat, sans-serif", // Replace with your desired font family
     },
   });
-
+  const router = useRouter();
   const [activeStep, setActiveStep] = useState(0);
   const [skills, setSkills] = useState([]);
-
-  const router = useRouter();
-  const { personalId } = router.query;
 
   const [formValues, setFormValues] = useState({
     name: "",
@@ -65,7 +62,6 @@ export default function CreateProject() {
     bankAccountNumber: "",
     bank: "",
     status: "active",
-
     githubRepoUrl: "",
     fundingGoal: 0,
     pitchSlidesUrlStrings: [],
@@ -151,6 +147,7 @@ export default function CreateProject() {
   };
 
   // upload specific components
+  const [showUploadAlert, setShowUploadAlert] = useState();
   const [coverImage, setCoverImage] = useState();
   const [pitchSlide1, setPitchSlide1] = useState();
   const [pitchSlide2, setPitchSlide2] = useState();
@@ -192,8 +189,10 @@ export default function CreateProject() {
 
   const handleUploadClick = async () => {
     if (!coverImage || !pitchSlide1 || !pitchSlide2 || !pitchSlide3) {
+      setShowUploadAlert(true);
       return;
     }
+    setShowUploadAlert(false);
     setUploadLoading(true);
     const coverImageFD = new FormData();
     coverImageFD.append("file", coverImage);
@@ -237,7 +236,7 @@ export default function CreateProject() {
 
       setFormValues({
         ...formValues,
-        coverImage: pitchSlide1Response.data["secure_url"],
+        coverImage: coverImageResponse.data["secure_url"],
         pitchSlidesUrlStrings: [
           pitchSlide1Response.data["secure_url"],
           pitchSlide2Response.data["secure_url"],
@@ -283,10 +282,19 @@ export default function CreateProject() {
     axios
       .post(`http://localhost:8080/projects`, { ...formData })
       .then(function (response) {
-        console.log(response);
+        console.log(response.data);
+        setShowSuccess(true);
+        const handleRedirect = async () => {
+          let preConstructPath = `/projects/${response.data.id}`;
+          router.push({
+            pathname: preConstructPath,
+          });
+        };
+        handleRedirect();
       })
       .catch(function (error) {
         console.log(error);
+        setShowFailure(true);
       });
   };
 
@@ -477,7 +485,7 @@ export default function CreateProject() {
                         <MenuItem value="5">Agritech</MenuItem>
                         <MenuItem value="6">Edutech</MenuItem>
                         <MenuItem value="7">E-Commerce</MenuItem>
-                        <MenuItem value="8">F&B</MenuItem>
+                        <MenuItem value="8">FnB</MenuItem>
                       </Select>{" "}
                       {!categoryId && (
                         <FormHelperText>Please select an option</FormHelperText>
@@ -602,6 +610,12 @@ export default function CreateProject() {
                     >
                       Upload
                     </Button>
+                    {showUploadAlert && (
+                      <Alert variant="filled" severity="error">
+                        Please upload a cover page and 3 pitch slides. Only
+                        image files will be accepted.
+                      </Alert>
+                    )}
                   </div>
                   <div>{uploadLoading && <CircularProgress />}</div>
                   <Snackbar
