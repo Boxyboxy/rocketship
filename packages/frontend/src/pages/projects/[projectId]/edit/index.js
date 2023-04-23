@@ -32,6 +32,8 @@ export default function EditProjectPage() {
   const [coverImage, setCoverImage] = useState();
   const [showUploadAlert, setShowUploadAlert] = useState();
   const [uploadLoading, setUploadLoading] = useState(false);
+  const [showUploadSuccess, setShowUploadSuccess] = useState(false);
+  const [showUploadFailure, setShowUploadFailure] = useState(false);
 
   // const isFundingGoalValid = (fundingGoal) => {
   //   if (fundingGoal) {
