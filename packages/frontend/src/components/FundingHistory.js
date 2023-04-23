@@ -215,7 +215,7 @@ export default function FundingHistory({ personalId }) {
 
   React.useEffect(() => {
     let updatedRows = fundings.map((s) => createData(s));
-    // TODO: include sort by date for rows
+
     console.log(updatedRows);
     setRows(updatedRows);
   }, [fundings]);

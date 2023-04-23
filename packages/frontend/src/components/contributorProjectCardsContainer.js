@@ -23,6 +23,9 @@ export default function ContributorProjectCardsContainer({ userId }) {
   }, [userId]);
 
   function generateCards(contributions) {
+    if (contributions.length < 1) {
+      return <h2> No contributions</h2>;
+    }
     return contributions.map((contribution, index) => (
       <ContributorProjectCard key={index} contribution={contribution} />
     ));

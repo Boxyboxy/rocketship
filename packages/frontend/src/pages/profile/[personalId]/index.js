@@ -13,7 +13,7 @@ export default function ProfilePage() {
   const { personalId } = router.query;
   const { user, isLoading, error } = useUser();
   const [userId, setUserId] = useState();
-  console.log(user);
+
   useEffect(() => {
     const fetchUserId = async () => {
       try {
@@ -27,9 +27,7 @@ export default function ProfilePage() {
     };
     fetchUserId();
   }, [user]);
-  console.log("personalId:" + personalId);
-  console.log("userId:" + userId);
-  console.log(router);
+
   useEffect(() => {
     const handleRedirect = async () => {
       if (userId && userId == personalId) {
