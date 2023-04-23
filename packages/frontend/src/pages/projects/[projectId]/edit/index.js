@@ -71,15 +71,15 @@ export default function EditProjectPage() {
       const fetchProject = async () => {
         try {
           const [projectResponse, allCategoriesResponse] = await Promise.all([
-            axios.get(`http://localhost:8080/projects/${projectId}`),
-            axios.get("http://localhost:8080/categories"),
+            axios.get(`${config.apiUrl}/projects/${projectId}`),
+            axios.get(`${config.apiUrl}/categories`),
           ]);
 
           setAllCategories(allCategoriesResponse.data);
 
           const [categoryResponse, skillsNeededResponse] = await Promise.all([
             axios.get(
-              `http://localhost:8080/categories/${projectResponse.data.categoryId}`
+              `${config.apiUrl}/categories/${projectResponse.data.categoryId}`
             ),
             axios.get(`${config.apiUrl}/requiredSkills?projectId=${projectId}`),
           ]);
