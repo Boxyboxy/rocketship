@@ -8,16 +8,14 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import TextField from "@mui/material/TextField";
 import { Select, MenuItem, Input } from "@material-ui/core";
-import InputLabel from "@mui/material/InputLabel";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import styles from "../../../../styles/editproject.module.css";
 import config from "../../../../config";
-
-// pending image update + submit request required
+import CircularProgress from "@mui/material/CircularProgress";
+import { getNames } from "country-list";
 
 export default function EditProjectPage() {
   const router = useRouter();
@@ -26,8 +24,15 @@ export default function EditProjectPage() {
 
   const [projectId, setProjectId] = useState();
   const [allCategories, setAllCategories] = useState();
-  const [projectSkillsCheckBox, setProjectSkillsCheckBox] = useState({});
-  const [presentProjectSkills, setPresentProjectSkills] = useState({});
+  const [requiredSkillsCheckbox, setRequiredSkillsCheckbox] = useState({});
+
+  const countryNames = getNames();
+  const [country, setCountry] = useState("");
+  const changeCountry = (selectedCountry) => {
+    let updatedFormData = formData;
+    updatedFormData.location = selectedCountry;
+    setFormData({ ...updatedFormData });
+  };
 
   const [coverImage, setCoverImage] = useState();
   const [showUploadAlert, setShowUploadAlert] = useState();
@@ -61,65 +66,57 @@ export default function EditProjectPage() {
       skillObjectsArray
         .map((item) => item.skill)
         .map((element, index) => (checkBoxBoolean[element] = false));
-      setProjectSkillsCheckBox(checkBoxBoolean);
+      setRequiredSkillsCheckbox(checkBoxBoolean);
     });
   }, []);
 
   useEffect(() => {
     // To be refactored and shared between project page and edit project page
-    if (projectId) {
-      const fetchProject = async () => {
-        try {
-          const [projectResponse, allCategoriesResponse] = await Promise.all([
-            axios.get(`${config.apiUrl}/projects/${projectId}`),
-            axios.get(`${config.apiUrl}/categories`),
-          ]);
 
-          setAllCategories(allCategoriesResponse.data);
-
-          const [categoryResponse, skillsNeededResponse] = await Promise.all([
-            axios.get(
-              `${config.apiUrl}/categories/${projectResponse.data.categoryId}`
-            ),
-            axios.get(`${config.apiUrl}/requiredSkills?projectId=${projectId}`),
-          ]);
-
-          console.log(skillsNeededResponse.data);
-          let skillObjectsArray = Object.values(skillsNeededResponse.data);
-
-          const checkBoxBoolean = {};
-          skillObjectsArray
-            .map((item) => item.skill.skill)
-            .map((element, index) => {
-              checkBoxBoolean[element] = true;
-              delete projectSkillsCheckBox[element];
-            });
-          setPresentProjectSkills(checkBoxBoolean);
-
-          const editedProject = {
-            ...projectResponse.data,
-            categoryName: categoryResponse.data.name,
-            categoryId: categoryResponse.data.id,
-          };
-
-          setSpecificProject(editedProject);
-
-          setFormData({
-            coverImage: editedProject.coverImage,
-            name: editedProject.name,
-            location: editedProject.location,
-            summary: editedProject.summary,
-            details: editedProject.details,
-            categoryId: editedProject.categoryId,
-            fundingGoal: editedProject.fundingGoal,
-            githubRepoUrl: editedProject.githubRepoUrl,
+    const fetchProject = async () => {
+      try {
+        const [projectResponse, allCategoriesResponse] = await Promise.all([
+          axios.get(`${config.apiUrl}/projects/${projectId}`),
+          axios.get(`${config.apiUrl}/categories`),
+        ]);
+        let skillObjectsArray = Object.values(projectResponse.data.skills);
+        const checkBoxBoolean = requiredSkillsCheckbox;
+        skillObjectsArray
+          .map((item) => item.skill)
+          .map((element, index) => {
+            checkBoxBoolean[element] = true;
           });
-        } catch (err) {
-          console.log(err);
-        }
-      };
-      fetchProject().then(console.log(formData));
-    }
+
+        setRequiredSkillsCheckbox(checkBoxBoolean);
+        setAllCategories(allCategoriesResponse.data);
+        const categoryResponse = await axios.get(
+          `${config.apiUrl}/categories/${projectResponse.data.categoryId}`
+        );
+
+        const editedProject = {
+          ...projectResponse.data,
+          categoryName: categoryResponse.data.name,
+          categoryId: categoryResponse.data.id,
+        };
+
+        setSpecificProject(editedProject);
+
+        setFormData({
+          coverImage: editedProject.coverImage,
+          name: editedProject.name,
+          location: editedProject.location,
+          summary: editedProject.summary,
+          details: editedProject.details,
+          categoryId: editedProject.categoryId,
+          fundingGoal: editedProject.fundingGoal,
+          githubRepoUrl: editedProject.githubRepoUrl,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (projectId) fetchProject();
   }, [projectId]);
 
   const handleChange = (e) => {
@@ -128,14 +125,14 @@ export default function EditProjectPage() {
   };
 
   const handleCheckboxChange = (event) => {
-    setProjectSkillsCheckBox({
-      ...projectSkillsCheckBox,
+    setRequiredSkillsCheckbox({
+      ...requiredSkillsCheckbox,
       [event.target.name]: event.target.checked,
     });
 
     // Maps checkbox boolean object into an array of skills to interface with backend
-    Object.keys(projectSkillsCheckBox).filter(
-      (skill) => projectSkillsCheckBox[skill]
+    Object.keys(requiredSkillsCheckbox).filter(
+      (skill) => requiredSkillsCheckbox[skill]
     );
   };
 
@@ -217,6 +214,7 @@ export default function EditProjectPage() {
               >
                 Upload{" "}
               </Button>
+              {uploadLoading && <CircularProgress />}
             </div>
           </div>
           <div className={styles.header}>Project Name</div>
@@ -242,16 +240,6 @@ export default function EditProjectPage() {
             value={formData.summary}
             onChange={handleChange}
           />
-          <div className={styles.header}>Location</div>
-          <TextField
-            required
-            id="location"
-            name="location"
-            onChange={handleChange}
-            value={formData.location}
-            fullWidth
-            variant="standard"
-          />
 
           <div className={styles.header}>
             Share all the details about your project here
@@ -265,10 +253,8 @@ export default function EditProjectPage() {
             value={formData.details}
             fullWidth
           />
-
           <br />
           <div className={styles.header}>Project Category</div>
-
           {formData.categoryId && (
             <Select
               onChange={handleChange}
@@ -285,6 +271,24 @@ export default function EditProjectPage() {
                     </MenuItem>
                   );
                 })}
+            </Select>
+          )}
+          <div className={styles.header}>Location</div>
+          {formData.location && (
+            <Select
+              required
+              value={formData.location}
+              defaultValue={formData.location}
+              onChange={handleChange}
+              id="location"
+              name="location"
+              fullWidth
+            >
+              {countryNames.map((country) => (
+                <MenuItem key={country} value={country}>
+                  {country}
+                </MenuItem>
+              ))}
             </Select>
           )}
           <div className={styles.header}>Funding Goal</div>
@@ -320,37 +324,11 @@ export default function EditProjectPage() {
           <br />
           <br />
           <div className={styles.header}>Skills</div>
-
-          <FormControl component="fieldset" variant="standard">
-            <FormLabel component="legend">Current Required Skills</FormLabel>
-            <FormGroup>
-              {Object.keys(presentProjectSkills).length > 0 ? (
-                Object.entries(presentProjectSkills).map(([k, v]) => (
-                  <FormControlLabel
-                    control={<Checkbox checked={v} disabled name={k} />}
-                    key={k}
-                    label={k}
-                  />
-                ))
-              ) : (
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={false}
-                      onChange={handleCheckboxChange}
-                      name="rendering"
-                    />
-                  }
-                  label="Rendering"
-                />
-              )}
-            </FormGroup>
-          </FormControl>
           <FormControl component="fieldset" variant="standard">
             <FormLabel component="legend">Select more skills</FormLabel>
             <FormGroup>
-              {Object.keys(projectSkillsCheckBox).length > 0 ? (
-                Object.entries(projectSkillsCheckBox).map(([k, v]) => (
+              {Object.keys(requiredSkillsCheckbox).length > 0 ? (
+                Object.entries(requiredSkillsCheckbox).map(([k, v]) => (
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -390,7 +368,7 @@ export default function EditProjectPage() {
               },
             }}
           >
-            Submit
+            Update
           </Button>
         </form>
       </div>
