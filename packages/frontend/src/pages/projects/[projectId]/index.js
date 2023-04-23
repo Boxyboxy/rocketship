@@ -21,7 +21,8 @@ import config from "../../../config/index";
 import Footer from "../../../components/footer";
 import styles from "../../../styles/projectpage.module.css";
 import Link from "next/link";
-
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 import axios from "axios";
 
 // PENDING: Will refactor into separate components
@@ -41,6 +42,9 @@ export default function ProjectPage() {
   const { user, isLoading, error } = useUser();
   const [userId, setUserId] = useState();
   const [userSkills, setUserSkills] = useState([]);
+
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showFailure, setShowFailure] = useState(false);
 
   //mapping for Chip color display
   const categoryColorMap = {
@@ -83,10 +87,12 @@ export default function ProjectPage() {
       .post(`http://localhost:8080/contributions`, formValues)
       .then(function (response) {
         console.log(response);
+        setShowSuccess(true);
         // openSuccessNotification("top");
       })
       .catch(function (error) {
         console.log(error);
+        setShowFailure(true);
         // openFailureNotification("top");
       });
   }
@@ -104,6 +110,14 @@ export default function ProjectPage() {
       query: { type: "membership" },
     });
   }
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setShowSuccess(false); // Close success snackbar
+    setShowFailure(false); // Close failure snackbar
+  };
 
   useEffect(() => {
     if (router.query.projectId) {
@@ -221,7 +235,7 @@ export default function ProjectPage() {
 
   const handleClick = (e) => {
     e.preventDefault();
-    // router.push(`mailto:${email}`);
+
     router.push(`mailto:test@gmail.com`);
   };
 
@@ -481,10 +495,10 @@ export default function ProjectPage() {
                           Cancel
                         </Button>
                         <Button
-                          onClick={
-                            (handleCloseContributeForm,
-                            handleSendContributeRequest)
-                          }
+                          onClick={(e) => {
+                            handleCloseContributeForm();
+                            handleSendContributeRequest(e);
+                          }}
                           sx={{
                             variant: "primary",
                             color: "white",
@@ -499,6 +513,36 @@ export default function ProjectPage() {
                       </DialogActions>
                     </Dialog>
                   </Box>
+                  <Snackbar
+                    open={showSuccess}
+                    autoHideDuration={3000}
+                    onClose={handleSnackbarClose}
+                    anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                  >
+                    <Alert
+                      elevation={6}
+                      variant="filled"
+                      onClose={handleSnackbarClose}
+                      severity="success"
+                    >
+                      Contribution request submitted successfully.
+                    </Alert>
+                  </Snackbar>
+                  <Snackbar
+                    open={showFailure}
+                    autoHideDuration={3000}
+                    onClose={handleSnackbarClose}
+                    anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                  >
+                    <Alert
+                      elevation={6}
+                      variant="filled"
+                      onClose={handleSnackbarClose}
+                      severity="error"
+                    >
+                      Contribution request failed.
+                    </Alert>
+                  </Snackbar>
                   <h3>FUNDING OPTIONS</h3>
                   <Box
                     sx={{
