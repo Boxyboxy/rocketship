@@ -23,8 +23,8 @@ export default function ContributorProjectCardsContainer({ userId }) {
   }, [userId]);
 
   function generateCards(contributions) {
-    return contributions.map((contribution) => (
-      <ContributorProjectCard contribution={contribution} />
+    return contributions.map((contribution, index) => (
+      <ContributorProjectCard key={index} contribution={contribution} />
     ));
   }
 

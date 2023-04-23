@@ -58,16 +58,26 @@ export default function ContributorProjectCard({ contribution }) {
   }, [contribution]);
 
   return (
-    <Link className={styles.name} href={`/projects/${contribution.project.id}`}>
-      <Card sx={{ minWidth: 345, maxWidth: 345, margin: 10 }}>
-        <CardMedia
-          component="img"
-          height="140"
-          src={contribution.project.coverImage}
-          alt="project1"
-        />
-        <CardContent>
-          <Stack direction="row" spacing={1}>
+    <Card
+      sx={{
+        minWidth: 345,
+        maxWidth: 345,
+        transition: "transform 0.2s",
+        "&:hover": { transform: "scale(1.05)" },
+      }}
+    >
+      <CardMedia
+        component="img"
+        height="140"
+        src={contribution.project.coverImage}
+        alt="project1"
+      />
+      <CardContent>
+        <Stack direction="row" spacing={1}>
+          <Link
+            className={styles.name}
+            href={`/projects/${contribution.project.id}`}
+          >
             <Typography
               gutterBottom
               variant="h5"
@@ -76,66 +86,66 @@ export default function ContributorProjectCard({ contribution }) {
             >
               {contribution.project.name}
             </Typography>
-          </Stack>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ fontFamily: "Montserrat" }}
-          >
-            {contribution.project.summary}
-          </Typography>
-        </CardContent>
-        <CardActions>
-          <Grid
-            container
-            direction="row"
-            justifyContent="flex-start"
-            alignItems="center"
-          >
-            Started by:
-            {
-              <Link
-                size="small"
-                href={`/profile/${projectOwner.id}`}
-                sx={{ fontFamily: "Montserrat" }}
-              >
-                {projectOwner.name}
-              </Link>
-            }
-          </Grid>
-        </CardActions>
-        {funding >= contribution.project.fundingGoal ? (
-          <Chip label="Fully funded!" color="success" />
-        ) : (
-          <>
-            <Typography
-              size="small"
-              sx={{
-                fontFamily: "Montserrat",
-                float: "right",
-                marginRight: "10px",
-                marginBottom: "18px",
-              }}
-            >
-              {` $${funding}/$${contribution.project.fundingGoal} raised`}
-            </Typography>
-            <BorderLinearProgress
-              variant="determinate"
-              sx={{ marginLeft: "10px" }}
-              value={(funding * 100) / contribution.project.fundingGoal}
-            />
-          </>
-        )}
-
+          </Link>
+        </Stack>
         <Typography
-          size="small"
-          sx={{
-            fontFamily: "Montserrat",
-          }}
+          variant="body2"
+          color="text.secondary"
+          sx={{ fontFamily: "Montserrat" }}
         >
-          {`Skill contributed: ${contribution.userSkill.skill.skill}`}
+          {contribution.project.summary}
         </Typography>
-      </Card>
-    </Link>
+      </CardContent>
+      <CardActions>
+        <Grid
+          container
+          direction="row"
+          justifyContent="flex-start"
+          alignItems="center"
+        >
+          Started by:
+          {
+            <Link
+              size="small"
+              href={`/profile/${projectOwner.id}`}
+              sx={{ fontFamily: "Montserrat" }}
+            >
+              {projectOwner.name}
+            </Link>
+          }
+        </Grid>
+      </CardActions>
+      {funding >= contribution.project.fundingGoal ? (
+        <Chip label="Fully funded!" color="success" />
+      ) : (
+        <span>
+          <Typography
+            size="small"
+            sx={{
+              fontFamily: "Montserrat",
+              float: "right",
+              marginRight: "10px",
+              marginBottom: "18px",
+            }}
+          >
+            {` $${funding}/$${contribution.project.fundingGoal} raised`}
+          </Typography>
+          <BorderLinearProgress
+            variant="determinate"
+            sx={{ marginLeft: "10px" }}
+            value={(funding * 100) / contribution.project.fundingGoal}
+          />
+        </span>
+      )}
+
+      <Typography
+        size="small"
+        sx={{
+          fontFamily: "Montserrat",
+        }}
+      >
+        {`Skill contributed: ${contribution.userSkill.skill.skill}`}
+      </Typography>
+    </Card>
   );
 }

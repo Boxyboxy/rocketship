@@ -26,8 +26,8 @@ export default function ProjectCardsContainer({ projects, ownerBoolean }) {
         />
       );
     }
-    return projects.map((project) => (
-      <ProjectCard project={project} ownerBoolean={ownerBoolean} />
+    return projects.map((project, index) => (
+      <ProjectCard key={index} project={project} ownerBoolean={ownerBoolean} />
     ));
   }
 
