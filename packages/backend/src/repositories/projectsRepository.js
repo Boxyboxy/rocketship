@@ -99,4 +99,19 @@ module.exports = {
       },
     });
   },
+
+  async updateProjectById(id, payload) {
+    const [_, [updatedProject]] = await project.update(
+      {
+        ...payload,
+        updated_at: new Date(),
+      },
+      // the model is returned when returning:true is specified
+      {
+        where: { id },
+        returning: true,
+      }
+    );
+    return updatedProject;
+  },
 };

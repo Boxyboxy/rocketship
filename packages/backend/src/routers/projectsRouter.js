@@ -10,5 +10,6 @@ projectsRouter.get("/count", projectsController.getProjectsCount);
 projectsRouter.get("/:id", projectsController.getProjectById);
 projectsRouter.post("/", projectsController.createProject);
 projectsRouter.delete("/:id", projectsController.deleteProject);
+projectsRouter.patch("/:id", projectsController.updateProjectById);
 
 module.exports = projectsRouter;
