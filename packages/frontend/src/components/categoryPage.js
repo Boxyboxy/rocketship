@@ -230,9 +230,7 @@ export default function CategoryPage({ selectedCategory }) {
             </Link>
 
             <div className={styles.txtContainer}>
-              <Link
-                className={styles.linkName}
-                href={`/projects/${randomProject.userId}/${randomProject.id}`}>
+              <Link className={styles.linkName} href={`/projects/${randomProject.id}`}>
                 <div className={styles.featuredHeader}>{randomProject.name}</div>
               </Link>
               {/* {randomProjectwFunding.fundingGoal != null ? (
@@ -241,9 +239,7 @@ export default function CategoryPage({ selectedCategory }) {
                 <></>
               )} */}
 
-              <p className={styles.featuredTxt}>
-                {randomProject.details} {randomProject.id}
-              </p>
+              <p className={styles.featuredTxt}>{randomProject.details}</p>
               <Link className={styles.name} href={`/profile/${randomProject.userId}`}>
                 {projectOwner.name}
               </Link>
