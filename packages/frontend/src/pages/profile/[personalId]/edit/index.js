@@ -169,7 +169,7 @@ export default function EditProfilPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formValuesTrimmed = trimWhitespaces(formValues);
-    console.log(userId);
+
     axios({
       url: `/api/users/${userId}`,
       responseType: "json",
@@ -199,8 +199,6 @@ export default function EditProfilPage() {
         setShowFailure(true);
         setErrorMessage(error.response.data.error);
       });
-
-    // TODO: userId is not captured when the page is redirected consistently
   };
 
   const handleSnackbarClose = (event, reason) => {

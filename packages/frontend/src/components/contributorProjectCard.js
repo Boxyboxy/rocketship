@@ -14,7 +14,6 @@ import Link from "next/link";
 import styles from "../styles/projectcard.module.css";
 
 export default function ContributorProjectCard({ contribution }) {
-  // TODO: Style the cards
   const [funding, setFunding] = useState(0);
   const [projectOwner, setProjectOwner] = useState({ name: "John Doe" });
 

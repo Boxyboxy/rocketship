@@ -9,7 +9,6 @@ import axios from "axios";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import config from "../../../../config";
 export default function PersonalProfilePage() {
-  // Add autho layer for middleware
   const { user, error, isLoading } = useUser();
   const router = useRouter();
   const { personalId } = router.query;

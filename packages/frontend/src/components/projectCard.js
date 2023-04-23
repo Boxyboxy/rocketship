@@ -18,8 +18,6 @@ export default function ProjectCard({ project, ownerBoolean }) {
 
   const [projectOwner, setProjectOwner] = useState({ name: "John Doe" });
 
-  // TODO: Style the card, set up href for owner profile button
-
   useEffect(() => {
     const fetchFunding = async () => {
       try {

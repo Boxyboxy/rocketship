@@ -23,8 +23,6 @@ import ContributorProjectCardsContainer from "./contributorProjectCardsContainer
 import FundingHistory from "./FundingHistory";
 import Button from "@mui/material/Button";
 export default function PublicProfile({ personalId }) {
-  // TODO: add edit button that links to edit page.
-  // Figure out a way to display funding, a table?
   const [profile, setProfile] = useState({
     name: "John Doe",
     mobile: "81112222",
