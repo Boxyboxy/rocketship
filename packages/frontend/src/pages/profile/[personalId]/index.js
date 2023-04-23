@@ -13,7 +13,7 @@ export default function ProfilePage() {
   const { personalId } = router.query;
   const { user, isLoading, error } = useUser();
   const [userId, setUserId] = useState();
-
+  console.log(user);
   useEffect(() => {
     const fetchUserId = async () => {
       try {
@@ -27,7 +27,9 @@ export default function ProfilePage() {
     };
     fetchUserId();
   }, [user]);
-
+  console.log("personalId:" + personalId);
+  console.log("userId:" + userId);
+  console.log(router);
   useEffect(() => {
     const handleRedirect = async () => {
       if (userId && userId == personalId) {
@@ -37,8 +39,19 @@ export default function ProfilePage() {
       }
     };
     handleRedirect();
-  }, [userId]);
+  }, [userId, router.asPath]);
 
+  useEffect(() => {
+    const handleRedirect = async () => {
+      if (userId && userId == personalId && router.isReady) {
+        let preConstructPath = `/profile/${userId}/personal`;
+        router.push({
+          pathname: preConstructPath,
+        });
+      }
+    };
+    handleRedirect();
+  }, []);
   return (
     <div className={styles.majorDiv}>
       <NavBar />

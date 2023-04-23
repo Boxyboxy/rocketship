@@ -169,7 +169,7 @@ export default function EditProfilPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formValuesTrimmed = trimWhitespaces(formValues);
-
+    console.log(userId);
     axios({
       url: `/api/users/${userId}`,
       responseType: "json",
@@ -187,8 +187,9 @@ export default function EditProfilPage() {
       .then(function (response) {
         setShowSuccess(true);
         const handleRedirect = async () => {
+          let preConstructPath = `/profile/${userId}/personal`;
           router.push({
-            pathname: `/profile/${userId}/personal`,
+            pathname: preConstructPath,
           });
         };
         handleRedirect();

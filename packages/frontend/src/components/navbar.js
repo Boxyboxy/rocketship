@@ -44,8 +44,6 @@ export default function NavBar() {
     };
     fetchUserId();
   }, [user]);
-  console.log(user);
-  console.log(userId);
 
   const handleChange = (e) => {
     setinputValue(e.target.value);
@@ -66,7 +64,7 @@ export default function NavBar() {
       .then((response) => {
         // Update state with search results
         setSearchResults(response.data);
-        console.log(response.data);
+
         router.push({
           pathname: "/searchResults",
           query: { inputValue: inputValue }, // Pass search results as query parameter
