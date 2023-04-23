@@ -1,54 +1,47 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import {
-  Avatar,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-} from "@mui/material";
-import Grid from "@mui/material/Grid";
-import styles from "../styles/profile.module.css";
-import Link from "@mui/material/Link";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import EmailIcon from "@mui/icons-material/Email";
-import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
-import PermIdentityIcon from "@mui/icons-material/PermIdentity";
-import HandymanIcon from "@mui/icons-material/Handyman";
-import ProjectCardsContainer from "./projectCardsContainer";
-import ContributorProjectCardsContainer from "./contributorProjectCardsContainer";
-import config from "../config";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import styles from '../styles/profile.module.css';
+import Link from '@mui/material/Link';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import EmailIcon from '@mui/icons-material/Email';
+import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+import HandymanIcon from '@mui/icons-material/Handyman';
+import ProjectCardsContainer from './projectCardsContainer';
+import ContributorProjectCardsContainer from './contributorProjectCardsContainer';
+import config from '../config';
 
 export default function PublicProfile({ personalId }) {
   // Should this be a reusable component???? To be shared across public and personal
   const [profile, setProfile] = useState({
-    name: "John Doe",
-    mobile: "81112222",
-    email: "johndoe@gmail.com",
-    linkedinUrl: "https://www.linkedin.com/in/johndoe/",
-    githubUrl: "https://github.com/johndoe",
+    name: 'John Doe',
+    mobile: '81112222',
+    email: 'johndoe@gmail.com',
+    linkedinUrl: 'https://www.linkedin.com/in/johndoe/',
+    githubUrl: 'https://github.com/johndoe',
     skills: [
-      { skill: "UI/UX Design" },
-      { skill: "Web Development" },
-      { skill: "Digital Marketing" },
-    ],
+      { skill: 'UI/UX Design' },
+      { skill: 'Web Development' },
+      { skill: 'Digital Marketing' }
+    ]
   });
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(
-          `${config.apiUrl}/users/${personalId}`
-        );
+        const response = await axios.get(`${config.apiUrl}/users/${personalId}`);
 
         setProfile(response.data);
       } catch (err) {
         console.log(err);
       }
     };
-
-    fetchProfile();
+    if (personalId) {
+      fetchProfile();
+    }
   }, [personalId]);
 
   function stringToColor(string) {
@@ -59,7 +52,7 @@ export default function PublicProfile({ personalId }) {
     for (i = 0; i < string.length; i += 1) {
       hash = string.charCodeAt(i) + ((hash << 5) - hash);
     }
-    let color = "#";
+    let color = '#';
 
     for (i = 0; i < 3; i += 1) {
       const value = (hash >> (i * 8)) & 0xff;
@@ -73,9 +66,9 @@ export default function PublicProfile({ personalId }) {
       sx: {
         bgcolor: stringToColor(name),
         width: 200,
-        height: 200,
+        height: 200
       },
-      children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+      children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`
     };
   }
 
@@ -101,8 +94,7 @@ export default function PublicProfile({ personalId }) {
         direction="column"
         justifyContent="space-around"
         alignItems="center"
-        sx={{ minHeight: "100vh" }}
-      >
+        sx={{ minHeight: '100vh' }}>
         <div>
           <h1>User info</h1>
           <span className={styles.line}></span>
@@ -111,20 +103,19 @@ export default function PublicProfile({ personalId }) {
             direction="row"
             justifyContent="space-evenly"
             alignItems="center"
-            sx={{ minWidth: "70vw" }}
-          >
+            sx={{ minWidth: '70vw' }}>
             <div className={styles.avatar}>
               <Avatar {...stringAvatar(profile.name)} />
             </div>
             <div>
               <h3>
-                <PermIdentityIcon fontSize="small" /> {" " + profile.name}
+                <PermIdentityIcon fontSize="small" /> {' ' + profile.name}
               </h3>
               <h3>
                 <PhoneIphoneIcon fontSize="small" /> {profile.mobile}
               </h3>
               <h3>
-                <EmailIcon fontSize="small" /> {" " + profile.email}
+                <EmailIcon fontSize="small" /> {' ' + profile.email}
               </h3>
               <Link href={profile.linkedinUrl} variant="body2" sx={{ mr: 5 }}>
                 <LinkedInIcon fontSize="large" />
@@ -144,9 +135,7 @@ export default function PublicProfile({ personalId }) {
                   <ListItemText primary="Skills" />
                 </ListItem>
 
-                {profile.skills
-                  ? generateSkillsList(profile.skills)
-                  : generateSkillsList([])}
+                {profile.skills ? generateSkillsList(profile.skills) : generateSkillsList([])}
               </List>
             </div>
           </Grid>
@@ -155,10 +144,7 @@ export default function PublicProfile({ personalId }) {
         <div>
           <h1>Projects Started</h1>
           <span className={styles.line}></span>
-          <ProjectCardsContainer
-            projects={profile.projects}
-            ownerBoolean={true}
-          />
+          <ProjectCardsContainer projects={profile.projects} ownerBoolean={true} />
         </div>
 
         <div>
