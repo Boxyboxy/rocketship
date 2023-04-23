@@ -1,7 +1,12 @@
+.projectName {
+  text-decoration: none;
+  color: black;
+  flex: 1;
+}
+
 .name {
   text-decoration: none;
   color: black;
   flex: 1;
-  /* margin: 20px; */
-  padding-right: 90px;
+  margin-left: 10px;
 }
