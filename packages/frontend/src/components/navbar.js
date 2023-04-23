@@ -45,7 +45,7 @@ export default function NavBar() {
         console.log(err);
       }
     };
-    fetchUserId();
+    if (user) fetchUserId();
   }, [user]);
 
   const handleChange = (e) => {
