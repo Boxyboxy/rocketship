@@ -212,7 +212,7 @@ export default function EditProjectPage() {
                 }}
                 onClick={handleUploadClick}
               >
-                Upload{" "}
+                Upload
               </Button>
               {uploadLoading && <CircularProgress />}
             </div>
