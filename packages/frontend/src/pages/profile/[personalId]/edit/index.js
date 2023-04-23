@@ -127,7 +127,6 @@ export default function EditProfilPage() {
 
         let skillObjectsArray = Object.values(response.data.skills);
 
-        console.log(response.data.skills);
         const checkBoxBoolean = {};
         skillObjectsArray
           .map((item) => item.skill)
