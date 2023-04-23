@@ -2,6 +2,7 @@ const { project, userSkill, user, skill } = require("../db/models");
 const {
   getAllContributions,
   createContribution,
+  updateContributionById,
 } = require("../repositories/contributionsRepository");
 
 module.exports = {
@@ -35,5 +36,20 @@ module.exports = {
   async createContribution(req, res) {
     const newContribution = await createContribution({ ...req.body });
     return res.json(newContribution);
+  },
+
+  async updateContributionById(req, res) {
+    const { id } = req.params;
+    console.log(id);
+    if (isNaN(id) || +id > Number.MAX_SAFE_INTEGER || +id < 0) {
+      const error = new Error("id  must be a valid number");
+      error.status = 400;
+      throw error;
+    }
+    const payload = req.body;
+
+    const updatedContribution = await updateContributionById(id, payload);
+
+    return res.json(updatedContribution);
   },
 };
