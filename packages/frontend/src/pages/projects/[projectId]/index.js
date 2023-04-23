@@ -38,8 +38,7 @@ export default function ProjectPage() {
   const [skills, setSkills] = useState([]);
   const [formValues, setFormValues] = useState({});
 
-  const { user, isLoading, error, getAccessTokenSilently, isAuthenticated } =
-    useUser();
+  const { user, isLoading, error } = useUser();
   const [userId, setUserId] = useState();
   const [userSkills, setUserSkills] = useState([]);
 
@@ -119,18 +118,17 @@ export default function ProjectPage() {
         try {
           const [
             projectResponse,
-            userResponse,
             fundingSumResponse,
-            backerSumResponse,
+            // backerSumResponse,
           ] = await Promise.all([
             axios.get(`http://localhost:8080/projects/${projectId}`),
-            // axios.get(`http://localhost:8080/users/${creatorId}`),
+
             axios.get(`http://localhost:8080/fundings/sum/${projectId}`),
-            axios.get(
-              `http://localhost:8080/fundings/backerSum?projectId=${projectId}`
-            ),
+            // axios.get(
+            //   `http://localhost:8080/fundings/backerSum?projectId=${projectId}`
+            // ),
           ]);
-          console.log(backerSumResponse.data);
+
           let formattedSum;
           //format funding sum response
           if (fundingSumResponse.data > 10000) {
@@ -143,14 +141,14 @@ export default function ProjectPage() {
           }
 
           setStats([
-            {
-              statName: "Backers",
-              sum: `${backerSumResponse.data.uniqueBackers}`,
-            },
+            // {
+            //   statName: "Backers",
+            //   sum: `${backerSumResponse.data.uniqueBackers}`,
+            // },
             { statName: "Funded", sum: `$${formattedSum}` },
           ]);
 
-          const [categoryResponse, skillsNeededResponse, allSkills] =
+          const [categoryResponse, requiredSkills, userResponse] =
             await Promise.all([
               axios.get(
                 `http://localhost:8080/categories/${projectResponse.data.categoryId}`
@@ -158,41 +156,21 @@ export default function ProjectPage() {
               axios.get(
                 `http://localhost:8080/requiredSkills?projectId=${projectId}`
               ),
-              // axios.get(`http://localhost:8080/skills`),
+              axios.get(
+                `http://localhost:8080/users/${projectResponse.data.userId}`
+              ),
             ]);
+          console.log(userResponse.data);
 
-          const skillArray = [];
+          setSkills(
+            requiredSkills.data.map((item) => {
+              const container = {};
+              container.skillId = item.skill.id;
+              container.skill = item.skill.skill;
 
-          for (const skillNeeded of skillsNeededResponse.data) {
-            await axios
-              .get(`http://localhost:8080/skills/${skillNeeded.skillId}`)
-              .then(function (response) {
-                console.log(response);
-                // skillArray.push({
-                //   ...skillArray,
-                //   [skillNeeded.skillId]: response.data.skill,
-                // });
-                skillArray.push(...skills, {
-                  skillId: skillNeeded.skillId,
-                  skill: response.data.skill,
-                });
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-          }
-
-          // for (const skillNeeded of skillsNeededResponse.data) {
-          //   for (const skill of allSkills.data) {
-          //     if (skillNeeded.skillId === skill.id) {
-          //       skillArray.push(skill.skill);
-          //       break;
-          //     }
-          //   }
-          // }
-
-          setSkills(skillArray);
-          console.log(skillArray);
+              return container;
+            })
+          );
 
           const editedProject = {
             ...projectResponse.data,
@@ -209,7 +187,6 @@ export default function ProjectPage() {
     }
   }, [creatorId, projectId]);
   console.log(specificProject);
-
   useEffect(() => {
     const fetchUserId = async () => {
       try {
