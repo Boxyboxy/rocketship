@@ -627,9 +627,6 @@ export default function ProjectPage() {
                 </Grid>
               </Grid>
             </Grid>
-            {/* this is extra features -- only backers can add comments */}
-            Comment Section
-            <p>blah blah</p>
           </div>
         </div>
       )}
