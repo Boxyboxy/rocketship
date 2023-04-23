@@ -15,7 +15,8 @@ import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import styles from "../../../../styles/editproject.module.css";
-// pending image update, category update function + displaying skills required
+
+// pending image update + submit request required
 
 export default function EditProjectPage() {
   const router = useRouter();
@@ -101,11 +102,47 @@ export default function EditProjectPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // const handleSkillCheckboxChange = (e = {});
+  const handleCheckboxChange = (event) => {
+    const value = event.target.value;
+    const isChecked = event.target.checked;
+
+    // If the checkbox is checked and the skill is not already in the skills array, add the skill
+    if (isChecked && !skills.includes(value)) {
+      console.log(isChecked);
+      setSkills([...skills, { id: parseInt(value), skill: event.target.name }]);
+    }
+    // If the checkbox is unchecked and the skill is in the skills array, remove the skill
+    else if (!isChecked) {
+      const updatedSkills = skills.filter(
+        (skill) => skill.id !== parseInt(value)
+      );
+      setSkills(updatedSkills);
+    }
+  };
+
+  //checking skills array
+  useEffect(() => {
+    console.log(skills);
+  }, [skills]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
+
+    // axios({
+    //   url: `/api/users/${userId}`,
+    //   responseType: "json",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   method: "patch",
+    //   data: {
+    //     ...formValuesTrimmed,
+    //     newSkills: Object.keys(userSkillsCheckBox).filter(
+    //       (key) => userSkillsCheckBox[key]
+    //     ),
+    //   },
+    // });
   };
 
   return (
@@ -186,16 +223,13 @@ export default function EditProjectPage() {
                     <Checkbox
                       checked={
                         skills &&
-                        skills.map((neededSkill) => {
-                          return neededSkill.id === skill.id;
-                          // if (neededSkill.id === skill.id) {
-                          //   console.log("yea");
-                          //   return true;
-                          // }
-                        })
+                        skills.some(
+                          (neededSkill) => neededSkill.id === skill.id
+                        )
                       }
-                      onChange={handleChange}
+                      onChange={handleCheckboxChange}
                       value={skill.id}
+                      name={skill.skill}
                     />
                   }
                   label={skill.skill}
