@@ -141,7 +141,8 @@ export default function EditProfilPage() {
         console.error("Failed to fetch user data:", error);
       }
     };
-    fetchUserData();
+
+    if (personalId) fetchUserData();
   }, [personalId]);
 
   const handleInputChange = (e) => {
