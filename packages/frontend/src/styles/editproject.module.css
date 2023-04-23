@@ -1,4 +1,13 @@
 .formContainer {
-  margin: 50px 50px;
+  margin: 50px 200px;
   padding: 10px 0px;
+}
+
+.header {
+  font-weight: bold;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  color: #3e497a;
+  margin: auto;
+  position: relative;
 }

@@ -15,6 +15,7 @@ import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import styles from "../../../../styles/editproject.module.css";
+import config from "../../../../config";
 
 // pending image update + submit request required
 
@@ -25,8 +26,8 @@ export default function EditProjectPage() {
 
   const [projectId, setProjectId] = useState();
   const [allCategories, setAllCategories] = useState();
-  const [skills, setSkills] = useState([]);
-  const [allSkills, setAllSkills] = useState();
+  const [projectSkillsCheckBox, setProjectSkillsCheckBox] = useState({});
+  const [presentProjectSkills, setPresentProjectSkills] = useState({});
 
   useEffect(() => {
     if (router.query.projectId) {
@@ -35,44 +36,46 @@ export default function EditProjectPage() {
   }, [router.query.projectId]);
 
   useEffect(() => {
+    axios.get(`${config.apiUrl}/skills`).then(({ data }) => {
+      let skillObjectsArray = Object.values(data);
+      const checkBoxBoolean = {};
+      skillObjectsArray
+        .map((item) => item.skill)
+        .map((element, index) => (checkBoxBoolean[element] = false));
+      setProjectSkillsCheckBox(checkBoxBoolean);
+    });
+  }, []);
+
+  useEffect(() => {
     // To be refactored and shared between project page and edit project page
     if (projectId) {
       const fetchProject = async () => {
         try {
           const [projectResponse, allCategoriesResponse] = await Promise.all([
             axios.get(`http://localhost:8080/projects/${projectId}`),
-            // axios.get(`http://localhost:8080/users/${creatorId}`),
             axios.get("http://localhost:8080/categories"),
           ]);
 
           setAllCategories(allCategoriesResponse.data);
 
-          const [categoryResponse, skillsNeededResponse, allSkillsDB] =
-            await Promise.all([
-              axios.get(
-                `http://localhost:8080/categories/${projectResponse.data.categoryId}`
-              ),
-              axios.get(
-                `http://localhost:8080/requiredSkills?projectId=${projectId}`
-              ),
-              axios.get(`http://localhost:8080/skills`),
-            ]);
+          const [categoryResponse, skillsNeededResponse] = await Promise.all([
+            axios.get(
+              `http://localhost:8080/categories/${projectResponse.data.categoryId}`
+            ),
+            axios.get(`${config.apiUrl}/requiredSkills?projectId=${projectId}`),
+          ]);
 
-          const skillArray = [];
-          // console.log(skillsNeededResponse.data);
+          console.log(skillsNeededResponse.data);
+          let skillObjectsArray = Object.values(skillsNeededResponse.data);
 
-          for (const skillNeeded of skillsNeededResponse.data) {
-            skillArray.push(skillNeeded.skill);
-          }
-          // console.log(allSkillsDB.data);
-          const allSkillsArrayDB = allSkillsDB.data.map((skill) => {
-            return { id: skill.id, skill: skill.skill };
-          });
-
-          console.log(skillArray);
-          console.log(allSkillsArrayDB);
-          setAllSkills(allSkillsArrayDB);
-          setSkills(skillArray);
+          const checkBoxBoolean = {};
+          skillObjectsArray
+            .map((item) => item.skill.skill)
+            .map((element, index) => {
+              checkBoxBoolean[element] = true;
+              delete projectSkillsCheckBox[element];
+            });
+          setPresentProjectSkills(checkBoxBoolean);
 
           const editedProject = {
             ...projectResponse.data,
@@ -103,27 +106,16 @@ export default function EditProjectPage() {
   };
 
   const handleCheckboxChange = (event) => {
-    const value = event.target.value;
-    const isChecked = event.target.checked;
+    setProjectSkillsCheckBox({
+      ...userSkillsCheckBox,
+      [event.target.name]: event.target.checked,
+    });
 
-    // If the checkbox is checked and the skill is not already in the skills array, add the skill
-    if (isChecked && !skills.includes(value)) {
-      console.log(isChecked);
-      setSkills([...skills, { id: parseInt(value), skill: event.target.name }]);
-    }
-    // If the checkbox is unchecked and the skill is in the skills array, remove the skill
-    else if (!isChecked) {
-      const updatedSkills = skills.filter(
-        (skill) => skill.id !== parseInt(value)
-      );
-      setSkills(updatedSkills);
-    }
+    // Maps checkbox boolean object into an array of skills to interface with backend
+    Object.keys(userSkillsCheckBox).filter(
+      (skill) => userSkillsCheckBox[skill]
+    );
   };
-
-  //checking skills array
-  useEffect(() => {
-    console.log(skills);
-  }, [skills]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -150,7 +142,7 @@ export default function EditProjectPage() {
       <NavBar />
       <div className={styles.formContainer}>
         <form onSubmit={handleSubmit}>
-          <p>Project Name</p>
+          <div className={styles.header}>Project Name</div>
           <TextField
             required
             id="name"
@@ -158,9 +150,12 @@ export default function EditProjectPage() {
             onChange={handleChange}
             // label="Project Name"
             value={formData.name}
+            variant="standard"
             fullWidth
           />
-          <p>Give a brief summary of what your Rocket is about</p>
+          <div className={styles.header}>
+            Give a brief summary of what your Rocket is about
+          </div>
           <TextField
             id="summary"
             name="summary"
@@ -169,7 +164,7 @@ export default function EditProjectPage() {
             fullWidth
             value={formData.summary}
           />
-          <p>Location</p>
+          <div className={styles.header}>Location</div>
           <TextField
             required
             id="location"
@@ -177,8 +172,11 @@ export default function EditProjectPage() {
             onChange={handleChange}
             value={formData.location}
             fullWidth
+            variant="standard"
           />
-          <p>Share all the details about your project here:</p>
+          <div className={styles.header}>
+            Share all the details about your project here
+          </div>
           <TextField
             id="details"
             name="details"
@@ -190,7 +188,7 @@ export default function EditProjectPage() {
           />
 
           <br />
-          <p>Project Category</p>
+          <div className={styles.header}>Project Category</div>
 
           {formData.categoryId && (
             <Select
@@ -213,30 +211,77 @@ export default function EditProjectPage() {
 
           <br />
           <br />
-          <p>Skills</p>
-          <FormGroup>
-            {allSkills &&
-              allSkills.map((skill) => (
+          <div className={styles.header}>Skills</div>
+
+          <FormControl component="fieldset" variant="standard">
+            <FormLabel component="legend">Current Required Skills</FormLabel>
+            <FormGroup>
+              {Object.keys(presentProjectSkills).length > 0 ? (
+                Object.entries(presentProjectSkills).map(([k, v]) => (
+                  <FormControlLabel
+                    control={<Checkbox checked={v} disabled name={k} />}
+                    key={k}
+                    label={k}
+                  />
+                ))
+              ) : (
                 <FormControlLabel
-                  key={skill.id}
                   control={
                     <Checkbox
-                      checked={
-                        skills &&
-                        skills.some(
-                          (neededSkill) => neededSkill.id === skill.id
-                        )
-                      }
+                      checked={false}
                       onChange={handleCheckboxChange}
-                      value={skill.id}
-                      name={skill.skill}
+                      name="rendering"
                     />
                   }
-                  label={skill.skill}
+                  label="Rendering"
                 />
-              ))}
-          </FormGroup>
-          <Button type="submit" variant="contained">
+              )}
+            </FormGroup>
+          </FormControl>
+          <FormControl component="fieldset" variant="standard">
+            <FormLabel component="legend">Select more skills</FormLabel>
+            <FormGroup>
+              {Object.keys(projectSkillsCheckBox).length > 0 ? (
+                Object.entries(projectSkillsCheckBox).map(([k, v]) => (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={v}
+                        onChange={handleCheckboxChange}
+                        name={k}
+                        key={k}
+                      />
+                    }
+                    label={k}
+                  />
+                ))
+              ) : (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={false}
+                      onChange={handleCheckboxChange}
+                      name="rendering"
+                    />
+                  }
+                  label="Rendering"
+                />
+              )}
+            </FormGroup>
+          </FormControl>
+          <br />
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              variant: "primary",
+              color: "white",
+              backgroundColor: "#21325E",
+              "&:hover": {
+                backgroundColor: "#21325E",
+              },
+            }}
+          >
             Submit
           </Button>
         </form>

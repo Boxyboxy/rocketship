@@ -33,7 +33,7 @@ export default function NavBar() {
   const [open, setOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
 
-  console.log(user);
+  // console.log(user);
   useEffect(() => {
     const fetchUserId = async () => {
       try {
@@ -88,7 +88,9 @@ export default function NavBar() {
         .then((response) => {
           const contributions = response.data;
           //project.userId -> project owner (the one that should be approving contributors' requests)
-          console.log(response.data);
+
+          // console.log(response.data);
+
           // Filter contributions based on status and userId
           const pendingRequests = contributions.filter(
             (contribution) => contribution.status === "pending"
@@ -97,13 +99,13 @@ export default function NavBar() {
           const pendingProjects = pendingRequests.filter(
             (project) => project.project.userId === userId
           );
-          console.log(pendingProjects);
+          // console.log(pendingProjects);
 
           // Update the requests count in state
           setRequestsCount(pendingProjects.length);
           setPendingProjects(pendingProjects);
-          console.log(pendingProjects);
-          console.log(pendingRequests);
+          // console.log(pendingProjects);
+          // console.log(pendingRequests);
         })
         .catch((error) => {
           console.error("Error fetching contributions:", error);
