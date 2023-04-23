@@ -1,6 +1,6 @@
 const { project } = require("../db/models");
 const logger = require("../middleware/logger");
-const { pitchSlide, category, skill } = require("../db/models");
+const { pitchSlide, category, skill, bankAccount } = require("../db/models");
 const {
   deletePitchSlidesByProjectId,
 } = require("../repositories/pitchSlidesRepository");
@@ -28,11 +28,24 @@ module.exports = {
 
   async createProject(payload) {
     const currentDate = new Date();
-    const { pitchSlidesUrlStrings, skillIdArray, ...rest } = payload;
-    console.log(rest);
+    const {
+      bankAccountNumber,
+      bank,
+      pitchSlidesUrlStrings,
+      skillIdArray,
+      ...rest
+    } = payload;
+
+    const newBankAccount = await bankAccount.create({
+      bankAccountNumber: bankAccountNumber,
+      bank: bank,
+      created_at: currentDate,
+      updated_at: currentDate,
+    });
 
     const newProject = await project.create({
       ...rest,
+      bankAccountId: newBankAccount.dataValues.id,
       created_at: currentDate,
       updated_at: currentDate,
     });
