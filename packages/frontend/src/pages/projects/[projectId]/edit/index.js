@@ -7,7 +7,7 @@ import Category from "../../../../components/category";
 import { useRouter } from "next/router";
 import axios from "axios";
 import TextField from "@mui/material/TextField";
-import { Select, MenuItem } from "@material-ui/core";
+import { Select, MenuItem, Input } from "@material-ui/core";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import FormLabel from "@mui/material/FormLabel";
@@ -28,6 +28,25 @@ export default function EditProjectPage() {
   const [allCategories, setAllCategories] = useState();
   const [projectSkillsCheckBox, setProjectSkillsCheckBox] = useState({});
   const [presentProjectSkills, setPresentProjectSkills] = useState({});
+
+  const [coverImage, setCoverImage] = useState();
+  const [showUploadAlert, setShowUploadAlert] = useState();
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [showUploadSuccess, setShowUploadSuccess] = useState(false);
+  const [showUploadFailure, setShowUploadFailure] = useState(false);
+
+  // const isFundingGoalValid = (fundingGoal) => {
+  //   if (fundingGoal) {
+  //     fundingGoal.length >= 1 && /^[1-9][0-9]*(\.[0-9]+)?$/.test(fundingGoal);
+  //     console.log(fundingGoal);
+  //   }
+  // };
+
+  const handleCoverImageChange = (e) => {
+    if (e.target.files) {
+      setCoverImage(e.target.files[0]);
+    }
+  };
 
   useEffect(() => {
     if (router.query.projectId) {
@@ -86,11 +105,14 @@ export default function EditProjectPage() {
           setSpecificProject(editedProject);
 
           setFormData({
+            coverImage: editedProject.coverImage,
             name: editedProject.name,
             location: editedProject.location,
             summary: editedProject.summary,
             details: editedProject.details,
             categoryId: editedProject.categoryId,
+            fundingGoal: editedProject.fundingGoal,
+            githubRepoUrl: editedProject.githubRepoUrl,
           });
         } catch (err) {
           console.log(err);
@@ -107,16 +129,50 @@ export default function EditProjectPage() {
 
   const handleCheckboxChange = (event) => {
     setProjectSkillsCheckBox({
-      ...userSkillsCheckBox,
+      ...projectSkillsCheckBox,
       [event.target.name]: event.target.checked,
     });
 
     // Maps checkbox boolean object into an array of skills to interface with backend
-    Object.keys(userSkillsCheckBox).filter(
-      (skill) => userSkillsCheckBox[skill]
+    Object.keys(projectSkillsCheckBox).filter(
+      (skill) => projectSkillsCheckBox[skill]
     );
   };
 
+  const handleUploadClick = async () => {
+    if (!coverImage) {
+      setShowUploadAlert(true);
+      return;
+    }
+    setShowUploadAlert(false);
+    setUploadLoading(true);
+
+    const coverImageFD = new FormData();
+    coverImageFD.append("file", coverImage);
+    coverImageFD.append("upload_preset", "rocketship");
+
+    try {
+      const [coverImageResponse] = await Promise.all([
+        await axios.post(
+          "https://api.cloudinary.com/v1_1/dbq7yg58d/image/upload/",
+          coverImageFD
+        ),
+      ]);
+
+      setFormData({
+        ...formData,
+        coverImage: coverImageResponse.data["secure_url"],
+      });
+
+      setShowUploadSuccess(true);
+
+      setUploadLoading(false);
+    } catch (err) {
+      console.log(err);
+      setUploadLoading(false);
+      setShowUploadFailure(true);
+    }
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
@@ -142,6 +198,27 @@ export default function EditProjectPage() {
       <NavBar />
       <div className={styles.formContainer}>
         <form onSubmit={handleSubmit}>
+          <div>
+            <p>Cover Image</p>
+            <img src={formData.coverImage} width="200" />
+            <div>
+              <Input type="file" onChange={handleCoverImageChange} />
+              <Button
+                sx={{
+                  variant: "primary",
+                  margin: "0px 20px",
+                  color: "white",
+                  backgroundColor: "#21325E",
+                  "&:hover": {
+                    backgroundColor: "#21325E",
+                  },
+                }}
+                onClick={handleUploadClick}
+              >
+                Upload{" "}
+              </Button>
+            </div>
+          </div>
           <div className={styles.header}>Project Name</div>
           <TextField
             required
@@ -163,6 +240,7 @@ export default function EditProjectPage() {
             rows={4}
             fullWidth
             value={formData.summary}
+            onChange={handleChange}
           />
           <div className={styles.header}>Location</div>
           <TextField
@@ -174,6 +252,7 @@ export default function EditProjectPage() {
             fullWidth
             variant="standard"
           />
+
           <div className={styles.header}>
             Share all the details about your project here
           </div>
@@ -208,7 +287,36 @@ export default function EditProjectPage() {
                 })}
             </Select>
           )}
-
+          <div className={styles.header}>Funding Goal</div>
+          <TextField
+            required
+            id="fundingGoal"
+            name="fundingGoal"
+            onChange={handleChange}
+            value={parseInt(formData.fundingGoal)}
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            InputProps={{
+              startAdornment: <div>$</div>,
+            }}
+            // error={!isFundingGoalValid(formData.fundingGoal)}
+            // helperText={
+            //   isFundingGoalValid(formData.fundingGoal)
+            //     ? ""
+            //     : "Please enter only numbers"
+            // }
+            variant="standard"
+          />
+          <div className={styles.header}>Github Repo URL</div>
+          <TextField
+            required
+            id="githubRepoUrl"
+            name="githubRepoUrl"
+            onChange={handleChange}
+            value={formData.githubRepoUrl}
+            fullWidth
+            variant="standard"
+          />
           <br />
           <br />
           <div className={styles.header}>Skills</div>
