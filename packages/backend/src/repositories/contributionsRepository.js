@@ -16,4 +16,20 @@ module.exports = {
       updated_at: currentDate,
     });
   },
+
+  async updateContributionById(id, payload) {
+    // eslint-disable-next-line no-unused-vars
+    const [_, [updatedContribution]] = await contribution.update(
+      { ...payload, updated_at: new Date() },
+      // the model is returned when returning:true is specified
+      {
+        where: { id },
+        returning: true,
+      }
+    );
+
+    const response = updatedContribution.toJSON();
+
+    return response;
+  },
 };

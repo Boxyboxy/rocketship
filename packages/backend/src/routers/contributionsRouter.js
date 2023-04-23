@@ -7,5 +7,8 @@ const contributionsRouter = express.Router();
 
 contributionsRouter.get("/", contributionsController.getAllContributions);
 contributionsRouter.post("/", contributionsController.createContribution);
-
+contributionsRouter.patch(
+  "/:id",
+  contributionsController.updateContributionById
+);
 module.exports = contributionsRouter;
