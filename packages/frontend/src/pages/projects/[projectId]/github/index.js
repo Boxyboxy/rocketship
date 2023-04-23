@@ -6,6 +6,7 @@ import Footer from "../../../../components/footer";
 import GitHub from "../../../../components/GitHub";
 import { useRouter } from "next/router";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import axios from "axios";
 
 export default function Github({ project }) {
   const router = useRouter();
