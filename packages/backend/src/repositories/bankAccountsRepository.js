@@ -15,7 +15,7 @@ module.exports = {
   async createBankAccount(payload) {
     const currentDate = new Date();
 
-    return contribution.create({
+    return bankAccount.create({
       ...payload,
       created_at: currentDate,
       updated_at: currentDate,

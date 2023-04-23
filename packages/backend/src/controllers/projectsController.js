@@ -1,13 +1,22 @@
-const { pitchSlide, category, skill, funding } = require("../db/models");
+const { pitchSlide, category, skill } = require("../db/models");
 const {
   getAllProjects,
   getProjectById,
   createProject,
   deleteProject,
   getProjectsCount,
+  updateProjectById,
 } = require("../repositories/projectsRepository");
 const { Sequelize } = require("sequelize");
 const { skillsIdMap } = require("../configs/data");
+const { createBankAccount } = require("../repositories/bankAccountsRepository");
+const {
+  deleteRequiredSkillsByProjectId,
+  createRequiredSkills,
+} = require("../repositories/requiredSkillsRepository");
+const {
+  deletePitchSlidesByProjectId,
+} = require("../repositories/pitchSlidesRepository");
 
 module.exports = {
   async getAllProjects({ query }, res) {
@@ -114,5 +123,76 @@ module.exports = {
   async getProjectsCount(req, res) {
     const count = await getProjectsCount();
     return res.json(count);
+  },
+
+  async updateProjectById(req, res) {
+    const { id } = req.params;
+    if (isNaN(id) || +id > Number.MAX_SAFE_INTEGER || +id < 0) {
+      const error = new Error("id  must be a valid number");
+      error.status = 400;
+      throw error;
+    }
+
+    const {
+      bankAccountNumber,
+      bank,
+      pitchSlidesUrlStrings,
+      requiredSkills,
+      ...rest
+    } = req.body;
+
+    let updatedProject = {};
+    if (bankAccountNumber && bank) {
+      const newBankAccount = await createBankAccount({
+        bankAccountNumber: bankAccountNumber,
+        bank: bank,
+      });
+      updatedProject = await updateProjectById(id, {
+        ...rest,
+        bankAccountId: newBankAccount.dataValues.id,
+      });
+    } else {
+      updatedProject = await updateProjectById(id, {
+        ...rest,
+      });
+    }
+
+    console.log(updatedProject.dataValues);
+
+    const response = {
+      ...updatedProject.dataValues,
+    };
+
+    console.log(response);
+
+    if (requiredSkills) {
+      console.log("update required skills called");
+      const skillIdArray = requiredSkills.map(
+        (requiredSkill) => skillsIdMap[requiredSkill]
+      );
+      await deleteRequiredSkillsByProjectId(id);
+      const requiredSkillsCreated = await createRequiredSkills(
+        id,
+        skillIdArray
+      );
+      response.requiredSkillsUpdated = requiredSkillsCreated;
+    }
+    if (pitchSlidesUrlStrings) {
+      await deletePitchSlidesByProjectId(id);
+      const pitchSlides = [];
+
+      for (const url of pitchSlidesUrlStrings) {
+        console.log(url);
+        const newPitchSlide = await pitchSlide.create({
+          urlString: url,
+          projectId: id,
+          createdAt: currentDate,
+          updatedAt: currentDate,
+        });
+        pitchSlides.push(newPitchSlide);
+      }
+      response.pitchSlides = pitchSlides;
+    }
+    return res.json(response);
   },
 };
