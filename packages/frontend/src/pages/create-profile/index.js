@@ -187,20 +187,6 @@ export default function CreateProfile() {
     setFormValues({ ...formValues, [e.target.id]: e.target.value });
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   axios
-  //     .post(`http://localhost:8080/createUser`, formValues, configs)
-  //     .then(function (response) {
-  //       console.log(response);
-  //       setShowSuccess(true);
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //       setShowFailure(true);
-  //     });
-  // };
-
   // form submit
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -239,16 +225,24 @@ export default function CreateProfile() {
   useEffect(() => {
     // Check if user has created a profile
     // const hasCreatedProfile = localStorage.getItem('hasCreatedProfile');
-    const hasCreatedProfile = user;
 
     if (!isLoading && user) {
-      if (hasCreatedProfile) {
-        // Redirect to dashboard if profile exists
-        router.push('/projects');
-      } else {
-        // Redirect to create profile page if profile does not exist
-        router.push('/create-profile');
-      }
+      // Call the API to check if the user already exists in the database
+      axios
+        .get(`http://localhost:8080/users?email=${userEmail}`)
+        .then((response) => {
+          const userExists = response.data.length > 0;
+          if (userExists) {
+            // Redirect to dashboard if profile exists or user already exists in the database
+            router.push('/projects');
+          } else {
+            // Redirect to create profile page if profile does not exist and user does not exist in the database
+            router.push('/create-profile');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   }, [user, isLoading]);
 
