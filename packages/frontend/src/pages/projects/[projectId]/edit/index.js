@@ -1,20 +1,27 @@
-import Head from "next/head";
 import Grid from "@mui/material/Unstable_Grid2";
 import { useEffect, useState } from "react";
-import { Typography, Button, Box, Checkbox } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  TextField,
+  CircularProgress,
+  FormControlLabel,
+  FormLabel,
+  FormControl,
+  FormGroup,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import NavBar from "../../../../components/navbar";
-import Category from "../../../../components/category";
+
 import { useRouter } from "next/router";
 import axios from "axios";
-import TextField from "@mui/material/TextField";
+
 import { Select, MenuItem, Input } from "@material-ui/core";
-import FormLabel from "@mui/material/FormLabel";
-import FormControl from "@mui/material/FormControl";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
+
 import styles from "../../../../styles/editproject.module.css";
 import config from "../../../../config";
-import CircularProgress from "@mui/material/CircularProgress";
+
 import { getNames } from "country-list";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
@@ -23,7 +30,7 @@ export default function EditProjectPage() {
 
   const { user, error, isLoading } = useUser();
   const [userId, setUserId] = useState();
-
+  console.log(userId);
   const [specificProject, setSpecificProject] = useState();
   const [formData, setFormData] = useState({});
   const [projectOwnerId, setProjectOwnerId] = useState();
@@ -45,6 +52,7 @@ export default function EditProjectPage() {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [showUploadSuccess, setShowUploadSuccess] = useState(false);
   const [showUploadFailure, setShowUploadFailure] = useState(false);
+  const [skillsLoaded, setSkillsLoaded] = useState(false);
 
   // const isFundingGoalValid = (fundingGoal) => {
   //   if (fundingGoal) {
@@ -68,6 +76,9 @@ export default function EditProjectPage() {
     fetchUserId();
   }, [user]);
 
+  console.log(userId);
+  console.log(projectOwnerId);
+
   const handleCoverImageChange = (e) => {
     if (e.target.files) {
       setCoverImage(e.target.files[0]);
@@ -86,24 +97,36 @@ export default function EditProjectPage() {
     }
   }, [router.query.projectId]);
 
-  useEffect(() => {
-    axios.get(`${config.apiUrl}/skills`).then(({ data }) => {
-      let skillObjectsArray = Object.values(data);
-      const checkBoxBoolean = {};
-      skillObjectsArray
-        .map((item) => item.skill)
-        .map((element, index) => (checkBoxBoolean[element] = false));
-      setRequiredSkillsCheckbox(checkBoxBoolean);
-    });
-  }, []);
+  // useEffect(() => {
+  //   const fetchSkills = async () => {
+
+  //     setSkillsLoaded(true);
+  //   };
+  //   fetchSkills();
+  // }, [router.query.projectId]);
 
   useEffect(() => {
+    const fetchSkills = async () => {};
+    //     setSkillsLoaded(true);
+    //   };
+
     const fetchProject = async () => {
       try {
+        // fetch skills
+        await axios.get(`${config.apiUrl}/skills`).then(({ data }) => {
+          let skillObjectsArray = Object.values(data);
+          const checkBoxBoolean = {};
+          skillObjectsArray
+            .map((item) => item.skill)
+            .map((element, index) => (checkBoxBoolean[element] = false));
+          setRequiredSkillsCheckbox(checkBoxBoolean);
+        });
+        // fetch projects & categories
         const [projectResponse, allCategoriesResponse] = await Promise.all([
           axios.get(`${config.apiUrl}/projects/${projectId}`),
           axios.get(`${config.apiUrl}/categories`),
         ]);
+
         let skillObjectsArray = Object.values(projectResponse.data.skills);
         const checkBoxBoolean = requiredSkillsCheckbox;
         skillObjectsArray
@@ -111,7 +134,7 @@ export default function EditProjectPage() {
           .map((element, index) => {
             checkBoxBoolean[element] = true;
           });
-
+        // set required skills and categories
         setRequiredSkillsCheckbox(checkBoxBoolean);
         setAllCategories(allCategoriesResponse.data);
         const categoryResponse = await axios.get(
@@ -199,22 +222,45 @@ export default function EditProjectPage() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    console.log({
+      ...formData,
+      requiredSkills: Object.keys(requiredSkillsCheckbox).filter(
+        (skill) => requiredSkillsCheckbox[skill]
+      ),
+    });
 
-    // axios({
-    //   url: `/api/users/${userId}`,
-    //   responseType: "json",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   method: "patch",
-    //   data: {
-    //     ...formValuesTrimmed,
-    //     newSkills: Object.keys(userSkillsCheckBox).filter(
-    //       (key) => userSkillsCheckBox[key]
-    //     ),
-    //   },
-    // });
+    axios
+      .patch(`http://localhost:8080/projects/${projectId}`, {
+        ...formData,
+        requiredSkills: Object.keys(requiredSkillsCheckbox).filter(
+          (skill) => requiredSkillsCheckbox[skill]
+        ),
+      })
+      .then(function (response) {
+        console.log(response.data);
+        setShowSuccess(true);
+        const handleRedirect = async () => {
+          let preConstructPath = `/projects/${response.data.id}`;
+          router.push({
+            pathname: preConstructPath,
+          });
+        };
+        handleRedirect();
+      })
+      .catch(function (error) {
+        console.log(error);
+        setShowFailure(true);
+      });
+  };
+
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showFailure, setShowFailure] = useState(false);
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setShowSuccess(false); // Close success snackbar
+    setShowFailure(false); // Close failure snackbar
   };
 
   return (
@@ -325,7 +371,7 @@ export default function EditProjectPage() {
               id="fundingGoal"
               name="fundingGoal"
               onChange={handleChange}
-              value={parseInt(formData.fundingGoal)}
+              value={formData.fundingGoal}
               fullWidth
               InputLabelProps={{ shrink: true }}
               InputProps={{
@@ -398,6 +444,36 @@ export default function EditProjectPage() {
             >
               Update
             </Button>
+            <Snackbar
+              open={showSuccess}
+              autoHideDuration={3000}
+              onClose={handleSnackbarClose}
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            >
+              <Alert
+                elevation={6}
+                variant="filled"
+                onClose={handleSnackbarClose}
+                severity="success"
+              >
+                Project creation successful!
+              </Alert>
+            </Snackbar>
+            <Snackbar
+              open={showFailure}
+              autoHideDuration={3000}
+              onClose={handleSnackbarClose}
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            >
+              <Alert
+                elevation={6}
+                variant="filled"
+                onClose={handleSnackbarClose}
+                severity="error"
+              >
+                Project creation failed. Please try again.
+              </Alert>
+            </Snackbar>
           </form>
         </div>
       ) : (

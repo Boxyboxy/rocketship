@@ -2,12 +2,14 @@ import Head from "next/head";
 import NavBar from "../../components/navbar";
 import Category from "../../components/category";
 import Footer from "../../components/footer";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+
 import styles from "../../styles/createproject.module.css";
-import Box from "@mui/material/Box";
+
 import { useState, useEffect } from "react";
-import TextField from "@mui/material/TextField";
+
 import {
+  createTheme,
+  ThemeProvider,
   Stepper,
   Step,
   StepLabel,
@@ -15,22 +17,27 @@ import {
   MenuItem,
   Button,
   Input,
+  FormControlLabel,
+  FormHelperText,
 } from "@material-ui/core";
 
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormLabel from "@mui/material/FormLabel";
-import FormGroup from "@mui/material/FormGroup";
-import FormControl from "@mui/material/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import {
+  Snackbar,
+  Alert,
+  Checkbox,
+  FormLabel,
+  FormGroup,
+  FormControl,
+  CircularProgress,
+  Box,
+  TextField,
+} from "@mui/material/Snackbar";
+
 import { getNames } from "country-list";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import config from "../../config";
 import axios from "axios";
 import { useRouter } from "next/router";
-import CircularProgress from "@mui/material/CircularProgress";
 
 const steps = [
   "Project name & Summary",
