@@ -44,6 +44,9 @@ export default function DynamicCategoryPage() {
   };
   return (
     <div>
+      <Head>
+        <title>Discover {categoryname} projects</title>
+      </Head>
       <NavBar />
       <Category />
       <CategoryPage selectedCategory={selectedCategory} />

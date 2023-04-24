@@ -80,7 +80,7 @@
 }
 
 .searchBox:hover > .txt {
-  width: 820px;
+  width: 800px;
   transition: all 1s;
 }
 
