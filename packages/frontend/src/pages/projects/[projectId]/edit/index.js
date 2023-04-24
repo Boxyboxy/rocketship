@@ -1,4 +1,3 @@
-import Grid from "@mui/material/Unstable_Grid2";
 import { useEffect, useState } from "react";
 import {
   Button,
@@ -11,17 +10,14 @@ import {
   FormGroup,
   Snackbar,
   Alert,
+  Grid,
 } from "@mui/material";
 import NavBar from "../../../../components/navbar";
-
 import { useRouter } from "next/router";
 import axios from "axios";
-
 import { Select, MenuItem, Input } from "@material-ui/core";
-
 import styles from "../../../../styles/editproject.module.css";
 import config from "../../../../config";
-
 import { getNames } from "country-list";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
@@ -30,9 +26,16 @@ export default function EditProjectPage() {
 
   const { user, error, isLoading } = useUser();
   const [userId, setUserId] = useState();
-  console.log(userId);
+
   const [specificProject, setSpecificProject] = useState();
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    name: "",
+    summary: "",
+    coverImage: "",
+    details: "",
+    githubRepoUrl: "",
+    fundingGoal: 0,
+  });
   const [projectOwnerId, setProjectOwnerId] = useState();
 
   const [projectId, setProjectId] = useState();
@@ -40,14 +43,19 @@ export default function EditProjectPage() {
   const [requiredSkillsCheckbox, setRequiredSkillsCheckbox] = useState({});
 
   const countryNames = getNames();
-  const [country, setCountry] = useState("");
-  const changeCountry = (selectedCountry) => {
-    let updatedFormData = formData;
-    updatedFormData.location = selectedCountry;
-    setFormData({ ...updatedFormData });
-  };
-
   const [coverImage, setCoverImage] = useState();
+  //data validation
+  const isNameValid = (name) => name.trim().length > 1;
+
+  const isFundingGoalValid = (fundingGoal) =>
+    fundingGoal.length >= 1 && /^[1-9][0-9]*(\.[0-9]+)?$/.test(fundingGoal);
+
+  const isGithubUrlValid = (url) =>
+    url.length > 2 &&
+    url.includes(".") &&
+    url.startsWith("http") &&
+    url.includes("github");
+  //upload
   const [showUploadAlert, setShowUploadAlert] = useState();
   const [uploadLoading, setUploadLoading] = useState(false);
   const [showUploadSuccess, setShowUploadSuccess] = useState(false);
@@ -60,13 +68,6 @@ export default function EditProjectPage() {
     setShowUploadSuccess(false); // Close success snackbar
     setShowUploadFailure(false); // Close failure snackbar
   };
-
-  // const isFundingGoalValid = (fundingGoal) => {
-  //   if (fundingGoal) {
-  //     fundingGoal.length >= 1 && /^[1-9][0-9]*(\.[0-9]+)?$/.test(fundingGoal);
-  //     console.log(fundingGoal);
-  //   }
-  // };
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -329,14 +330,17 @@ export default function EditProjectPage() {
               id="name"
               name="name"
               onChange={handleChange}
-              // label="Project Name"
               value={formData.name}
               variant="standard"
+              error={!isNameValid(formData.name)}
+              helperText={
+                isNameValid(formData.name)
+                  ? ""
+                  : "Please enter your project name"
+              }
               fullWidth
             />
-            <div className={styles.header}>
-              Give a brief summary of what your Rocket is about
-            </div>
+            <div className={styles.header}>Project Summary</div>
             <TextField
               id="summary"
               name="summary"
@@ -345,11 +349,15 @@ export default function EditProjectPage() {
               fullWidth
               value={formData.summary}
               onChange={handleChange}
+              error={!isNameValid(formData.summary)}
+              helperText={
+                isNameValid(formData.summary)
+                  ? ""
+                  : "Give a brief summary of what your Project is about."
+              }
             />
 
-            <div className={styles.header}>
-              Share all the details about your project here
-            </div>
+            <div className={styles.header}>Project details</div>
             <TextField
               id="details"
               name="details"
@@ -358,6 +366,12 @@ export default function EditProjectPage() {
               onChange={handleChange}
               value={formData.details}
               fullWidth
+              error={!isNameValid(formData.details)}
+              helperText={
+                isNameValid(formData.details)
+                  ? ""
+                  : "Share all the details about your project here. "
+              }
             />
             <br />
             <div className={styles.header}>Project Category</div>
@@ -409,13 +423,13 @@ export default function EditProjectPage() {
               InputProps={{
                 startAdornment: <div>$</div>,
               }}
-              // error={!isFundingGoalValid(formData.fundingGoal)}
-              // helperText={
-              //   isFundingGoalValid(formData.fundingGoal)
-              //     ? ""
-              //     : "Please enter only numbers"
-              // }
               variant="standard"
+              error={!isFundingGoalValid(formData.fundingGoal)}
+              helperText={
+                isFundingGoalValid(formData.fundingGoal)
+                  ? ""
+                  : "How much do you want to raise for your project."
+              }
             />
             <div className={styles.header}>Github Repo URL</div>
             <TextField
@@ -426,6 +440,12 @@ export default function EditProjectPage() {
               value={formData.githubRepoUrl}
               fullWidth
               variant="standard"
+              error={!isGithubUrlValid(formData.githubRepoUrl)}
+              helperText={
+                isGithubUrlValid(formData.githubRepoUrl)
+                  ? ""
+                  : "Please drop a valid github repository url."
+              }
             />
             <br />
             <br />

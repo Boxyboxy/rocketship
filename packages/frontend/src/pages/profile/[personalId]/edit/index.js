@@ -1,24 +1,29 @@
 import Head from 'next/head';
-import Box from '@mui/material/Box';
-import NavBar from '../../../../components/navbar';
-import Category from '../../../../components/category';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import { useRouter } from 'next/router';
-import Footer from '../../../../components/footer';
-import axios from 'axios';
-import TextField from '@mui/material/TextField';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { useState, useEffect } from 'react';
-import styles from '../../../../styles/editprofile.module.css';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import Button from '@mui/material/Button';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
-import { useUser } from '@auth0/nextjs-auth0/client';
-import config from '../../../../config';
+import NavBar from "../../../../components/navbar";
+import Category from "../../../../components/category";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import { useRouter } from "next/router";
+import Footer from "../../../../components/footer";
+import axios from "axios";
+import {
+  FormControl,
+  FormLabel,
+  Button,
+  Snackbar,
+  Alert,
+  TextField,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  Box,
+} from "@mui/material/FormControl";
+
+import { useState, useEffect } from "react";
+import styles from "../../../../styles/editprofile.module.css";
+
+import { useUser } from "@auth0/nextjs-auth0/client";
+import config from "../../../../config";
+
 export default function EditProfilPage() {
   const router = useRouter();
   const { personalId } = router.query;
