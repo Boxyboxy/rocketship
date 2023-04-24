@@ -229,9 +229,10 @@ export default function CreateProfile() {
     if (!isLoading && user) {
       // Call the API to check if the user already exists in the database
       axios
-        .get(`http://localhost:8080/users?email=${userEmail}`)
+        .get(`http://localhost:8080/users`)
         .then((response) => {
-          const userExists = response.data.length > 0;
+          const userExists = response.data.some((userData) => userData.email === userEmail);
+          console.log(response.data);
           if (userExists) {
             // Redirect to dashboard if profile exists or user already exists in the database
             router.push('/projects');
@@ -244,7 +245,8 @@ export default function CreateProfile() {
           console.log(error);
         });
     }
-  }, [user, isLoading]);
+  }, [user, isLoading, userEmail]);
+  console.log(userEmail);
 
   return (
     <div>
