@@ -12,6 +12,9 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
 import Link from 'next/link';
 import styles from '../styles/projectcard.module.css';
+import BuildIcon from '@mui/icons-material/Build';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 export default function ContributorProjectCard({ contribution }) {
   const [funding, setFunding] = useState(0);
@@ -55,7 +58,6 @@ export default function ContributorProjectCard({ contribution }) {
   return (
     <Card
       sx={{
-        minWidth: 345,
         maxWidth: 345,
         transition: 'transform 0.2s',
         '&:hover': { transform: 'scale(1.05)' }
@@ -66,13 +68,24 @@ export default function ContributorProjectCard({ contribution }) {
         src={contribution.project.coverImage}
         alt="project1"
       />
-      <CardContent>
+      <CardContent sx={{ height: 120, overflow: 'hidden' }}>
         <Stack direction="row" spacing={1}>
-          <Link className={styles.name} href={`/projects/${contribution.project.id}`}>
+          <Link className={styles.projectName} href={`/projects/${contribution.project.id}`}>
             <Typography gutterBottom variant="h5" component="div" sx={{ fontFamily: 'Montserrat' }}>
               {contribution.project.name}
             </Typography>
-          </Link>
+          </Link>{' '}
+          <Typography
+            size="small"
+            sx={{
+              fontFamily: 'Montserrat'
+            }}>
+            <Tooltip title={contribution.userSkill.skill.skill} >
+              <IconButton>
+                <BuildIcon />
+              </IconButton>
+            </Tooltip>
+          </Typography>
         </Stack>
         <Typography variant="body2" color="text.secondary" sx={{ fontFamily: 'Montserrat' }}>
           {contribution.project.summary}
@@ -82,6 +95,7 @@ export default function ContributorProjectCard({ contribution }) {
         <Grid container direction="row" justifyContent="flex-start" alignItems="center">
           {
             <Link
+              className={styles.name}
               size="small"
               href={`/profile/${projectOwner.id}`}
               sx={{ fontFamily: 'Montserrat' }}>
@@ -91,7 +105,11 @@ export default function ContributorProjectCard({ contribution }) {
         </Grid>
       </CardActions>
       {funding >= contribution.project.fundingGoal ? (
-        <Chip label="Fully funded!" color="success" />
+        <Chip
+          label="Fully funded!"
+          color="success"
+          sx={{ marginLeft: '10px', marginBottom: '10px' }}
+        />
       ) : (
         <span>
           <Typography
@@ -111,14 +129,6 @@ export default function ContributorProjectCard({ contribution }) {
           />
         </span>
       )}
-
-      <Typography
-        size="small"
-        sx={{
-          fontFamily: 'Montserrat'
-        }}>
-        {`Skill contributed: ${contribution.userSkill.skill.skill}`}
-      </Typography>
     </Card>
   );
 }
