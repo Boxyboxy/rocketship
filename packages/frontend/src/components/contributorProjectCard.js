@@ -1,28 +1,26 @@
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import { useEffect, useState } from "react";
-import config from "../config";
-import axios from "axios";
-import { BorderLinearProgress } from "./BorderLinearProgress";
-import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
-import Grid from "@mui/material/Grid";
-import Link from "next/link";
-import styles from "../styles/projectcard.module.css";
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import { useEffect, useState } from 'react';
+import config from '../config';
+import axios from 'axios';
+import { BorderLinearProgress } from './BorderLinearProgress';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Grid';
+import Link from 'next/link';
+import styles from '../styles/projectcard.module.css';
 
 export default function ContributorProjectCard({ contribution }) {
   const [funding, setFunding] = useState(0);
-  const [projectOwner, setProjectOwner] = useState({ name: "John Doe" });
+  const [projectOwner, setProjectOwner] = useState({ name: 'John Doe' });
 
   useEffect(() => {
     const fetchFunding = async () => {
       try {
-        const response = await axios.get(
-          `${config.apiUrl}/fundings/sum/${contribution.projectId}`
-        );
+        const response = await axios.get(`${config.apiUrl}/fundings/sum/${contribution.projectId}`);
 
         if (
           isNaN(response.data) ||
@@ -44,9 +42,7 @@ export default function ContributorProjectCard({ contribution }) {
   useEffect(() => {
     const fetchProjectOwner = async () => {
       try {
-        const response = await axios.get(
-          `${config.apiUrl}/users/${contribution.project.userId}`
-        );
+        const response = await axios.get(`${config.apiUrl}/users/${contribution.project.userId}`);
 
         setProjectOwner(response.data);
       } catch (err) {
@@ -61,10 +57,9 @@ export default function ContributorProjectCard({ contribution }) {
       sx={{
         minWidth: 345,
         maxWidth: 345,
-        transition: "transform 0.2s",
-        "&:hover": { transform: "scale(1.05)" },
-      }}
-    >
+        transition: 'transform 0.2s',
+        '&:hover': { transform: 'scale(1.05)' }
+      }}>
       <CardMedia
         component="img"
         height="140"
@@ -73,42 +68,23 @@ export default function ContributorProjectCard({ contribution }) {
       />
       <CardContent>
         <Stack direction="row" spacing={1}>
-          <Link
-            className={styles.name}
-            href={`/projects/${contribution.project.id}`}
-          >
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="div"
-              sx={{ fontFamily: "Montserrat" }}
-            >
+          <Link className={styles.name} href={`/projects/${contribution.project.id}`}>
+            <Typography gutterBottom variant="h5" component="div" sx={{ fontFamily: 'Montserrat' }}>
               {contribution.project.name}
             </Typography>
           </Link>
         </Stack>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ fontFamily: "Montserrat" }}
-        >
+        <Typography variant="body2" color="text.secondary" sx={{ fontFamily: 'Montserrat' }}>
           {contribution.project.summary}
         </Typography>
       </CardContent>
       <CardActions>
-        <Grid
-          container
-          direction="row"
-          justifyContent="flex-start"
-          alignItems="center"
-        >
-          Started by:
+        <Grid container direction="row" justifyContent="flex-start" alignItems="center">
           {
             <Link
               size="small"
               href={`/profile/${projectOwner.id}`}
-              sx={{ fontFamily: "Montserrat" }}
-            >
+              sx={{ fontFamily: 'Montserrat' }}>
               {projectOwner.name}
             </Link>
           }
@@ -121,17 +97,16 @@ export default function ContributorProjectCard({ contribution }) {
           <Typography
             size="small"
             sx={{
-              fontFamily: "Montserrat",
-              float: "right",
-              marginRight: "10px",
-              marginBottom: "18px",
-            }}
-          >
+              fontFamily: 'Montserrat',
+              float: 'right',
+              marginRight: '10px',
+              marginBottom: '18px'
+            }}>
             {` $${funding}/$${contribution.project.fundingGoal} raised`}
           </Typography>
           <BorderLinearProgress
             variant="determinate"
-            sx={{ marginLeft: "10px" }}
+            sx={{ marginLeft: '10px' }}
             value={(funding * 100) / contribution.project.fundingGoal}
           />
         </span>
@@ -140,9 +115,8 @@ export default function ContributorProjectCard({ contribution }) {
       <Typography
         size="small"
         sx={{
-          fontFamily: "Montserrat",
-        }}
-      >
+          fontFamily: 'Montserrat'
+        }}>
         {`Skill contributed: ${contribution.userSkill.skill.skill}`}
       </Typography>
     </Card>

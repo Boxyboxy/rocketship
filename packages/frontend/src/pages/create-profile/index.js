@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
+import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Snackbar from '@mui/material/Snackbar';
@@ -67,7 +68,7 @@ export default function CreateProfile() {
         console.log(err);
       }
     };
-    fetchUserId();
+    if (user) fetchUserId();
   }, [user]);
 
   //get full name
@@ -116,37 +117,60 @@ export default function CreateProfile() {
         console.error('Failed to fetch user data:', error);
       }
     };
-    fetchUserData();
+    if (personalId) fetchUserData();
   }, [personalId]);
   console.log(formValues);
   console.log(fullName);
 
   //get skills
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://localhost:8080/skills'); // Fetch data from the skills db route
-        const data = await response.json();
-        setSkills(data);
-        console.log(data);
-      } catch (error) {
-        console.error('Failed to fetch skills:', error);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(`${config.apiUrl}/skills`); // Fetch data from the skills db route
+  //       const data = await response.json();
+  //       setSkills(data);
+  //       console.log(data);
+  //     } catch (error) {
+  //       console.error('Failed to fetch skills:', error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
-  const [checkedSkills, setCheckedSkills] = useState([]);
+  // const [checkedSkills, setCheckedSkills] = useState([]);
+  // const handleCheckboxChange = (event) => {
+  //   const { value, checked } = event.target;
+  //   if (checked) {
+  //     // Add the skill to the checkedSkills array if it's checked
+  //     setCheckedSkills([...checkedSkills, value]);
+  //     console.log(checkedSkills);
+  //   } else {
+  //     // Remove the skill from the checkedSkills array if it's unchecked
+  //     setCheckedSkills(checkedSkills.filter((skill) => skill !== value));
+  //   }
+  // };
+
+  // requiredSkills
+  const [skillsCheckbox, setSkillsCheckbox] = useState({});
+
+  useEffect(() => {
+    axios.get(`${config.apiUrl}/skills`).then(({ data }) => {
+      let skillObjectsArray = Object.values(data);
+      const checkBoxBoolean = {};
+      skillObjectsArray
+        .map((item) => item.skill)
+        .map((element, index) => (checkBoxBoolean[element] = false));
+      setSkillsCheckbox(checkBoxBoolean);
+    });
+  }, []);
   const handleCheckboxChange = (event) => {
-    const { value, checked } = event.target;
-    if (checked) {
-      // Add the skill to the checkedSkills array if it's checked
-      setCheckedSkills([...checkedSkills, value]);
-      console.log(checkedSkills);
-    } else {
-      // Remove the skill from the checkedSkills array if it's unchecked
-      setCheckedSkills(checkedSkills.filter((skill) => skill !== value));
-    }
+    setSkillsCheckbox({
+      ...skillsCheckbox,
+      [event.target.name]: event.target.checked
+    });
+    console.log(skillsCheckbox);
+    // Maps checkbox boolean object into an array of skills to interface with backend
+    Object.keys(skillsCheckbox).filter((skill) => skillsCheckbox[skill]);
   };
 
   const [activeStep, setActiveStep] = useState(0);
@@ -162,20 +186,40 @@ export default function CreateProfile() {
   const handleInputChange = (e) => {
     setFormValues({ ...formValues, [e.target.id]: e.target.value });
   };
-  const trimWhitespaces = (obj) => {
-    for (let [key, value] of Object.entries(obj)) {
-      obj[key] = value.trim();
-    }
-    return obj;
-  };
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   axios
+  //     .post(`http://localhost:8080/createUser`, formValues, configs)
+  //     .then(function (response) {
+  //       console.log(response);
+  //       setShowSuccess(true);
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //       setShowFailure(true);
+  //     });
+  // };
+
+  // form submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    let formData = {
+      ...formValues,
+      skills: Object.keys(skillsCheckbox).filter((skill) => skillsCheckbox[skill])
+    };
     axios
-      .post(`http://localhost:8080/createUser`, formValues, configs)
+      .post(`http://localhost:8080/users`, { ...formData })
       .then(function (response) {
-        console.log(response);
+        console.log(response.data);
         setShowSuccess(true);
+        const handleRedirect = async () => {
+          let preConstructPath = `/projects`;
+          router.push({
+            pathname: preConstructPath
+          });
+        };
+        handleRedirect();
       })
       .catch(function (error) {
         console.log(error);
@@ -191,8 +235,29 @@ export default function CreateProfile() {
     setShowFailure(false); // Close failure snackbar
   };
 
+  //check if user has logged in before
+  useEffect(() => {
+    // Check if user has created a profile
+    // const hasCreatedProfile = localStorage.getItem('hasCreatedProfile');
+    const hasCreatedProfile = user;
+
+    if (!isLoading && user) {
+      if (hasCreatedProfile) {
+        // Redirect to dashboard if profile exists
+        router.push('/projects');
+      } else {
+        // Redirect to create profile page if profile does not exist
+        router.push('/create-profile');
+      }
+    }
+  }, [user, isLoading]);
+
   return (
     <div>
+      <Head>
+        {' '}
+        <title>Create Profile</title>
+      </Head>
       <NavBar />
       <Category />
       <ThemeProvider theme={theme}>
@@ -334,17 +399,35 @@ export default function CreateProfile() {
               // Render form content for step 3
               <div>
                 <div className={styles.steps}>
-                  <div className={styles.header}>Tick all the skill sets that apply to you</div>
-                  {skills.map((skill, index) => (
-                    <FormControlLabel
-                      required
-                      key={index}
-                      control={<Checkbox />}
-                      label={skill.skill} // Render the skill value as the label
-                      value={skill.skill}
-                      onChange={handleCheckboxChange}
-                    />
-                  ))}
+                  <div className={styles.header}>Tick all the skill sets that you possess!</div>
+                  <FormGroup>
+                    {Object.keys(skillsCheckbox).length > 0 ? (
+                      Object.entries(skillsCheckbox).map(([k, v]) => (
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={v}
+                              onChange={handleCheckboxChange}
+                              name={k}
+                              key={k}
+                            />
+                          }
+                          label={k}
+                        />
+                      ))
+                    ) : (
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={false}
+                            onChange={handleCheckboxChange}
+                            name="rendering"
+                          />
+                        }
+                        label="Rendering"
+                      />
+                    )}
+                  </FormGroup>
                 </div>
                 <div className={styles.btnGroup}>
                   <Button onClick={handleBack} sx={{ marginRight: '20px' }}>
