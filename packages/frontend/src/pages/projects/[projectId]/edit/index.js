@@ -52,7 +52,14 @@ export default function EditProjectPage() {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [showUploadSuccess, setShowUploadSuccess] = useState(false);
   const [showUploadFailure, setShowUploadFailure] = useState(false);
-  const [skillsLoaded, setSkillsLoaded] = useState(false);
+
+  const handleUploadSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setShowUploadSuccess(false); // Close success snackbar
+    setShowUploadFailure(false); // Close failure snackbar
+  };
 
   // const isFundingGoalValid = (fundingGoal) => {
   //   if (fundingGoal) {
@@ -97,25 +104,14 @@ export default function EditProjectPage() {
     }
   }, [router.query.projectId]);
 
-  // useEffect(() => {
-  //   const fetchSkills = async () => {
-
-  //     setSkillsLoaded(true);
-  //   };
-  //   fetchSkills();
-  // }, [router.query.projectId]);
-
   useEffect(() => {
-    const fetchSkills = async () => {};
-    //     setSkillsLoaded(true);
-    //   };
-
     const fetchProject = async () => {
       try {
         // fetch skills
+        const checkBoxBoolean = {};
         await axios.get(`${config.apiUrl}/skills`).then(({ data }) => {
           let skillObjectsArray = Object.values(data);
-          const checkBoxBoolean = {};
+
           skillObjectsArray
             .map((item) => item.skill)
             .map((element, index) => (checkBoxBoolean[element] = false));
@@ -128,7 +124,7 @@ export default function EditProjectPage() {
         ]);
 
         let skillObjectsArray = Object.values(projectResponse.data.skills);
-        const checkBoxBoolean = requiredSkillsCheckbox;
+
         skillObjectsArray
           .map((item) => item.skill)
           .map((element, index) => {
@@ -146,7 +142,7 @@ export default function EditProjectPage() {
           categoryName: categoryResponse.data.name,
           categoryId: categoryResponse.data.id,
         };
-
+        // set project
         setSpecificProject(editedProject);
 
         setFormData({
@@ -289,7 +285,43 @@ export default function EditProjectPage() {
                   Upload
                 </Button>
                 {uploadLoading && <CircularProgress />}
+                {showUploadAlert && (
+                  <Alert variant="filled" severity="error">
+                    Please upload a cover page. Only image files will be
+                    accepted.
+                  </Alert>
+                )}
               </div>
+              <Snackbar
+                open={showUploadSuccess}
+                autoHideDuration={3000}
+                onClose={handleUploadSnackbarClose}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+              >
+                <Alert
+                  elevation={6}
+                  variant="filled"
+                  onClose={handleSnackbarClose}
+                  severity="success"
+                >
+                  Upload of image successful.
+                </Alert>
+              </Snackbar>
+              <Snackbar
+                open={showUploadFailure}
+                autoHideDuration={3000}
+                onClose={handleUploadSnackbarClose}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+              >
+                <Alert
+                  elevation={6}
+                  variant="filled"
+                  onClose={handleUploadSnackbarClose}
+                  severity="error"
+                >
+                  Failed to upload images.
+                </Alert>
+              </Snackbar>
             </div>
             <div className={styles.header}>Project Name</div>
             <TextField
@@ -456,7 +488,7 @@ export default function EditProjectPage() {
                 onClose={handleSnackbarClose}
                 severity="success"
               >
-                Project creation successful!
+                Project update successful!
               </Alert>
             </Snackbar>
             <Snackbar
@@ -471,7 +503,7 @@ export default function EditProjectPage() {
                 onClose={handleSnackbarClose}
                 severity="error"
               >
-                Project creation failed. Please try again.
+                Project update failed. Please try again.
               </Alert>
             </Snackbar>
           </form>
