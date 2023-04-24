@@ -2,11 +2,8 @@ import Head from "next/head";
 import NavBar from "../../components/navbar";
 import Category from "../../components/category";
 import Footer from "../../components/footer";
-
 import styles from "../../styles/createproject.module.css";
-
 import { useState, useEffect } from "react";
-
 import {
   createTheme,
   ThemeProvider,
