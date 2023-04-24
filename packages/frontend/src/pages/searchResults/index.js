@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import NavBar from '../../components/navbar';
@@ -14,8 +15,8 @@ import styles from '../../styles/search.module.css';
 import Grid from '@mui/material/Unstable_Grid2';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import Chip from '@mui/material/Chip';
 import Link from 'next/link';
+import config from '../../config';
 import ProjectCardsContainer from '../../components/projectCardsContainer';
 
 const SearchResults = () => {
@@ -35,8 +36,8 @@ const SearchResults = () => {
     const fetchProjects = async () => {
       try {
         const [projectsResponse, usersResponse] = await Promise.all([
-          axios.get('http://localhost:8080/projects'),
-          axios.get('http://localhost:8080/users')
+          axios.get(`${config.apiUrl}/projects`),
+          axios.get(`${config.apiUrl}/users`)
         ]);
         const usersMap = new Map(usersResponse.data.map((user) => [user.id, user.name]));
         const projects = projectsResponse.data.map((project) => {
@@ -65,7 +66,7 @@ const SearchResults = () => {
   // Fetch data using the search query value and update searchResults state
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/projects`, {
+      .get(`${config.apiUrl}/projects`, {
         params: {
           projectName: inputValue
           // categoryName: inputValue
@@ -85,7 +86,7 @@ const SearchResults = () => {
         for (const project of searchResults) {
           try {
             const fundingPromises = searchResults.map(async (project) => {
-              const response = await axios.get(`http://localhost:8080/fundings/sum/${project.id}`);
+              const response = await axios.get(`${config.apiUrl}/fundings/sum/${project.id}`);
               return { ...project, funding: response.data };
             });
 
@@ -118,7 +119,7 @@ const SearchResults = () => {
 
   // get top 3 projects
   useEffect(() => {
-    fetch('http://localhost:8080/projects')
+    fetch(`${config.apiUrl}/projects`)
       .then((response) => response.json())
       .then((data) => {
         const top3Projects = projectsArray.slice(0, 3);
@@ -144,6 +145,9 @@ const SearchResults = () => {
 
   return (
     <div>
+      <Head>
+        <title>Search results for {inputValue}</title>
+      </Head>
       <NavBar />
       <Category />
       {searchResults.length ? (
@@ -151,11 +155,11 @@ const SearchResults = () => {
       ) : (
         <h1 className={styles.header}>No search results for "{inputValue}"</h1>
       )}
-      
+
       {searchResults.length ? (
         <div className={styles.searchContainer}>
-        <ProjectCardsContainer projects={projectsToDisplay} /></div>
-        
+          <ProjectCardsContainer projects={projectsToDisplay} />
+        </div>
       ) : (
         <div className={styles.header}>
           <div className={styles.title}>We can't find what you are looking for ☹️ </div>
@@ -168,39 +172,7 @@ const SearchResults = () => {
             direction="row"
             justify="flex-start"
             alignItems="flex-start">
-            {topProjects.map((result) => (
-              // <div className={styles.searchResultsContainer}>
-              <Grid item xs={12} sm={6} md={3} key={result.id}>
-                <Link
-                  className={styles.linkName}
-                  href={`/projects/${result.userId}/${result.id}`}
-                  passHref>
-                  <Card
-                    className={styles.card}
-                    sx={{
-                      maxWidth: 345,
-                      transition: 'transform 0.2s',
-                      '&:hover': { transform: 'scale(1.05)' }
-                    }}>
-                    <CardMedia sx={{ height: 140 }} image={result.coverImage} title={result.name} />
-                    <CardContent sx={{ height: 120, overflow: 'hidden' }}>
-                      <Typography gutterBottom variant="h5" component="div">
-                        {result.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {result.summary}
-                      </Typography>
-                    </CardContent>
-                    <CardActions>
-                      <Link className={styles.linkName} href={`/profile/${result.userId}`} passHref>
-                        <Button size="small">{result.userName}</Button>
-                      </Link>
-                    </CardActions>
-                  </Card>{' '}
-                </Link>
-              </Grid>
-              // </div>
-            ))}
+            <ProjectCardsContainer projects={topProjects} />
           </Grid>
         </div>
       )}

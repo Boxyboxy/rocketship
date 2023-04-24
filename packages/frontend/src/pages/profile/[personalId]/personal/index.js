@@ -1,13 +1,14 @@
-import NavBar from "../../../../components/navbar";
-import Category from "../../../../components/category";
-import { useRouter } from "next/router";
-import Footer from "../../../../components/footer";
-import PersonalProfile from "../../../../components/personalProfile";
-import styles from "../../../../styles/profilepage.module.css";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { useUser } from "@auth0/nextjs-auth0/client";
-import config from "../../../../config";
+import Head from 'next/head';
+import NavBar from '../../../../components/navbar';
+import Category from '../../../../components/category';
+import { useRouter } from 'next/router';
+import Footer from '../../../../components/footer';
+import PersonalProfile from '../../../../components/personalProfile';
+import styles from '../../../../styles/profilepage.module.css';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useUser } from '@auth0/nextjs-auth0/client';
+import config from '../../../../config';
 export default function PersonalProfilePage() {
   const { user, error, isLoading } = useUser();
   const router = useRouter();
@@ -17,9 +18,7 @@ export default function PersonalProfilePage() {
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await axios.get(
-          `${config.apiUrl}/users?email=${user.email}`
-        );
+        const response = await axios.get(`${config.apiUrl}/users?email=${user.email}`);
         setUserId(response.data[0].id);
       } catch (err) {
         console.log(err);
@@ -33,7 +32,7 @@ export default function PersonalProfilePage() {
       if (userId && userId != personalId) {
         let preConstructPath = `/profile/${userId}/personal`;
         router.push({
-          pathname: preConstructPath,
+          pathname: preConstructPath
         });
       }
     };
@@ -41,6 +40,9 @@ export default function PersonalProfilePage() {
   }, [userId]);
   return (
     <div className={styles.majorDiv}>
+      <Head>
+        <title>My Launchpad</title>
+      </Head>
       <NavBar />
       <Category />
       <PersonalProfile personalId={personalId} />

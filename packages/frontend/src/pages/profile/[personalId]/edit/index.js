@@ -1,23 +1,24 @@
-import Box from "@mui/material/Box";
-import NavBar from "../../../../components/navbar";
-import Category from "../../../../components/category";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import { useRouter } from "next/router";
-import Footer from "../../../../components/footer";
-import axios from "axios";
-import TextField from "@mui/material/TextField";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import { useState, useEffect } from "react";
-import styles from "../../../../styles/editprofile.module.css";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import Button from "@mui/material/Button";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
-import { useUser } from "@auth0/nextjs-auth0/client";
-import config from "../../../../config";
+import Head from 'next/head';
+import Box from '@mui/material/Box';
+import NavBar from '../../../../components/navbar';
+import Category from '../../../../components/category';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { useRouter } from 'next/router';
+import Footer from '../../../../components/footer';
+import axios from 'axios';
+import TextField from '@mui/material/TextField';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import { useState, useEffect } from 'react';
+import styles from '../../../../styles/editprofile.module.css';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import { useUser } from '@auth0/nextjs-auth0/client';
+import config from '../../../../config';
 export default function EditProfilPage() {
   const router = useRouter();
   const { personalId } = router.query;
@@ -28,25 +29,21 @@ export default function EditProfilPage() {
 
   const [userSkillsCheckBox, setUserSkillsCheckBox] = useState({});
   const [formValues, setFormValues] = useState({
-    name: "john doe",
-    mobile: "88888888",
-    email: "abdcefg@gmail.com",
-    githubUrl: "https://github.com",
-    linkedinUrl: "https://linkedin.com",
+    name: 'john doe',
+    mobile: '88888888',
+    email: 'abdcefg@gmail.com',
+    githubUrl: 'https://github.com',
+    linkedinUrl: 'https://linkedin.com'
   });
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [showFailure, setShowFailure] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(
-    "User Profile failed. Please try again."
-  );
+  const [errorMessage, setErrorMessage] = useState('User Profile failed. Please try again.');
 
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await axios.get(
-          `${config.apiUrl}/users?email=${user.email}`
-        );
+        const response = await axios.get(`${config.apiUrl}/users?email=${user.email}`);
         setUserId(response.data[0].id);
       } catch (err) {
         console.log(err);
@@ -59,7 +56,7 @@ export default function EditProfilPage() {
     const handleRedirect = async () => {
       if (userId != personalId) {
         router.push({
-          pathname: `/profile/${userId}/personal`,
+          pathname: `/profile/${userId}/personal`
         });
       }
     };
@@ -67,37 +64,27 @@ export default function EditProfilPage() {
   }, [userId]);
 
   const isNameValid = (name) =>
-    name.trim().includes(" ") &&
-    name.trim().length > 3 &&
-    name.trim().split(" ").length == 2;
+    name.trim().includes(' ') && name.trim().length > 3 && name.trim().split(' ').length == 2;
 
-  const isMobileValid = (mobile) =>
-    mobile.length == 8 && mobile.match(/^\d{8}$/);
+  const isMobileValid = (mobile) => mobile.length == 8 && mobile.match(/^\d{8}$/);
 
-  const isEmailValid = (email) =>
-    email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+  const isEmailValid = (email) => email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 
   const isGithubUrlValid = (url) =>
-    url.length > 2 &&
-    url.includes(".") &&
-    url.startsWith("http") &&
-    url.includes("github");
+    url.length > 2 && url.includes('.') && url.startsWith('http') && url.includes('github');
 
   const isLinkedinUrlValid = (url) =>
-    url.length > 2 &&
-    url.includes(".") &&
-    url.startsWith("http") &&
-    url.includes("linkedin");
+    url.length > 2 && url.includes('.') && url.startsWith('http') && url.includes('linkedin');
 
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#21325e", // Replace with your desired primary color
-      },
+        main: '#21325e' // Replace with your desired primary color
+      }
     },
     typography: {
-      fontFamily: "Montserrat, sans-serif", // Replace with your desired font family
-    },
+      fontFamily: 'Montserrat, sans-serif' // Replace with your desired font family
+    }
   });
   useEffect(() => {
     axios.get(`${config.apiUrl}/skills`).then(({ data }) => {
@@ -113,16 +100,14 @@ export default function EditProfilPage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(
-          `${config.apiUrl}/users/${personalId}`
-        );
+        const response = await axios.get(`${config.apiUrl}/users/${personalId}`);
 
         setFormValues({
           name: response.data.name,
           mobile: response.data.mobile,
           email: response.data.email,
           linkedinUrl: response.data.linkedinUrl,
-          githubUrl: response.data.githubUrl,
+          githubUrl: response.data.githubUrl
         });
 
         let skillObjectsArray = Object.values(response.data.skills);
@@ -138,7 +123,7 @@ export default function EditProfilPage() {
           });
         setPresentUserSkills(checkBoxBoolean);
       } catch (error) {
-        console.error("Failed to fetch user data:", error);
+        console.error('Failed to fetch user data:', error);
       }
     };
 
@@ -158,13 +143,11 @@ export default function EditProfilPage() {
   const handleCheckboxChange = (event) => {
     setUserSkillsCheckBox({
       ...userSkillsCheckBox,
-      [event.target.name]: event.target.checked,
+      [event.target.name]: event.target.checked
     });
 
     // Maps checkbox boolean object into an array of skills to interface with backend
-    Object.keys(userSkillsCheckBox).filter(
-      (skill) => userSkillsCheckBox[skill]
-    );
+    Object.keys(userSkillsCheckBox).filter((skill) => userSkillsCheckBox[skill]);
   };
 
   const handleSubmit = (e) => {
@@ -173,24 +156,22 @@ export default function EditProfilPage() {
 
     axios({
       url: `/api/users/${userId}`,
-      responseType: "json",
+      responseType: 'json',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
-      method: "patch",
+      method: 'patch',
       data: {
         ...formValuesTrimmed,
-        newSkills: Object.keys(userSkillsCheckBox).filter(
-          (key) => userSkillsCheckBox[key]
-        ),
-      },
+        newSkills: Object.keys(userSkillsCheckBox).filter((key) => userSkillsCheckBox[key])
+      }
     })
       .then(function (response) {
         setShowSuccess(true);
         const handleRedirect = async () => {
           let preConstructPath = `/profile/${userId}/personal`;
           router.push({
-            pathname: preConstructPath,
+            pathname: preConstructPath
           });
         };
         handleRedirect();
@@ -203,7 +184,7 @@ export default function EditProfilPage() {
   };
 
   const handleSnackbarClose = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
     setShowSuccess(false); // Close success snackbar
@@ -211,6 +192,9 @@ export default function EditProfilPage() {
   };
   return (
     <div className={styles.majorDiv}>
+      <Head>
+        <title>Edit your Launchpad</title>
+      </Head>
       <NavBar />
       <Category />
       <ThemeProvider theme={theme}>
@@ -220,11 +204,10 @@ export default function EditProfilPage() {
           alignItems="center"
           component="form"
           sx={{
-            "& .MuiTextField-root": { m: 1, width: "50ch" },
+            '& .MuiTextField-root': { m: 1, width: '50ch' }
           }}
           noValidate
-          autoComplete="off"
-        >
+          autoComplete="off">
           <div className={styles.form}>
             <div className={styles.header}>Personal details</div>
 
@@ -238,8 +221,8 @@ export default function EditProfilPage() {
               error={!isNameValid(formValues.name)}
               helperText={
                 isNameValid(formValues.name)
-                  ? ""
-                  : "Please enter a full name with a space in between your first and last name"
+                  ? ''
+                  : 'Please enter a full name with a space in between your first and last name'
               }
             />
             <br />
@@ -250,17 +233,15 @@ export default function EditProfilPage() {
               onChange={handleInputChange}
               inputProps={{
                 maxLength: 10,
-                inputMode: "numeric",
-                pattern: "[0-9]*",
+                inputMode: 'numeric',
+                pattern: '[0-9]*'
                 // Restrict input to only numbers
               }}
               value={formValues.mobile}
               InputLabelProps={{ shrink: true }}
               error={!isMobileValid(formValues.mobile)}
               helperText={
-                isMobileValid(formValues.mobile)
-                  ? ""
-                  : "Please enter an 8 digit mobile number"
+                isMobileValid(formValues.mobile) ? '' : 'Please enter an 8 digit mobile number'
               }
             />
             <br />
@@ -272,9 +253,7 @@ export default function EditProfilPage() {
               value={formValues.email}
               InputLabelProps={{ shrink: true }}
               error={!isEmailValid(formValues.email)}
-              helperText={
-                isEmailValid(formValues.email) ? "" : "Email is not valid"
-              }
+              helperText={isEmailValid(formValues.email) ? '' : 'Email is not valid'}
             />
             <div className={styles.header}>Social Links</div>
             <TextField
@@ -285,11 +264,7 @@ export default function EditProfilPage() {
               value={formValues.githubUrl}
               InputLabelProps={{ shrink: true }}
               error={!isGithubUrlValid(formValues.githubUrl)}
-              helperText={
-                isGithubUrlValid(formValues.githubUrl)
-                  ? ""
-                  : "Github URL is not valid"
-              }
+              helperText={isGithubUrlValid(formValues.githubUrl) ? '' : 'Github URL is not valid'}
             />
             <br />
             <TextField
@@ -301,9 +276,7 @@ export default function EditProfilPage() {
               InputLabelProps={{ shrink: true }}
               error={!isLinkedinUrlValid(formValues.linkedinUrl)}
               helperText={
-                isLinkedinUrlValid(formValues.linkedinUrl)
-                  ? ""
-                  : "Linkedin URL is not valid"
+                isLinkedinUrlValid(formValues.linkedinUrl) ? '' : 'Linkedin URL is not valid'
               }
             />
             <div className={styles.header}>Skills</div>
@@ -321,11 +294,7 @@ export default function EditProfilPage() {
                 ) : (
                   <FormControlLabel
                     control={
-                      <Checkbox
-                        checked={false}
-                        onChange={handleCheckboxChange}
-                        name="rendering"
-                      />
+                      <Checkbox checked={false} onChange={handleCheckboxChange} name="rendering" />
                     }
                     label="Rendering"
                   />
@@ -339,12 +308,7 @@ export default function EditProfilPage() {
                   Object.entries(userSkillsCheckBox).map(([k, v]) => (
                     <FormControlLabel
                       control={
-                        <Checkbox
-                          checked={v}
-                          onChange={handleCheckboxChange}
-                          name={k}
-                          key={k}
-                        />
+                        <Checkbox checked={v} onChange={handleCheckboxChange} name={k} key={k} />
                       }
                       label={k}
                     />
@@ -352,11 +316,7 @@ export default function EditProfilPage() {
                 ) : (
                   <FormControlLabel
                     control={
-                      <Checkbox
-                        checked={false}
-                        onChange={handleCheckboxChange}
-                        name="rendering"
-                      />
+                      <Checkbox checked={false} onChange={handleCheckboxChange} name="rendering" />
                     }
                     label="Rendering"
                   />
@@ -376,22 +336,19 @@ export default function EditProfilPage() {
                   isGithubUrlValid(formValues.githubUrl) &&
                   isLinkedinUrlValid(formValues.linkedinUrl)
                 )
-              }
-            >
+              }>
               Submit
             </Button>
             <Snackbar
               open={showSuccess}
               autoHideDuration={3000}
               onClose={handleSnackbarClose}
-              anchorOrigin={{ vertical: "top", horizontal: "center" }}
-            >
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
               <Alert
                 elevation={6}
                 variant="filled"
                 onClose={handleSnackbarClose}
-                severity="success"
-              >
+                severity="success">
                 User Profile updated successfully.
               </Alert>
             </Snackbar>
@@ -399,14 +356,8 @@ export default function EditProfilPage() {
               open={showFailure}
               autoHideDuration={3000}
               onClose={handleSnackbarClose}
-              anchorOrigin={{ vertical: "top", horizontal: "center" }}
-            >
-              <Alert
-                elevation={6}
-                variant="filled"
-                onClose={handleSnackbarClose}
-                severity="error"
-              >
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+              <Alert elevation={6} variant="filled" onClose={handleSnackbarClose} severity="error">
                 {errorMessage}
               </Alert>
             </Snackbar>

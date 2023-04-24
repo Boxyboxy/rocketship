@@ -2,18 +2,13 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { categorydata } from '../constants/categorydata';
 import styles from '../styles/categorypage.module.css';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import config from '../config';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { Box, Typography } from '@mui/material';
-import Chip from '@mui/material/Chip';
+import { Box } from '@mui/material';
 import Link from 'next/link';
 import ProjectCardsContainer from '../components/projectCardsContainer';
 
@@ -93,7 +88,7 @@ export default function CategoryPage({ selectedCategory }) {
         for (const project of filteredProjects) {
           try {
             const fundingPromises = filteredProjects.map(async (project) => {
-              const response = await axios.get(`http://localhost:8080/fundings/sum/${project.id}`);
+              const response = await axios.get(`${config.apiUrl}/fundings/sum/${project.id}`);
               return { ...project, funding: response.data };
             });
 
@@ -116,9 +111,7 @@ export default function CategoryPage({ selectedCategory }) {
     (async () => {
       if (randomProject) {
         try {
-          const response = await axios.get(
-            `http://localhost:8080/fundings/sum/${randomProject.id}`
-          );
+          const response = await axios.get(`${config.apiUrl}/fundings/sum/${randomProject.id}`);
           console.log('fetchRandomFunding called');
           const data = response.data;
           setRandomFunding((prevState) => ({ ...prevState, ...data }));
@@ -191,7 +184,7 @@ export default function CategoryPage({ selectedCategory }) {
   useEffect(() => {
     const fetchProjectOwner = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/users/${randomProject.userId}`);
+        const response = await axios.get(`${config.apiUrl}/users/${randomProject.userId}`);
 
         setProjectOwner(response.data);
       } catch (err) {
