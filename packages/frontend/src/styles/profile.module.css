@@ -1,7 +1,3 @@
-.container {
-  margin: 0 150px 0 150px;
-}
-
 .avatar {
   z-index: 0;
 }
@@ -12,4 +8,16 @@
   display: block;
   border-bottom: 2px dashed #ccc;
   margin-bottom: 20px;
+}
+
+.skills {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.container {
+  margin: 50px 100px 50px 100px;
+}
+
+.contributeContainer {
+  margin: 50px 100px 50px 100px;
 }

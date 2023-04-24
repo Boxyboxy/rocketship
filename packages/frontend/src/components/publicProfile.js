@@ -141,13 +141,13 @@ export default function PublicProfile({ personalId }) {
           </Grid>
         </div>
 
-        <div>
+        <div className={styles.container}>
           <h1>Projects Started</h1>
           <span className={styles.line}></span>
           <ProjectCardsContainer projects={profile.projects} ownerBoolean={true} />
         </div>
 
-        <div>
+        <div className={styles.contributeContainer}>
           <h1>Projects Contributed</h1>
           <span className={styles.line}></span>
           <ContributorProjectCardsContainer userId={profile.id} />
