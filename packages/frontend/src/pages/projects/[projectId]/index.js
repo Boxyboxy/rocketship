@@ -29,6 +29,10 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import EmailIcon from "@mui/icons-material/Email";
 import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
 import TwitterIcon from "@mui/icons-material/Twitter";
+import PPBanner from "../../../components/ppBanner";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import { TabPanel, a11yProps } from "../../../components/tabPanel";
 
 // PENDING: Will refactor into separate components
 // PENDING: Will update margin/ spacing / design
@@ -268,6 +272,12 @@ export default function ProjectPage() {
     router.push(`mailto:${specificProject.creatorEmail}`);
   };
 
+  const [tabValue, setTabValue] = useState(0);
+
+  const handleTabChange = (event, newTabValue) => {
+    setTabValue(newTabValue);
+  };
+
   return (
     <div>
       {specificProject && (
@@ -280,7 +290,7 @@ export default function ProjectPage() {
           <div>
             <NavBar />
             <br />
-            <Category />
+            {/* <Category /> */}
           </div>
           <div className={styles.breadcrumbs}>
             <Breadcrumbs>
@@ -543,268 +553,290 @@ export default function ProjectPage() {
                     />
                   </Grid>
                 </Grid>
+              </Grid>
+            </Grid>
+          </div>
+          {/* banner */}
 
-                {/* <h3>Project Owner</h3> */}
+          <PPBanner />
 
-                <h3>Contributors</h3>
-                <div>
-                  {contributors &&
-                    contributors.map((contributor) => {
-                      return (
-                        <Grid container>
-                          <Grid xs={8} sm={8} md={8} lg={8}>
-                            <Link
-                              size="small"
-                              className={styles.name}
-                              href={`/profile/${contributor.userId}`}
-                              sx={{
-                                fontFamily: "Montserrat",
-                              }}
-                            >
-                              {contributor.contributorName}
-                            </Link>
+          <div className={styles.container}>
+            <Grid container sx={{ marginTop: 2 }}>
+              <Grid xs={12} sm={12} md={7} lg={7}>
+                <Box>
+                  <Box>
+                    <Tabs
+                      value={tabValue}
+                      onChange={handleTabChange}
+                      sx={{
+                        "& .MuiTab-root": {
+                          color: "#3E497A",
+                        },
+                        "& .MuiTabs-indicator": {
+                          backgroundColor: "#3E497A",
+                        },
+                      }}
+                    >
+                      <Tab label="About" {...a11yProps(0)} />
+                      <Tab label="Contributors" {...a11yProps(1)} />
+                      <Tab label="" {...a11yProps(2)} />
+                    </Tabs>
+                  </Box>
+                  <TabPanel value={tabValue} index={0}>
+                    <h2>Project Details</h2>
+                    <p className={styles.details}>{specificProject.details}</p>
+                    <div>
+                      {specificProject.pitchSlides.map((slide) => (
+                        <img src={slide.urlString} width={600} height={400} />
+                      ))}
+                    </div>
+                  </TabPanel>
+                  <TabPanel value={tabValue} index={1}>
+                    {contributors &&
+                      contributors.map((contributor) => {
+                        return (
+                          <Grid container sx={{ marginTop: 1 }}>
+                            <Grid xs={8} sm={8} md={8} lg={8}>
+                              <Link
+                                size="small"
+                                className={styles.name}
+                                href={`/profile/${contributor.userId}`}
+                                sx={{
+                                  fontFamily: "Montserrat",
+                                }}
+                              >
+                                {contributor.contributorName}
+                              </Link>
+                            </Grid>
+                            <Grid xs={4} sm={4} md={4} lg={4}>
+                              {contributor.contributedSkill}
+                            </Grid>
                           </Grid>
-                          <Grid xs={4} sm={4} md={4} lg={4}>
-                            {contributor.contributedSkill}
-                          </Grid>
-                        </Grid>
-                      );
-                    })}
-                </div>
+                        );
+                      })}
+                  </TabPanel>
+                  <TabPanel value={tabValue} index={2}></TabPanel>
+                </Box>
               </Grid>
 
-              <Grid container sx={{ marginTop: 2 }}>
-                <Grid xs={12} sm={12} md={7} lg={7}>
-                  <h2>Project Details</h2>
-                  <p className={styles.details}>{specificProject.details}</p>
-                  <div>
-                    {specificProject.pitchSlides.map((slide) => (
-                      <img src={slide.urlString} width={600} height={400} />
+              <Grid xs={12} sm={12} md={5} lg={5}>
+                <h3>SKILLS NEEDED</h3>
+                {/* <br /> */}
+                <Box
+                  sx={{
+                    width: "100%",
+                    minHeight: 100,
+                  }}
+                >
+                  {skills &&
+                    skills.map((skill) => (
+                      <p className={styles.skills} key={skill.skillId}>
+                        {skill.skill}
+                      </p>
                     ))}
-                  </div>
-                </Grid>
-
-                <Grid xs={12} sm={12} md={5} lg={5}>
-                  <h3>SKILLS NEEDED</h3>
-                  {/* <br /> */}
-                  <Box
+                  <Button
+                    variant="contained"
                     sx={{
-                      width: "100%",
-                      minHeight: 100,
-                      // border: '2px solid grey'
-                      // border: '1px dashed grey'
-                    }}
-                  >
-                    {skills &&
-                      skills.map((skill) => (
-                        <p className={styles.skills} key={skill.skillId}>
-                          {skill.skill}
-                        </p>
-                      ))}
-                    <Button
-                      variant="contained"
-                      sx={{
-                        marginTop: 3,
-                        color: "black",
+                      marginTop: 3,
+                      color: "black",
+                      backgroundColor: "#F1D00A",
+                      "&:hover": {
                         backgroundColor: "#F1D00A",
-                        "&:hover": {
-                          backgroundColor: "#F1D00A",
-                        },
-                        width: "100%",
-                      }}
-                      onClick={handleOpenContributeForm}
-                      disabled={userSkills.length < 1}
-                    >
-                      {userSkills.length < 1
-                        ? "You do not have the relevant skills to contribute"
-                        : "Contribute"}
-                    </Button>
-                    <Dialog
-                      open={openContributeForm}
-                      onClose={handleCloseContributeForm}
-                    >
-                      <DialogTitle>
-                        Want to contribute to this project?
-                      </DialogTitle>
-                      <DialogContent>
-                        <DialogContentText>
-                          Select the skill for contribution to the project.
-                        </DialogContentText>
-                        {/* Need to update this to match user skills, can only add in when user Id is available */}
-                        <Select
-                          id="Skill"
-                          label="Skill"
-                          fullWidth
-                          sx={{ marginTop: 2, marginBottom: 2 }}
-                          name="userSkillId"
-                          onChange={handleInputChange}
-                        >
-                          {/* The value is set to userSkill so you can submit this value in your post request */}
-                          {userSkills.map((userSkill) => (
-                            <MenuItem
-                              key={userSkill.id}
-                              value={userSkill.userSkill.id}
-                            >
-                              {userSkill.skill}
-                            </MenuItem>
-                          ))}
-                        </Select>
-
-                        <DialogContentText>
-                          Please kindly write in a message to the project owner
-                          here.
-                        </DialogContentText>
-                        <TextField
-                          multiline
-                          fullWidth
-                          margin="dense"
-                          rows={4}
-                          name="message"
-                          onChange={handleInputChange}
-                        />
-                      </DialogContent>
-                      <DialogActions>
-                        <Button
-                          onClick={handleCloseContributeForm}
-                          sx={{
-                            color: "#21325E",
-                            "&:hover": {
-                              backgroundColor: "white",
-                            },
-                          }}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          onClick={(e) => {
-                            handleCloseContributeForm();
-                            handleSendContributeRequest(e);
-                          }}
-                          sx={{
-                            variant: "primary",
-                            color: "white",
-                            backgroundColor: "#21325E",
-                            "&:hover": {
-                              backgroundColor: "#21325E",
-                            },
-                          }}
-                        >
-                          Send Request
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-                  </Box>
-                  <Snackbar
-                    open={showSuccess}
-                    autoHideDuration={3000}
-                    onClose={handleSnackbarClose}
-                    anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                  >
-                    <Alert
-                      elevation={6}
-                      variant="filled"
-                      onClose={handleSnackbarClose}
-                      severity="success"
-                    >
-                      Contribution request submitted successfully.
-                    </Alert>
-                  </Snackbar>
-                  <Snackbar
-                    open={showFailure}
-                    autoHideDuration={3000}
-                    onClose={handleSnackbarClose}
-                    anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                  >
-                    <Alert
-                      elevation={6}
-                      variant="filled"
-                      onClose={handleSnackbarClose}
-                      severity="error"
-                    >
-                      Contribution request failed.
-                    </Alert>
-                  </Snackbar>
-                  <h3>FUNDING OPTIONS</h3>
-                  <Box
-                    sx={{
+                      },
                       width: "100%",
-                      minHeight: 100,
-                      // border: "2px solid grey",
                     }}
+                    onClick={handleOpenContributeForm}
+                    disabled={userSkills.length < 1}
                   >
-                    {/* <b id="fund-membership">Funding options</b>
-                    <br /> <br /> */}
-                    <div className={styles.box}>
-                      <h3 id="fund-membership">MEMBERSHIP</h3>
-                      <p>
-                        Our membership program offers you exclusive benefits and
-                        discounts on our products and services. As a member, you
-                        will have access to a range of perks such as early
-                        access to new products, exclusive discounts, and special
-                        promotions. You will also receive personalized support
-                        from our team to help you make the most of your
-                        membership.
-                      </p>
-                    </div>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        marginTop: 3,
-                        marginBottom: 3,
-                        color: "white",
-                        backgroundColor: "#3E497A",
-                        width: "100%",
-                        "&:hover": {
-                          backgroundColor: "#3E497A",
-                        },
-                      }}
-                      onClick={handleMembershipPurchaseClick}
-                    >
-                      Select
-                    </Button>
-                    <div className={styles.box}>
-                      <h3> EQUITY </h3>
-                      <p>
-                        Our investment plan offers you the opportunity to invest
-                        in our company and benefit from its growth potential. As
-                        an equity investor, you will become a part-owner of our
-                        company and share in its profits and losses. Here are
-                        some of the benefits of investing in our equity:
-                      </p>
+                    {userSkills.length < 1
+                      ? "You do not have the relevant skills to contribute"
+                      : "Contribute"}
+                  </Button>
+                  <Dialog
+                    open={openContributeForm}
+                    onClose={handleCloseContributeForm}
+                  >
+                    <DialogTitle>
+                      Want to contribute to this project?
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText>
+                        Select the skill for contribution to the project.
+                      </DialogContentText>
+                      {/* Need to update this to match user skills, can only add in when user Id is available */}
+                      <Select
+                        id="Skill"
+                        label="Skill"
+                        fullWidth
+                        sx={{ marginTop: 2, marginBottom: 2 }}
+                        name="userSkillId"
+                        onChange={handleInputChange}
+                      >
+                        {/* The value is set to userSkill so you can submit this value in your post request */}
+                        {userSkills.map((userSkill) => (
+                          <MenuItem
+                            key={userSkill.id}
+                            value={userSkill.userSkill.id}
+                          >
+                            {userSkill.skill}
+                          </MenuItem>
+                        ))}
+                      </Select>
 
-                      <ul>
-                        <li>Potential for high returns on your investment</li>
-                        <li>
-                          Ability to participate in the company's
-                          decision-making process
-                        </li>
-                        <li>
-                          Chance to support a growing company and help it
-                          achieve its goals
-                        </li>
-                        <li>
-                          Opportunity to share in the profits and losses of the
-                          company
-                        </li>
-                      </ul>
-                    </div>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        marginTop: 5,
-                        color: "white",
+                      <DialogContentText>
+                        Please kindly write in a message to the project owner
+                        here.
+                      </DialogContentText>
+                      <TextField
+                        multiline
+                        fullWidth
+                        margin="dense"
+                        rows={4}
+                        name="message"
+                        onChange={handleInputChange}
+                      />
+                    </DialogContent>
+                    <DialogActions>
+                      <Button
+                        onClick={handleCloseContributeForm}
+                        sx={{
+                          color: "#21325E",
+                          "&:hover": {
+                            backgroundColor: "white",
+                          },
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={(e) => {
+                          handleCloseContributeForm();
+                          handleSendContributeRequest(e);
+                        }}
+                        sx={{
+                          variant: "primary",
+                          color: "white",
+                          backgroundColor: "#21325E",
+                          "&:hover": {
+                            backgroundColor: "#21325E",
+                          },
+                        }}
+                      >
+                        Send Request
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </Box>
+                <Snackbar
+                  open={showSuccess}
+                  autoHideDuration={3000}
+                  onClose={handleSnackbarClose}
+                  anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                >
+                  <Alert
+                    elevation={6}
+                    variant="filled"
+                    onClose={handleSnackbarClose}
+                    severity="success"
+                  >
+                    Contribution request submitted successfully.
+                  </Alert>
+                </Snackbar>
+                <Snackbar
+                  open={showFailure}
+                  autoHideDuration={3000}
+                  onClose={handleSnackbarClose}
+                  anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                >
+                  <Alert
+                    elevation={6}
+                    variant="filled"
+                    onClose={handleSnackbarClose}
+                    severity="error"
+                  >
+                    Contribution request failed.
+                  </Alert>
+                </Snackbar>
+                <h3>FUNDING OPTIONS</h3>
+                <Box
+                  sx={{
+                    width: "100%",
+                    minHeight: 100,
+                    // border: "2px solid grey",
+                  }}
+                >
+                  {/* <b id="fund-membership">Funding options</b>
+                    <br /> <br /> */}
+                  <div className={styles.box}>
+                    <h3 id="fund-membership">MEMBERSHIP</h3>
+                    <p>
+                      Our membership program offers you exclusive benefits and
+                      discounts on our products and services. As a member, you
+                      will have access to a range of perks such as early access
+                      to new products, exclusive discounts, and special
+                      promotions. You will also receive personalized support
+                      from our team to help you make the most of your
+                      membership.
+                    </p>
+                  </div>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      marginTop: 3,
+                      marginBottom: 3,
+                      color: "white",
+                      backgroundColor: "#3E497A",
+                      width: "100%",
+                      "&:hover": {
                         backgroundColor: "#3E497A",
-                        width: "100%",
-                        "&:hover": {
-                          backgroundColor: "#3E497A",
-                        },
-                      }}
-                      onClick={handleEquityPurchaseClick}
-                    >
-                      Select
-                    </Button>
-                  </Box>
-                </Grid>
+                      },
+                    }}
+                    onClick={handleMembershipPurchaseClick}
+                  >
+                    Select
+                  </Button>
+                  <div className={styles.box}>
+                    <h3> EQUITY </h3>
+                    <p>
+                      Our investment plan offers you the opportunity to invest
+                      in our company and benefit from its growth potential. As
+                      an equity investor, you will become a part-owner of our
+                      company and share in its profits and losses. Here are some
+                      of the benefits of investing in our equity:
+                    </p>
+
+                    <ul>
+                      <li>Potential for high returns on your investment</li>
+                      <li>
+                        Ability to participate in the company's decision-making
+                        process
+                      </li>
+                      <li>
+                        Chance to support a growing company and help it achieve
+                        its goals
+                      </li>
+                      <li>
+                        Opportunity to share in the profits and losses of the
+                        company
+                      </li>
+                    </ul>
+                  </div>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      marginTop: 5,
+                      color: "white",
+                      backgroundColor: "#3E497A",
+                      width: "100%",
+                      "&:hover": {
+                        backgroundColor: "#3E497A",
+                      },
+                    }}
+                    onClick={handleEquityPurchaseClick}
+                  >
+                    Select
+                  </Button>
+                </Box>
               </Grid>
             </Grid>
           </div>
