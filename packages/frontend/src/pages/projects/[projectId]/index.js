@@ -36,6 +36,7 @@ import { TabPanel, a11yProps } from "../../../components/tabPanel";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
+import FormatThousands from "../../../components/formatThousand";
 
 // PENDING: Will refactor into separate components
 // PENDING: Will update margin/ spacing / design
@@ -176,16 +177,7 @@ export default function ProjectPage() {
           console.log(contributionArray);
           setContributors(contributionArray);
 
-          let formattedSum;
-          //format funding sum response
-          if (fundingSumResponse.data > 10000) {
-            formattedSum = Intl.NumberFormat({
-              style: "currency",
-              currency: "SGD",
-            }).format(fundingSumResponse.data);
-          } else {
-            formattedSum = fundingSumResponse.data;
-          }
+          let formattedSum = FormatThousands(fundingSumResponse.data);
 
           setStats([
             // {
