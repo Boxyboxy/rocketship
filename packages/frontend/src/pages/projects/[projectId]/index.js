@@ -37,6 +37,7 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import FormatThousands from "../../../components/formatThousand";
+import QuestionBanner from "../../../components/questionBanner";
 
 // PENDING: Will refactor into separate components
 // PENDING: Will update margin/ spacing / design
@@ -892,6 +893,9 @@ export default function ProjectPage() {
           </div>
         </div>
       )}
+      <br />
+      <br />
+      <QuestionBanner />
       <Footer />
     </div>
   );
