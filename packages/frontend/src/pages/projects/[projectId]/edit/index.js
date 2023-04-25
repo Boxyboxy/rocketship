@@ -153,9 +153,13 @@ export default function EditProjectPage() {
           summary: editedProject.summary,
           details: editedProject.details,
           categoryId: editedProject.categoryId,
-          fundingGoal: editedProject.fundingGoal,
+          fundingGoal: editedProject.fundingGoal.toString(),
           githubRepoUrl: editedProject.githubRepoUrl,
         });
+
+        console.log(editedProject.fundingGoal);
+
+        console.log(typeof editedProject.fundingGoal);
 
         setProjectOwnerId(editedProject.userId);
       } catch (err) {

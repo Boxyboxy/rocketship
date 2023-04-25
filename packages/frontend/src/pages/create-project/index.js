@@ -2,11 +2,22 @@ import Head from "next/head";
 import NavBar from "../../components/navbar";
 import Category from "../../components/category";
 import Footer from "../../components/footer";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import styles from "../../styles/createproject.module.css";
+
 import { useState, useEffect } from "react";
 import {
-  createTheme,
-  ThemeProvider,
+  TextField,
+  Snackbar,
+  Alert,
+  Checkbox,
+  FormLabel,
+  FormGroup,
+  FormControl,
+  CircularProgress,
+  Box,
+} from "@mui/material";
+import {
   Stepper,
   Step,
   StepLabel,
@@ -17,18 +28,6 @@ import {
   FormControlLabel,
   FormHelperText,
 } from "@material-ui/core";
-
-import {
-  Snackbar,
-  Alert,
-  Checkbox,
-  FormLabel,
-  FormGroup,
-  FormControl,
-  CircularProgress,
-  Box,
-  TextField,
-} from "@mui/material/Snackbar";
 
 import { getNames } from "country-list";
 import { useUser } from "@auth0/nextjs-auth0/client";
