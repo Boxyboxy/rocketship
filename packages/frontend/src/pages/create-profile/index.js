@@ -195,7 +195,7 @@ export default function CreateProfile() {
       skills: Object.keys(skillsCheckbox).filter((skill) => skillsCheckbox[skill])
     };
     axios
-      .post(`http://localhost:8080/users`, { ...formData })
+      .post(`${config.apiUrl}/users`, { ...formData })
       .then(function (response) {
         console.log(response.data);
         setShowSuccess(true);
@@ -229,7 +229,7 @@ export default function CreateProfile() {
     if (!isLoading && user) {
       // Call the API to check if the user already exists in the database
       axios
-        .get(`http://localhost:8080/users`)
+        .get(`${config.apiUrl}/users`)
         .then((response) => {
           const userExists = response.data.some((userData) => userData.email === userEmail);
           console.log(response.data);
