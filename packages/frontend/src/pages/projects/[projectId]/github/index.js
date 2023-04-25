@@ -1,20 +1,19 @@
-import Head from "next/head";
-import { useState, useEffect } from "react";
-import NavBar from "../../../../components/navbar";
-import Category from "../../../../components/category";
-import Footer from "../../../../components/footer";
-import GitHub from "../../../../components/GitHub";
-import { useRouter } from "next/router";
-import { useUser } from "@auth0/nextjs-auth0/client";
-import axios from "axios";
+import Head from 'next/head';
+import { useState, useEffect } from 'react';
+import NavBar from '../../../../components/navbar';
+import Category from '../../../../components/category';
+import Footer from '../../../../components/footer';
+import GitHub from '../../../../components/GitHub';
+import { useRouter } from 'next/router';
+import { useUser } from '@auth0/nextjs-auth0/client';
+import axios from 'axios';
 
 export default function Github({ project }) {
   const router = useRouter();
   const [creatorId, setCreatorId] = useState();
   const [projectId, setProjectId] = useState();
   const [specificProject, setSpecificProject] = useState();
-  const { user, isLoading, error, getAccessTokenSilently, isAuthenticated } =
-    useUser();
+  const { user, isLoading, error, getAccessTokenSilently, isAuthenticated } = useUser();
 
   useEffect(() => {
     if (router.query.creatorId) {
@@ -30,23 +29,19 @@ export default function Github({ project }) {
       const fetchProject = async () => {
         try {
           const [projectResponse, userResponse] = await Promise.all([
-            axios.get(`http://localhost:8080/projects/${projectId}`),
-            axios.get(`http://localhost:8080/users/${creatorId}`),
+            axios.get(`${config.apiUrl}/projects/${projectId}`),
+            axios.get(`${config.apiUrl}/users/${creatorId}`)
           ]);
 
           const [categoryResponse] = await Promise.all([
-            axios.get(
-              `http://localhost:8080/categories/${projectResponse.data.categoryId}`
-            ),
-            axios.get(
-              `http://localhost:8080/requiredSkills?projectId=${projectId}`
-            ),
+            axios.get(`${config.apiUrl}/categories/${projectResponse.data.categoryId}`),
+            axios.get(`${config.apiUrl}/requiredSkills?projectId=${projectId}`)
           ]);
 
           const editedProject = {
             ...projectResponse.data,
             creatorName: userResponse.data.name,
-            categoryName: categoryResponse.data.name,
+            categoryName: categoryResponse.data.name
           };
 
           setSpecificProject(editedProject);

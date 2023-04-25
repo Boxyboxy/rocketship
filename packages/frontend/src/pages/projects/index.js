@@ -16,6 +16,7 @@ import Footer from '../../components/footer';
 import styles from '../../styles/projects.module.css';
 import AnimateNumbers from '../../components/animateNumbers';
 import ProjectCardsContainer from '../../components/projectCardsContainer';
+import config from '../../config';
 
 export default function HomePage() {
   // const [numOfProjects, setNumOfProjects] = useState(1238);
@@ -44,8 +45,8 @@ export default function HomePage() {
     const fetchProjects = async () => {
       try {
         const [projectsResponse, usersResponse] = await Promise.all([
-          axios.get('http://localhost:8080/projects'),
-          axios.get('http://localhost:8080/users')
+          axios.get(`${config.apiUrl}/projects`),
+          axios.get(`${config.apiUrl}/users`)
         ]);
         const usersMap = new Map(usersResponse.data.map((user) => [user.id, user.name]));
         const projects = projectsResponse.data.map((project) => {
@@ -97,7 +98,7 @@ export default function HomePage() {
         for (const project of filteredProjects) {
           try {
             const fundingPromises = filteredProjects.map(async (project) => {
-              const response = await axios.get(`http://localhost:8080/fundings/sum/${project.id}`);
+              const response = await axios.get(`${config.apiUrl}/fundings/sum/${project.id}`);
               return { ...project, funding: response.data };
             });
 

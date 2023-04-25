@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   Button,
   Checkbox,
@@ -10,16 +10,16 @@ import {
   FormGroup,
   Snackbar,
   Alert,
-  Grid,
-} from "@mui/material";
-import NavBar from "../../../../components/navbar";
-import { useRouter } from "next/router";
-import axios from "axios";
-import { Select, MenuItem, Input } from "@material-ui/core";
-import styles from "../../../../styles/editproject.module.css";
-import config from "../../../../config";
-import { getNames } from "country-list";
-import { useUser } from "@auth0/nextjs-auth0/client";
+  Grid
+} from '@mui/material';
+import NavBar from '../../../../components/navbar';
+import { useRouter } from 'next/router';
+import axios from 'axios';
+import { Select, MenuItem, Input } from '@material-ui/core';
+import styles from '../../../../styles/editproject.module.css';
+import config from '../../../../config';
+import { getNames } from 'country-list';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 export default function EditProjectPage() {
   const router = useRouter();
@@ -29,12 +29,12 @@ export default function EditProjectPage() {
 
   const [specificProject, setSpecificProject] = useState();
   const [formData, setFormData] = useState({
-    name: "",
-    summary: "",
-    coverImage: "",
-    details: "",
-    githubRepoUrl: "",
-    fundingGoal: 0,
+    name: '',
+    summary: '',
+    coverImage: '',
+    details: '',
+    githubRepoUrl: '',
+    fundingGoal: 0
   });
   const [projectOwnerId, setProjectOwnerId] = useState();
 
@@ -51,10 +51,7 @@ export default function EditProjectPage() {
     fundingGoal.length >= 1 && /^[1-9][0-9]*(\.[0-9]+)?$/.test(fundingGoal);
 
   const isGithubUrlValid = (url) =>
-    url.length > 2 &&
-    url.includes(".") &&
-    url.startsWith("http") &&
-    url.includes("github");
+    url.length > 2 && url.includes('.') && url.startsWith('http') && url.includes('github');
   //upload
   const [showUploadAlert, setShowUploadAlert] = useState();
   const [uploadLoading, setUploadLoading] = useState(false);
@@ -62,7 +59,7 @@ export default function EditProjectPage() {
   const [showUploadFailure, setShowUploadFailure] = useState(false);
 
   const handleUploadSnackbarClose = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
     setShowUploadSuccess(false); // Close success snackbar
@@ -72,9 +69,7 @@ export default function EditProjectPage() {
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await axios.get(
-          `${config.apiUrl}/users?email=${user.email}`
-        );
+        const response = await axios.get(`${config.apiUrl}/users?email=${user.email}`);
         setUserId(response.data[0].id);
         console.log(response.data[0].id);
       } catch (err) {
@@ -95,7 +90,7 @@ export default function EditProjectPage() {
 
   const handleBackButtonClick = () => {
     router.push({
-      pathname: `/projects`,
+      pathname: `/projects`
     });
   };
 
@@ -121,7 +116,7 @@ export default function EditProjectPage() {
         // fetch projects & categories
         const [projectResponse, allCategoriesResponse] = await Promise.all([
           axios.get(`${config.apiUrl}/projects/${projectId}`),
-          axios.get(`${config.apiUrl}/categories`),
+          axios.get(`${config.apiUrl}/categories`)
         ]);
 
         let skillObjectsArray = Object.values(projectResponse.data.skills);
@@ -141,7 +136,7 @@ export default function EditProjectPage() {
         const editedProject = {
           ...projectResponse.data,
           categoryName: categoryResponse.data.name,
-          categoryId: categoryResponse.data.id,
+          categoryId: categoryResponse.data.id
         };
         // set project
         setSpecificProject(editedProject);
@@ -154,7 +149,7 @@ export default function EditProjectPage() {
           details: editedProject.details,
           categoryId: editedProject.categoryId,
           fundingGoal: editedProject.fundingGoal.toString(),
-          githubRepoUrl: editedProject.githubRepoUrl,
+          githubRepoUrl: editedProject.githubRepoUrl
         });
 
         console.log(editedProject.fundingGoal);
@@ -171,20 +166,18 @@ export default function EditProjectPage() {
   }, [projectId]);
 
   const handleChange = (e) => {
-    console.log(e.target.name + " value is " + e.target.value);
+    console.log(e.target.name + ' value is ' + e.target.value);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleCheckboxChange = (event) => {
     setRequiredSkillsCheckbox({
       ...requiredSkillsCheckbox,
-      [event.target.name]: event.target.checked,
+      [event.target.name]: event.target.checked
     });
 
     // Maps checkbox boolean object into an array of skills to interface with backend
-    Object.keys(requiredSkillsCheckbox).filter(
-      (skill) => requiredSkillsCheckbox[skill]
-    );
+    Object.keys(requiredSkillsCheckbox).filter((skill) => requiredSkillsCheckbox[skill]);
   };
 
   const handleUploadClick = async () => {
@@ -196,20 +189,17 @@ export default function EditProjectPage() {
     setUploadLoading(true);
 
     const coverImageFD = new FormData();
-    coverImageFD.append("file", coverImage);
-    coverImageFD.append("upload_preset", "rocketship");
+    coverImageFD.append('file', coverImage);
+    coverImageFD.append('upload_preset', 'rocketship');
 
     try {
       const [coverImageResponse] = await Promise.all([
-        await axios.post(
-          "https://api.cloudinary.com/v1_1/dbq7yg58d/image/upload/",
-          coverImageFD
-        ),
+        await axios.post('https://api.cloudinary.com/v1_1/dbq7yg58d/image/upload/', coverImageFD)
       ]);
 
       setFormData({
         ...formData,
-        coverImage: coverImageResponse.data["secure_url"],
+        coverImage: coverImageResponse.data['secure_url']
       });
 
       setShowUploadSuccess(true);
@@ -227,15 +217,15 @@ export default function EditProjectPage() {
       ...formData,
       requiredSkills: Object.keys(requiredSkillsCheckbox).filter(
         (skill) => requiredSkillsCheckbox[skill]
-      ),
+      )
     });
 
     axios
-      .patch(`http://localhost:8080/projects/${projectId}`, {
+      .patch(`${config.apiUrl}/projects/${projectId}`, {
         ...formData,
         requiredSkills: Object.keys(requiredSkillsCheckbox).filter(
           (skill) => requiredSkillsCheckbox[skill]
-        ),
+        )
       })
       .then(function (response) {
         console.log(response.data);
@@ -243,7 +233,7 @@ export default function EditProjectPage() {
         const handleRedirect = async () => {
           let preConstructPath = `/projects/${response.data.id}`;
           router.push({
-            pathname: preConstructPath,
+            pathname: preConstructPath
           });
         };
         handleRedirect();
@@ -257,7 +247,7 @@ export default function EditProjectPage() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showFailure, setShowFailure] = useState(false);
   const handleSnackbarClose = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
     setShowSuccess(false); // Close success snackbar
@@ -277,23 +267,21 @@ export default function EditProjectPage() {
                 <Input type="file" onChange={handleCoverImageChange} />
                 <Button
                   sx={{
-                    variant: "primary",
-                    margin: "0px 20px",
-                    color: "white",
-                    backgroundColor: "#21325E",
-                    "&:hover": {
-                      backgroundColor: "#21325E",
-                    },
+                    variant: 'primary',
+                    margin: '0px 20px',
+                    color: 'white',
+                    backgroundColor: '#21325E',
+                    '&:hover': {
+                      backgroundColor: '#21325E'
+                    }
                   }}
-                  onClick={handleUploadClick}
-                >
+                  onClick={handleUploadClick}>
                   Upload
                 </Button>
                 {uploadLoading && <CircularProgress />}
                 {showUploadAlert && (
                   <Alert variant="filled" severity="error">
-                    Please upload a cover page. Only image files will be
-                    accepted.
+                    Please upload a cover page. Only image files will be accepted.
                   </Alert>
                 )}
               </div>
@@ -301,14 +289,12 @@ export default function EditProjectPage() {
                 open={showUploadSuccess}
                 autoHideDuration={3000}
                 onClose={handleUploadSnackbarClose}
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-              >
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
                 <Alert
                   elevation={6}
                   variant="filled"
                   onClose={handleSnackbarClose}
-                  severity="success"
-                >
+                  severity="success">
                   Upload of image successful.
                 </Alert>
               </Snackbar>
@@ -316,14 +302,12 @@ export default function EditProjectPage() {
                 open={showUploadFailure}
                 autoHideDuration={3000}
                 onClose={handleUploadSnackbarClose}
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-              >
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
                 <Alert
                   elevation={6}
                   variant="filled"
                   onClose={handleUploadSnackbarClose}
-                  severity="error"
-                >
+                  severity="error">
                   Failed to upload images.
                 </Alert>
               </Snackbar>
@@ -337,11 +321,7 @@ export default function EditProjectPage() {
               value={formData.name}
               variant="standard"
               error={!isNameValid(formData.name)}
-              helperText={
-                isNameValid(formData.name)
-                  ? ""
-                  : "Please enter your project name"
-              }
+              helperText={isNameValid(formData.name) ? '' : 'Please enter your project name'}
               fullWidth
             />
             <div className={styles.header}>Project Summary</div>
@@ -356,8 +336,8 @@ export default function EditProjectPage() {
               error={!isNameValid(formData.summary)}
               helperText={
                 isNameValid(formData.summary)
-                  ? ""
-                  : "Give a brief summary of what your Project is about."
+                  ? ''
+                  : 'Give a brief summary of what your Project is about.'
               }
             />
 
@@ -373,8 +353,8 @@ export default function EditProjectPage() {
               error={!isNameValid(formData.details)}
               helperText={
                 isNameValid(formData.details)
-                  ? ""
-                  : "Share all the details about your project here. "
+                  ? ''
+                  : 'Share all the details about your project here. '
               }
             />
             <br />
@@ -385,8 +365,7 @@ export default function EditProjectPage() {
                 id="categoryId"
                 name="categoryId"
                 value={formData.categoryId}
-                fullWidth
-              >
+                fullWidth>
                 {allCategories &&
                   allCategories.map((category) => {
                     return (
@@ -406,8 +385,7 @@ export default function EditProjectPage() {
                 onChange={handleChange}
                 id="location"
                 name="location"
-                fullWidth
-              >
+                fullWidth>
                 {countryNames.map((country) => (
                   <MenuItem key={country} value={country}>
                     {country}
@@ -425,14 +403,14 @@ export default function EditProjectPage() {
               fullWidth
               InputLabelProps={{ shrink: true }}
               InputProps={{
-                startAdornment: <div>$</div>,
+                startAdornment: <div>$</div>
               }}
               variant="standard"
               error={!isFundingGoalValid(formData.fundingGoal)}
               helperText={
                 isFundingGoalValid(formData.fundingGoal)
-                  ? ""
-                  : "How much do you want to raise for your project."
+                  ? ''
+                  : 'How much do you want to raise for your project.'
               }
             />
             <div className={styles.header}>Github Repo URL</div>
@@ -447,8 +425,8 @@ export default function EditProjectPage() {
               error={!isGithubUrlValid(formData.githubRepoUrl)}
               helperText={
                 isGithubUrlValid(formData.githubRepoUrl)
-                  ? ""
-                  : "Please drop a valid github repository url."
+                  ? ''
+                  : 'Please drop a valid github repository url.'
               }
             />
             <br />
@@ -461,12 +439,7 @@ export default function EditProjectPage() {
                   Object.entries(requiredSkillsCheckbox).map(([k, v]) => (
                     <FormControlLabel
                       control={
-                        <Checkbox
-                          checked={v}
-                          onChange={handleCheckboxChange}
-                          name={k}
-                          key={k}
-                        />
+                        <Checkbox checked={v} onChange={handleCheckboxChange} name={k} key={k} />
                       }
                       label={k}
                     />
@@ -474,11 +447,7 @@ export default function EditProjectPage() {
                 ) : (
                   <FormControlLabel
                     control={
-                      <Checkbox
-                        checked={false}
-                        onChange={handleCheckboxChange}
-                        name="rendering"
-                      />
+                      <Checkbox checked={false} onChange={handleCheckboxChange} name="rendering" />
                     }
                     label="Rendering"
                   />
@@ -490,28 +459,25 @@ export default function EditProjectPage() {
               type="submit"
               variant="contained"
               sx={{
-                variant: "primary",
-                color: "white",
-                backgroundColor: "#21325E",
-                "&:hover": {
-                  backgroundColor: "#21325E",
-                },
-              }}
-            >
+                variant: 'primary',
+                color: 'white',
+                backgroundColor: '#21325E',
+                '&:hover': {
+                  backgroundColor: '#21325E'
+                }
+              }}>
               Update
             </Button>
             <Snackbar
               open={showSuccess}
               autoHideDuration={3000}
               onClose={handleSnackbarClose}
-              anchorOrigin={{ vertical: "top", horizontal: "center" }}
-            >
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
               <Alert
                 elevation={6}
                 variant="filled"
                 onClose={handleSnackbarClose}
-                severity="success"
-              >
+                severity="success">
                 Project update successful!
               </Alert>
             </Snackbar>
@@ -519,14 +485,8 @@ export default function EditProjectPage() {
               open={showFailure}
               autoHideDuration={3000}
               onClose={handleSnackbarClose}
-              anchorOrigin={{ vertical: "top", horizontal: "center" }}
-            >
-              <Alert
-                elevation={6}
-                variant="filled"
-                onClose={handleSnackbarClose}
-                severity="error"
-              >
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+              <Alert elevation={6} variant="filled" onClose={handleSnackbarClose} severity="error">
                 Project update failed. Please try again.
               </Alert>
             </Snackbar>
@@ -535,23 +495,22 @@ export default function EditProjectPage() {
       ) : (
         <div>
           <Grid container>
-            <Grid sx={{ margin: "auto", marginTop: 20 }}>
-              <Grid sx={{ justifyItems: "center" }}></Grid>
+            <Grid sx={{ margin: 'auto', marginTop: 20 }}>
+              <Grid sx={{ justifyItems: 'center' }}></Grid>
               <br />
               Oops you don't have permission to do this. <br />
               <Button
                 variant="primary"
                 sx={{
-                  color: "white",
-                  backgroundColor: "#21325E",
+                  color: 'white',
+                  backgroundColor: '#21325E',
                   marginTop: 5,
-                  width: "100%",
-                  "&:hover": {
-                    backgroundColor: "#21325E",
-                  },
+                  width: '100%',
+                  '&:hover': {
+                    backgroundColor: '#21325E'
+                  }
                 }}
-                onClick={handleBackButtonClick}
-              >
+                onClick={handleBackButtonClick}>
                 Back to projects
               </Button>
             </Grid>
