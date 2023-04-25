@@ -25,6 +25,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import axios from "axios";
 import RandomizeAvatarImage from "../../../components/randomAvatarImage";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 
 // PENDING: Will refactor into separate components
 // PENDING: Will update margin/ spacing / design
@@ -278,6 +279,21 @@ export default function ProjectPage() {
             <br />
             <Category />
           </div>
+          <div className={styles.breadcrumbs}>
+            <Breadcrumbs>
+              <Link
+                underline="hover"
+                href="/projects"
+                className={styles.breadcrumbsLink}
+              >
+                Projects
+              </Link>
+              <Typography sx={{ fontFamily: "Montserrat" }}>
+                {specificProject.name}
+              </Typography>
+            </Breadcrumbs>
+          </div>
+
           <div className={styles.container}>
             {/* <ArrowBackIcon /> Back */}
             <Grid container>

@@ -1,5 +1,17 @@
 .container {
-  margin: 100px 100px 0 100px;
+  margin: 40px 100px 0 100px;
+  font-family: "Montserrat", sans-serif;
+}
+
+.breadcrumbs {
+  margin: 30px 100px 0px 100px;
+  font-family: "Montserrat", sans-serif;
+  color: grey;
+}
+
+.breadcrumbsLink {
+  text-decoration: none;
+  color: grey;
   font-family: "Montserrat", sans-serif;
 }
 
