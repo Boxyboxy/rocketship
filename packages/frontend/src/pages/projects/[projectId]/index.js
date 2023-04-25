@@ -547,7 +547,7 @@ export default function ProjectPage() {
                     </Tabs>
                   </Box>
                   <TabPanel value={tabValue} index={0}>
-                    <h2>Project Details</h2>
+                    <h2>PROJECT DETAILS</h2>
                     <p className={styles.details}>{specificProject.details}</p>
                     <div>
                       {specificProject.pitchSlides.map((slide) => (
@@ -718,7 +718,9 @@ export default function ProjectPage() {
 
                 {/* funding  */}
 
-                <h2 id="fund-membership">FUNDING OPTIONS</h2>
+                <h2 id="fund-membership" className={styles.fundMembership}>
+                  FUNDING OPTIONS
+                </h2>
 
                 <Card>
                   <div className={styles.box}>
