@@ -12,6 +12,6 @@ export const PPLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,
-    backgroundColor: theme.palette.mode === "light" ? "#3E497A" : "#308fe8",
+    backgroundColor: theme.palette.mode === "light" ? "#3E497A" : "#3E497A",
   },
 }));

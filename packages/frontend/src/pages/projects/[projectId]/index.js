@@ -312,7 +312,7 @@ export default function ProjectPage() {
                 />
               </Grid>
               <Grid xs={12} sm={12} md={5} lg={5}>
-                <Stack direction="row" spacing={2} alignItems="center">
+                <Stack direction="row" spacing={1} alignItems="center">
                   <Typography
                     variant="h4"
                     sx={{
@@ -332,6 +332,15 @@ export default function ProjectPage() {
                       "default"
                     }
                   />
+                  {stats[0].sum >= specificProject.fundingGoal && (
+                    <Chip
+                      sx={{
+                        fontFamily: "Montserrat",
+                      }}
+                      label="Fully funded!"
+                      color="success"
+                    />
+                  )}
                 </Stack>
                 <p>{specificProject.summary}</p>
                 <Grid container row sx={{ margin: "40px 0px" }}>
@@ -405,9 +414,12 @@ export default function ProjectPage() {
                   <div>
                     <PPLinearProgress
                       variant="determinate"
-                      value={(stats[0].sum / specificProject.fundingGoal) * 100}
+                      value={
+                        (stats[0].sum / specificProject.fundingGoal) * 100 > 100
+                          ? 100
+                          : (stats[0].sum / specificProject.fundingGoal) * 100
+                      }
                     />
-                    {console.log(stats[0].sum)}
                   </div>
                 )}
                 <Grid container sx={{ marginLeft: 0 }}>
@@ -436,24 +448,34 @@ export default function ProjectPage() {
                     )}
                   </Grid>
 
-                  <Grid
-                    xs={6}
-                    sm={6}
-                    md={6}
-                    lg={6}
-                    sx={{ textAlign: "right", justifyContent: "right" }}
-                  >
-                    <Typography
-                      sx={{
-                        fontSize: "1.5rem",
-                        color: "#3E497A",
-                        fontFamily: "Montserrat",
-                      }}
+                  <Grid xs={6} sm={6} md={6} lg={6} sx={{ textAlign: "right" }}>
+                    <Stack
+                      direction="row"
+                      spacing={2}
+                      sx={{ justifyContent: "right", alignItems: "center" }}
                     >
-                      $
-                      {specificProject.fundingGoal &&
-                        FormatThousands(specificProject.fundingGoal)}
-                    </Typography>
+                      {/* {stats[0].sum >= specificProject.fundingGoal && (
+                        <Chip
+                          sx={{
+                            fontFamily: "Montserrat",
+                          }}
+                          label="fully funded!"
+                          color="success"
+                        />
+                      )} */}
+
+                      <Typography
+                        sx={{
+                          fontSize: "1.5rem",
+                          color: "#3E497A",
+                          fontFamily: "Montserrat",
+                        }}
+                      >
+                        $
+                        {specificProject.fundingGoal &&
+                          FormatThousands(specificProject.fundingGoal)}
+                      </Typography>
+                    </Stack>
                     <Typography
                       sx={{
                         fontSize: "0.8rem",
@@ -464,14 +486,6 @@ export default function ProjectPage() {
                       Funding Goal
                     </Typography>
                   </Grid>
-
-                  {stats[0].sum >= specificProject.fundingGoal && (
-                    <Chip
-                      sx={{ fontFamily: "Montserrat", marginLeft: "-150px" }}
-                      label="fully funded!"
-                      color="success"
-                    />
-                  )}
                 </Grid>
                 <Grid
                   container
