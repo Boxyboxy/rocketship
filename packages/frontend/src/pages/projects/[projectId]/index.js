@@ -599,10 +599,13 @@ export default function ProjectPage() {
                     </div>
                   </TabPanel>
                   <TabPanel value={tabValue} index={1}>
-                    {contributors &&
+                    {contributors.length ? (
                       contributors.map((contributor) => {
                         return (
-                          <Grid container sx={{ marginTop: 1 }}>
+                          <Grid
+                            container
+                            sx={{ margin: "10px 100px 10px 10px" }}
+                          >
                             <Grid xs={8} sm={8} md={8} lg={8}>
                               <Link
                                 size="small"
@@ -620,7 +623,10 @@ export default function ProjectPage() {
                             </Grid>
                           </Grid>
                         );
-                      })}
+                      })
+                    ) : (
+                      <p>There are no contributors at the moment. </p>
+                    )}
                   </TabPanel>
                   <TabPanel value={tabValue} index={2}></TabPanel>
                 </Box>
