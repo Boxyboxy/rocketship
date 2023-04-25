@@ -26,7 +26,7 @@ export default function PPBanner() {
         sx={{ alignItems: "center", marginLeft: 5, marginRight: 5 }}
       >
         <img src="/images/ppastronaut.png" width="100px" /> Contribute to
-        projects and help make it better.
+        projects and help make them better.
       </Stack>
       <Stack
         direction="row"

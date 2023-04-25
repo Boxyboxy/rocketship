@@ -1,41 +1,43 @@
-import Head from 'next/head';
-import Grid from '@mui/material/Unstable_Grid2';
-import { useEffect, useState } from 'react';
-import { Typography, Button, Box, TextField, Chip, Stack } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import CategoryIcon from '@mui/icons-material/Category';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import NavBar from '../../../components/navbar';
-import Category from '../../../components/category';
-import { useRouter } from 'next/router';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useUser } from '@auth0/nextjs-auth0/client';
-import config from '../../../config/index';
-import Footer from '../../../components/footer';
-import styles from '../../../styles/projectpage.module.css';
-import Link from 'next/link';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
-import axios from 'axios';
-import RandomizeAvatarImage from '../../../components/randomAvatarImage';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import EmailIcon from '@mui/icons-material/Email';
-import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import PPBanner from '../../../components/ppBanner';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import { TabPanel, a11yProps } from '../../../components/tabPanel';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
+import Head from "next/head";
+import Grid from "@mui/material/Unstable_Grid2";
+import { useEffect, useState } from "react";
+import { Typography, Button, Box, TextField, Chip, Stack } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import CategoryIcon from "@mui/icons-material/Category";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import NavBar from "../../../components/navbar";
+import Category from "../../../components/category";
+import { useRouter } from "next/router";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import MenuItem from "@mui/material/MenuItem";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import config from "../../../config/index";
+import Footer from "../../../components/footer";
+import styles from "../../../styles/projectpage.module.css";
+import Link from "next/link";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import axios from "axios";
+import RandomizeAvatarImage from "../../../components/randomAvatarImage";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import EmailIcon from "@mui/icons-material/Email";
+import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import PPBanner from "../../../components/ppBanner";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import { TabPanel, a11yProps } from "../../../components/tabPanel";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import FormatThousands from "../../../components/formatThousand";
+import QuestionBanner from "../../../components/questionBanner";
 
 // PENDING: Will refactor into separate components
 // PENDING: Will update margin/ spacing / design
@@ -173,16 +175,20 @@ export default function ProjectPage() {
           console.log(contributionArray);
           setContributors(contributionArray);
 
-          let formattedSum;
+
+          //let formattedSum;
           //format funding sum response
-          if (fundingSumResponse.data > 10000) {
-            formattedSum = Intl.NumberFormat({
-              style: 'currency',
-              currency: 'SGD'
-            }).format(fundingSumResponse.data);
-          } else {
-            formattedSum = fundingSumResponse.data;
-          }
+          //if (fundingSumResponse.data > 10000) {
+            //formattedSum = Intl.NumberFormat({
+              //style: 'currency',
+              //currency: 'SGD'
+            //}).format(fundingSumResponse.data);
+          //} else {
+          //  formattedSum = fundingSumResponse.data;
+         // }
+
+          let formattedSum = FormatThousands(fundingSumResponse.data);
+
 
           setStats([
             // {
@@ -405,11 +411,16 @@ export default function ProjectPage() {
                   <Grid xs={6} sm={6} md={6} lg={6} sx={{ textAlign: 'left' }}>
                     <Typography
                       sx={{
-                        fontSize: '1.5rem',
-                        color: '#3E497A',
-                        fontFamily: 'Montserrat'
-                      }}>
-                      ${specificProject.fundingGoal}
+
+                        fontSize: "1.5rem",
+                        color: "#3E497A",
+                        fontFamily: "Montserrat",
+                      }}
+                    >
+                      $
+                      {specificProject.fundingGoal &&
+                        FormatThousands(specificProject.fundingGoal)}
+
                     </Typography>
                     <Typography
                       sx={{
@@ -545,10 +556,13 @@ export default function ProjectPage() {
                     </div>
                   </TabPanel>
                   <TabPanel value={tabValue} index={1}>
-                    {contributors &&
+                    {contributors.length ? (
                       contributors.map((contributor) => {
                         return (
-                          <Grid container sx={{ marginTop: 1 }}>
+                          <Grid
+                            container
+                            sx={{ margin: "10px 100px 10px 10px" }}
+                          >
                             <Grid xs={8} sm={8} md={8} lg={8}>
                               <Link
                                 size="small"
@@ -565,7 +579,10 @@ export default function ProjectPage() {
                             </Grid>
                           </Grid>
                         );
-                      })}
+                      })
+                    ) : (
+                      <p>There are no contributors at the moment. </p>
+                    )}
                   </TabPanel>
                   <TabPanel value={tabValue} index={2}></TabPanel>
                 </Box>
@@ -803,6 +820,9 @@ export default function ProjectPage() {
           </div>
         </div>
       )}
+      <br />
+      <br />
+      <QuestionBanner />
       <Footer />
     </div>
   );
