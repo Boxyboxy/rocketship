@@ -26,6 +26,9 @@ import Alert from "@mui/material/Alert";
 import axios from "axios";
 import RandomizeAvatarImage from "../../../components/randomAvatarImage";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
+import EmailIcon from "@mui/icons-material/Email";
+import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
+import TwitterIcon from "@mui/icons-material/Twitter";
 
 // PENDING: Will refactor into separate components
 // PENDING: Will update margin/ spacing / design
@@ -328,14 +331,14 @@ export default function ProjectPage() {
                 </Stack>
 
                 <p>{specificProject.summary}</p>
-                <Grid container row>
+                <Grid container row sx={{ margin: "40px 0px" }}>
                   <Grid>
                     <Avatar
                       sx={{ width: 50, height: 50, margin: "0px 10px 0px 0px" }}
                       src={RandomizeAvatarImage()}
                     />
                   </Grid>
-                  <Grid>
+                  <Grid sx={{ alignItems: "center" }}>
                     <Link
                       className={styles.name}
                       href={`/profile/${specificProject.userId}`}
@@ -457,23 +460,90 @@ export default function ProjectPage() {
                     />
                   )}
                 </Grid>
-
-                <a href="#fund-membership">
-                  <Button
-                    variant="contained"
+                <Grid
+                  container
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "left",
+                    marginTop: 3,
+                  }}
+                >
+                  <Grid
+                    xs={8}
+                    sm={8}
+                    md={8}
+                    lg={8}
+                    sx={{ marginRight: "10px" }}
+                  >
+                    <a href="#fund-membership">
+                      <Button
+                        variant="contained"
+                        sx={{
+                          color: "white",
+                          backgroundColor: "#21325E",
+                          "&:hover": {
+                            backgroundColor: "#21325E",
+                          },
+                        }}
+                        fullWidth
+                      >
+                        Fund
+                      </Button>
+                    </a>
+                  </Grid>
+                  <Grid
+                    xs={3}
+                    sm={3}
+                    md={3}
+                    lg={3}
                     sx={{
-                      marginTop: 3,
-                      color: "white",
-                      backgroundColor: "#21325E",
-                      width: "100%",
-                      "&:hover": {
-                        backgroundColor: "#21325E",
-                      },
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "right",
                     }}
                   >
-                    Fund
-                  </Button>
-                </a>
+                    <FacebookOutlinedIcon
+                      sx={{
+                        fontSize: "30px",
+                        marginRight: "10px",
+                        color: "#21325E",
+                        "&:hover": {
+                          cursor: "pointer",
+                        },
+                      }}
+                    />
+                    <EmailIcon
+                      sx={{
+                        fontSize: "30px",
+                        marginRight: "10px",
+                        color: "#21325E",
+                        "&:hover": {
+                          cursor: "pointer",
+                        },
+                      }}
+                      onClick={(event) =>
+                        (window.location.href = `mailto:?subject=${specificProject.name}%20on%20Rocketship&body=${config.apiUrl}/projects/${projectId}`)
+                      }
+                    />
+                    <TwitterIcon
+                      sx={{
+                        fontSize: "30px",
+                        marginRight: "10px",
+                        color: "#21325E",
+                        "&:hover": {
+                          cursor: "pointer",
+                        },
+                      }}
+                      onClick={(event) =>
+                        (window.location.href = `https://twitter.com/intent/tweet?text=Check%20out%20${specificProject.name}%20by%20${specificProject.creatorName}rocketship&url=${config.apiUrl}/projects/${projectId}`)
+                      }
+                    />
+                  </Grid>
+                </Grid>
+
                 {/* <h3>Project Owner</h3> */}
 
                 <h3>Contributors</h3>
@@ -504,7 +574,7 @@ export default function ProjectPage() {
               </Grid>
 
               <Grid container sx={{ marginTop: 2 }}>
-                <Grid xs={12} sm={12} md={6} lg={6}>
+                <Grid xs={12} sm={12} md={7} lg={7}>
                   <h2>Project Details</h2>
                   <p className={styles.details}>{specificProject.details}</p>
                   <div>
@@ -514,7 +584,7 @@ export default function ProjectPage() {
                   </div>
                 </Grid>
 
-                <Grid xs={12} sm={12} md={6} lg={6}>
+                <Grid xs={12} sm={12} md={5} lg={5}>
                   <h3>SKILLS NEEDED</h3>
                   {/* <br /> */}
                   <Box
