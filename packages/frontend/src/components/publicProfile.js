@@ -93,7 +93,7 @@ export default function PublicProfile({ personalId }) {
         container
         direction="column"
         justifyContent="space-around"
-        alignItems="center"
+        // alignItems="center"
         sx={{ minHeight: '100vh' }}>
         <div>
           <h1>User info</h1>
@@ -126,7 +126,7 @@ export default function PublicProfile({ personalId }) {
             </div>
             <div>
               <List>
-                <ListItem key={0}>
+                <ListItem key={0} disableTypography sx={{ fontFamily: 'Montserrat' }}>
                   <ListItemAvatar>
                     <Avatar>
                       <HandymanIcon />

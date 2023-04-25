@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
+import { Avatar, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
 import styles from '../styles/profile.module.css';
@@ -143,18 +143,28 @@ export default function PublicProfile({ personalId }) {
             </div>
             <div className={styles.skills}>
               <List className={styles.skills}>
-                <ListItem key={0}>
+                <ListItem key={0} disableTypography sx={{ fontFamily: 'Montserrat' }}>
                   <ListItemAvatar>
                     <Avatar>
                       <HandymanIcon />
                     </Avatar>
                   </ListItemAvatar>
                   <div>
-                    <ListItemText className={styles.skills} primary="Skills" />
+                    <ListItemText
+                      disableTypography
+                      sx={{ fontFamily: 'Montserrat', fontWeight: 'bold' }}
+                      className={styles.skills}
+                      primary="Skills"
+                    />
                   </div>
                 </ListItem>
-
-                {profile.skills ? generateSkillsList(profile.skills) : generateSkillsList([])}
+                <ListItemText
+                  disableTypography
+                  sx={{ fontFamily: 'Montserrat' }}
+                  primary={
+                    profile.skills ? generateSkillsList(profile.skills) : generateSkillsList([])
+                  }
+                />
               </List>
             </div>
           </Grid>
