@@ -96,8 +96,10 @@ export default function PublicProfile({ personalId }) {
         // alignItems="center"
         sx={{ minHeight: '100vh' }}>
         <div>
-          <h1>User info</h1>
-          <span className={styles.line}></span>
+          <div className={styles.container}>
+            <h1>User info</h1>
+            <span className={styles.line}></span>
+          </div>
           <Grid
             container
             direction="row"
@@ -132,7 +134,7 @@ export default function PublicProfile({ personalId }) {
                       <HandymanIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary="Skills" />
+                  <ListItemText  sx={{ fontFamily: 'Montserrat' }} primary="Skills" />
                 </ListItem>
 
                 {profile.skills ? generateSkillsList(profile.skills) : generateSkillsList([])}
