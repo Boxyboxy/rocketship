@@ -444,7 +444,9 @@ export default function ProjectPage() {
                         fontFamily: "Montserrat",
                       }}
                     >
-                      ${specificProject.fundingGoal}
+                      $
+                      {specificProject.fundingGoal &&
+                        FormatThousands(specificProject.fundingGoal)}
                     </Typography>
                     <Typography
                       sx={{
