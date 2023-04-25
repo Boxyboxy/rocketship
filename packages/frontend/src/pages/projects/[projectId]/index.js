@@ -36,6 +36,8 @@ import { TabPanel, a11yProps } from "../../../components/tabPanel";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
+import FormatThousands from "../../../components/formatThousand";
+import QuestionBanner from "../../../components/questionBanner";
 
 // PENDING: Will refactor into separate components
 // PENDING: Will update margin/ spacing / design
@@ -176,16 +178,7 @@ export default function ProjectPage() {
           console.log(contributionArray);
           setContributors(contributionArray);
 
-          let formattedSum;
-          //format funding sum response
-          if (fundingSumResponse.data > 10000) {
-            formattedSum = Intl.NumberFormat({
-              style: "currency",
-              currency: "SGD",
-            }).format(fundingSumResponse.data);
-          } else {
-            formattedSum = fundingSumResponse.data;
-          }
+          let formattedSum = FormatThousands(fundingSumResponse.data);
 
           setStats([
             // {
@@ -452,7 +445,9 @@ export default function ProjectPage() {
                         fontFamily: "Montserrat",
                       }}
                     >
-                      ${specificProject.fundingGoal}
+                      $
+                      {specificProject.fundingGoal &&
+                        FormatThousands(specificProject.fundingGoal)}
                     </Typography>
                     <Typography
                       sx={{
@@ -599,10 +594,13 @@ export default function ProjectPage() {
                     </div>
                   </TabPanel>
                   <TabPanel value={tabValue} index={1}>
-                    {contributors &&
+                    {contributors.length ? (
                       contributors.map((contributor) => {
                         return (
-                          <Grid container sx={{ marginTop: 1 }}>
+                          <Grid
+                            container
+                            sx={{ margin: "10px 100px 10px 10px" }}
+                          >
                             <Grid xs={8} sm={8} md={8} lg={8}>
                               <Link
                                 size="small"
@@ -620,7 +618,10 @@ export default function ProjectPage() {
                             </Grid>
                           </Grid>
                         );
-                      })}
+                      })
+                    ) : (
+                      <p>There are no contributors at the moment. </p>
+                    )}
                   </TabPanel>
                   <TabPanel value={tabValue} index={2}></TabPanel>
                 </Box>
@@ -892,6 +893,9 @@ export default function ProjectPage() {
           </div>
         </div>
       )}
+      <br />
+      <br />
+      <QuestionBanner />
       <Footer />
     </div>
   );
