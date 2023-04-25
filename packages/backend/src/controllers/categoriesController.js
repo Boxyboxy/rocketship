@@ -5,27 +5,37 @@ const {
 
 module.exports = {
   async getAllCategories(req, res) {
-    const categories = await getAllCategories();
+    try {
+      const categories = await getAllCategories();
 
-    return res.json(categories);
+      return res.json(categories);
+    } catch (err) {
+      console.err(err);
+    }
   },
   async getCategoryById(req, res) {
-    const { id } = req.params;
+    try {
+      const { id } = req.params;
 
-    // +id converts a string to number
-    if (isNaN(id) || +id > Number.MAX_SAFE_INTEGER || +id < 0) {
-      const error = new Error("Category Id must be a valid number");
-      error.status = 400;
-      throw error;
+      // +id converts a string to number
+      if (isNaN(id) || +id > Number.MAX_SAFE_INTEGER || +id < 0) {
+        const error = new Error("Category Id must be a valid number");
+        error.status = 400;
+        throw error;
+      }
+
+      const category = await getCategoryById(id);
+      if (!category) {
+        const error = new Error(
+          `Could not find category with category id ${id}`
+        );
+        error.status = 400;
+        throw error;
+      }
+
+      return res.json(category);
+    } catch (err) {
+      console.error(err);
     }
-
-    const category = await getCategoryById(id);
-    if (!category) {
-      const error = new Error(`Could not find category with category id ${id}`);
-      error.status = 400;
-      throw error;
-    }
-
-    return res.json(category);
   },
 };
