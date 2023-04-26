@@ -166,6 +166,7 @@ export default function ProjectCard({ project, ownerBoolean }) {
         <Chip
           label="Fully funded!"
           color="success"
+          size="small"
           sx={{ marginLeft: "10px", marginBottom: "10px" }}
         />
       ) : (
