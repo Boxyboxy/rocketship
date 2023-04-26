@@ -23,7 +23,7 @@ export default async function stripeIntentHandler(req, res) {
     metadata: {
       projectId: product[0].projectId,
       // need to update this to gather own user Id - person who's making the purchase
-      userId: 3,
+      userId: product[0].userId,
       incentive: product[0].incentive,
       equity: product[0].equity,
     },
