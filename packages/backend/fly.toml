@@ -38,4 +38,4 @@ processes = []
     timeout = "2s"
 
 [deploy]
-  release_command = "npx sequelize-cli  db:seed --seed 20230325073106-seed-skills.js --url 'postgres://postgres:xM2RbROgDZJko0z@[fdaa:1:722d:0:1::5]:5432/rocketship'"
+  release_command = "npx sequelize-cli db:migrate --url 'postgres://postgres:xM2RbROgDZJko0z@[fdaa:1:722d:0:1::5]:5432/rocketship'"
