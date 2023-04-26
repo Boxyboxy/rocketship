@@ -41,7 +41,6 @@ import QuestionBanner from "../../../components/questionBanner";
 import { PPLinearProgress } from "../../../components/ppProgress";
 
 // PENDING: Will refactor into separate components
-// PENDING: Will update margin/ spacing / design
 
 export default function ProjectPage() {
   const router = useRouter();
@@ -62,6 +61,7 @@ export default function ProjectPage() {
   const [showFailure, setShowFailure] = useState(false);
 
   const [contributors, setContributors] = useState();
+  const [randomAvatar, setRandomAvatar] = useState();
 
   //mapping for Chip color display
   const categoryColorMap = {
@@ -165,10 +165,7 @@ export default function ProjectPage() {
           console.log(contributionsResponse.data);
           const contributionArray = [];
           for (const contribution of contributionsResponse.data) {
-            if (
-              contribution.status === "pending" ||
-              contribution.status === "accepted"
-            ) {
+            if (contribution.status === "accepted") {
               contributionArray.push({
                 userId: contribution.userSkill.userId,
                 contributorName: contribution.userSkill.user.name,
@@ -218,6 +215,7 @@ export default function ProjectPage() {
           };
 
           setSpecificProject(editedProject);
+          setRandomAvatar(RandomizeAvatarImage);
         } catch (err) {
           console.log(err);
         }
@@ -347,7 +345,7 @@ export default function ProjectPage() {
                   <Grid>
                     <Avatar
                       sx={{ width: 50, height: 50, margin: "0px 10px 0px 0px" }}
-                      src={RandomizeAvatarImage()}
+                      src={randomAvatar}
                     />
                   </Grid>
                   <Grid sx={{ alignItems: "center" }}>
