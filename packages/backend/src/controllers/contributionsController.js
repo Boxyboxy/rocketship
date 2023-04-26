@@ -8,7 +8,7 @@ const {
 module.exports = {
   async getAllContributions({ query }, res) {
     try {
-      const { projectId, userId } = query;
+      const { projectId, userId, status } = query;
       const options = {
         include: [
           { model: project },
@@ -28,6 +28,9 @@ module.exports = {
 
       if (userId) {
         options.include[1].include[0].where.id = userId;
+      }
+      if (status) {
+        options.where.status = status;
       }
 
       const contributions = await getAllContributions(options);
