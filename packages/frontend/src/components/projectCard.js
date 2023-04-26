@@ -15,6 +15,7 @@ import styles from "../styles/projectcard.module.css";
 import { Button } from "@mui/material";
 import { useRouter } from "next/router";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import FormatThousands from "../components/formatThousand";
 
 export default function ProjectCard({ project, ownerBoolean }) {
   const [funding, setFunding] = useState("0");
@@ -22,6 +23,7 @@ export default function ProjectCard({ project, ownerBoolean }) {
   const [projectOwner, setProjectOwner] = useState({ name: "John Doe" });
 
   const router = useRouter();
+  console.log(router);
   const { user, error, isLoading } = useUser();
   const [userId, setUserId] = useState();
 
@@ -32,7 +34,6 @@ export default function ProjectCard({ project, ownerBoolean }) {
           `${config.apiUrl}/users?email=${user.email}`
         );
         setUserId(response.data[0].id);
-        console.log(response.data[0].id);
       } catch (err) {
         console.log(err);
       }
@@ -111,6 +112,25 @@ export default function ProjectCard({ project, ownerBoolean }) {
               {project.name}
             </Typography>
           </Link>
+
+          {project.userId === userId &&
+            router.pathname === "/profile/[personalId]/personal" && (
+              <div>
+                <Button
+                  sx={{
+                    float: "right",
+                    color: "white",
+                    backgroundColor: "#21325E",
+                    "&:hover": {
+                      backgroundColor: "#21325E",
+                    },
+                  }}
+                  onClick={handleEditButtonClick}
+                >
+                  Edit
+                </Button>
+              </div>
+            )}
         </Stack>
         <Typography
           variant="body2"
@@ -120,25 +140,6 @@ export default function ProjectCard({ project, ownerBoolean }) {
           {project.summary}
         </Typography>
       </CardContent>
-      {project.userId === userId && (
-        <div>
-          <br />
-          <Button
-            sx={{
-              float: "right",
-              color: "white",
-              margin: "0px 10px",
-              backgroundColor: "#21325E",
-              "&:hover": {
-                backgroundColor: "#21325E",
-              },
-            }}
-            onClick={handleEditButtonClick}
-          >
-            Edit
-          </Button>
-        </div>
-      )}
       {ownerBoolean ? (
         ""
       ) : (
@@ -154,7 +155,7 @@ export default function ProjectCard({ project, ownerBoolean }) {
                 size="small"
                 className={styles.name}
                 href={`/profile/${projectOwner.id}`}
-                sx={{ fontFamily: "Montserrat" }}
+                sx={{ fontFamily: "Montserrat", fontSize: "1px" }}
               >
                 {projectOwner.name}
               </Link>
@@ -167,24 +168,29 @@ export default function ProjectCard({ project, ownerBoolean }) {
           label="Fully funded!"
           color="success"
           size="small"
-          sx={{ marginLeft: "10px", marginBottom: "10px" }}
+          sx={{ marginLeft: "16px", marginBottom: "10px" }}
         />
       ) : (
         <span>
+          <BorderLinearProgress
+            variant="determinate"
+            sx={{ margin: "20px 16px 3px 16px" }}
+            value={(funding * 100) / project.fundingGoal}
+          />
           <Typography
             size="small"
             sx={{
               fontFamily: "Montserrat",
               float: "right",
-              marginRight: "10px",
+              marginRight: "16px",
               marginBottom: "18px",
+              marginTop: "5px",
             }}
-          >{` $${funding}/$${project.fundingGoal} raised`}</Typography>
-          <BorderLinearProgress
-            variant="determinate"
-            sx={{ marginLeft: "10px" }}
-            value={(funding * 100) / project.fundingGoal}
-          />
+          >
+            {` $${FormatThousands(funding)}/$${FormatThousands(
+              project.fundingGoal
+            )} raised`}
+          </Typography>
         </span>
       )}{" "}
     </Card>

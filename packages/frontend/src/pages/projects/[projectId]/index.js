@@ -453,16 +453,6 @@ export default function ProjectPage() {
                       spacing={2}
                       sx={{ justifyContent: "right", alignItems: "center" }}
                     >
-                      {/* {stats[0].sum >= specificProject.fundingGoal && (
-                        <Chip
-                          sx={{
-                            fontFamily: "Montserrat",
-                          }}
-                          label="fully funded!"
-                          color="success"
-                        />
-                      )} */}
-
                       <Typography
                         sx={{
                           fontSize: "1.5rem",
