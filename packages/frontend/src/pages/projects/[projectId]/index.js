@@ -223,7 +223,7 @@ export default function ProjectPage() {
       fetchProject().then(console.log(specificProject));
     }
   }, [creatorId, projectId]);
-  // console.log(specificProject);
+
   useEffect(() => {
     const fetchUserId = async () => {
       try {
@@ -237,6 +237,7 @@ export default function ProjectPage() {
     };
     fetchUserId();
   }, [user]);
+
   useEffect(() => {
     const fetchUserSkills = async () => {
       try {
