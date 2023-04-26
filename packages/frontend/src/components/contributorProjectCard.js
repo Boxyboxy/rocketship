@@ -15,6 +15,7 @@ import styles from "../styles/projectcard.module.css";
 import BuildIcon from "@mui/icons-material/Build";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import FormatThousands from "../components/formatThousand";
 
 export default function ContributorProjectCard({ contribution }) {
   const [funding, setFunding] = useState(0);
@@ -132,46 +133,58 @@ export default function ContributorProjectCard({ contribution }) {
               {projectOwner.name}
             </Link>
           }
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              fontFamily: "Montserrat",
+
+              textTransform: "capitalize",
+            }}
+          >
+            Status:
+            <Chip
+              label={contribution.status}
+              color={statusMap[contribution.status]}
+              size="small"
+              sx={{
+                marginLeft: "10px",
+                marginRight: "10px",
+                marginBottom: "1px",
+              }}
+            />{" "}
+          </Typography>
         </Grid>
       </CardActions>
-      <Typography
-        variant="body2"
-        color="text.secondary"
-        sx={{ fontFamily: "Montserrat", marginLeft: "10px" }}
-      >
-        Status:
-        <Chip
-          label={contribution.status}
-          color={statusMap[contribution.status]}
-          size="small"
-          sx={{ marginLeft: "10px", marginBottom: "1px" }}
-        />{" "}
-      </Typography>
+
       {funding >= contribution.project.fundingGoal ? (
         <Chip
           label="Fully funded!"
           size="small"
           color="success"
-          sx={{ marginLeft: "10px", marginBottom: "10px" }}
+          sx={{ marginLeft: "16px", marginBottom: "10px" }}
         />
       ) : (
         <span>
+          <BorderLinearProgress
+            variant="determinate"
+            sx={{ margin: "20px 16px 3px 16px" }}
+            value={(funding * 100) / contribution.project.fundingGoal}
+          />
           <Typography
             size="small"
             sx={{
               fontFamily: "Montserrat",
               float: "right",
-              marginRight: "10px",
+              marginRight: "16px",
               marginBottom: "18px",
+              marginTop: "5px",
             }}
           >
-            {` $${funding}/$${contribution.project.fundingGoal} raised`}
+            {` $${FormatThousands(funding)}/$${FormatThousands(
+              contribution.project.fundingGoal
+            )} raised`}
           </Typography>
-          <BorderLinearProgress
-            variant="determinate"
-            sx={{ marginLeft: "10px" }}
-            value={(funding * 100) / contribution.project.fundingGoal}
-          />
         </span>
       )}
     </Card>

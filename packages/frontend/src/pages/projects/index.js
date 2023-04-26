@@ -95,7 +95,7 @@ export default function HomePage() {
   //get funding
   useEffect(() => {
     const fetchFunding = async () => {
-      console.log(filteredProjects);
+      // console.log(filteredProjects);
       if (projectsArray) {
         for (const project of filteredProjects) {
           try {
@@ -108,7 +108,7 @@ export default function HomePage() {
 
             const fetchedFundings = await Promise.all(fundingPromises);
             setProjectsFunding(fetchedFundings);
-            console.log(projectsFunding);
+            // console.log(projectsFunding);
           } catch (err) {
             console.log(err);
           }
@@ -130,7 +130,7 @@ export default function HomePage() {
     });
 
     setFilteredProjectswFunding(filteredProjectswFunding);
-    console.log(filteredProjectswFunding);
+    // console.log(filteredProjectswFunding);
   }, [projectsFunding]);
 
   const handleSort = (button) => {

@@ -23,6 +23,7 @@ import config from "../config";
 import ContributorProjectCardsContainer from "./contributorProjectCardsContainer";
 import FundingHistory from "./FundingHistory";
 import Button from "@mui/material/Button";
+
 export default function PublicProfile({ personalId }) {
   const [profile, setProfile] = useState({
     name: "John Doe",

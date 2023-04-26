@@ -2,7 +2,7 @@ import styles from "../styles/projectCardsContainer.module.css";
 import ProjectCard from "./projectCard";
 export default function ProjectCardsContainer({ projects, ownerBoolean }) {
   function generateCards(projects) {
-    console.log(projects);
+    // console.log(projects);
     if (!projects) {
       return <h2> No projects</h2>;
     }

@@ -209,12 +209,14 @@ export default function NavBar() {
             </Link>
           </li>
           <li className={styles.navli}>
-            <Link
-              className={styles.linkName}
-              href={`/profile/${userId}/personal`}
-            >
-              My Launchpad
-            </Link>
+            {userId && (
+              <Link
+                className={styles.linkName}
+                href={`/profile/${userId}/personal`}
+              >
+                My Launchpad
+              </Link>
+            )}
           </li>
 
           <div className={styles.navli}>
