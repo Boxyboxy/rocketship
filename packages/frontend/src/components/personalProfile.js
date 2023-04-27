@@ -120,12 +120,19 @@ export default function PublicProfile({ personalId }) {
           >
             <h1>User info</h1>
 
-            <Button variant="contained">
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#3E497A",
+                "&:hover": {
+                  backgroundColor: "#21325E",
+                },
+              }}
+            >
               <a
                 href={`/profile/${personalId}/edit`}
                 style={{
                   textDecoration: "none",
-                  background: "F1D00A",
                   color: "#f0f0f0",
                 }}
               >
@@ -165,8 +172,12 @@ export default function PublicProfile({ personalId }) {
               <List className={styles.skills}>
                 <ListItem
                   key={0}
-                  disableTypography
-                  sx={{ fontFamily: "Montserrat" }}
+                  // disableTypography
+                  sx={{
+                    "& .MuiTypography-root": {
+                      fontFamily: "Montserrat",
+                    },
+                  }}
                 >
                   <ListItemAvatar>
                     <Avatar>
@@ -176,7 +187,9 @@ export default function PublicProfile({ personalId }) {
                   <div>
                     <ListItemText
                       disableTypography
-                      sx={{ fontFamily: "Montserrat", fontWeight: "bold" }}
+                      sx={{
+                        fontWeight: "bold",
+                      }}
                       className={styles.skills}
                       primary="Skills"
                     />
@@ -184,7 +197,11 @@ export default function PublicProfile({ personalId }) {
                 </ListItem>
                 <ListItemText
                   disableTypography
-                  sx={{ fontFamily: "Montserrat" }}
+                  sx={{
+                    "& .MuiTypography-root": {
+                      fontFamily: "Montserrat",
+                    },
+                  }}
                   primary={
                     profile.skills
                       ? generateSkillsList(profile.skills)
