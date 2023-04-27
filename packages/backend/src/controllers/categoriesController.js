@@ -10,7 +10,7 @@ module.exports = {
 
       return res.json(categories);
     } catch (err) {
-      console.err(err);
+      console.error(err);
     }
   },
   async getCategoryById(req, res) {

@@ -36,7 +36,7 @@ module.exports = {
       const contributions = await getAllContributions(options);
       return res.json(contributions);
     } catch (err) {
-      console.err(err);
+      console.error(err);
     }
   },
 
