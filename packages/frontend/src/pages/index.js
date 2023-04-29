@@ -110,13 +110,13 @@ export default function App() {
       {/* about section  */}
       <div className={styles.about}>
         <h2 className={styles.h3title}>
-          You can be an astronaut, contributor or backer at RocketShip!
+          You can be a project owner, contributor or backer at RocketShip!
         </h2>
         <div className={styles.cardContainer}>
           <div className={styles.aboutCard}>
             <div className={styles.front}>
               <img className={styles.cardImg} src="/images/planet-01.png" alt="planet1" />
-              <h2>Astronaut</h2>
+              <h2>Project Owner</h2>
             </div>
             <div className={styles.back}>
               <div className={styles.backTxt}>

@@ -122,34 +122,6 @@ export default function CreateProfile() {
   console.log(formValues);
   console.log(fullName);
 
-  //get skills
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch(`${config.apiUrl}/skills`); // Fetch data from the skills db route
-  //       const data = await response.json();
-  //       setSkills(data);
-  //       console.log(data);
-  //     } catch (error) {
-  //       console.error('Failed to fetch skills:', error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
-
-  // const [checkedSkills, setCheckedSkills] = useState([]);
-  // const handleCheckboxChange = (event) => {
-  //   const { value, checked } = event.target;
-  //   if (checked) {
-  //     // Add the skill to the checkedSkills array if it's checked
-  //     setCheckedSkills([...checkedSkills, value]);
-  //     console.log(checkedSkills);
-  //   } else {
-  //     // Remove the skill from the checkedSkills array if it's unchecked
-  //     setCheckedSkills(checkedSkills.filter((skill) => skill !== value));
-  //   }
-  // };
-
   // requiredSkills
   const [skillsCheckbox, setSkillsCheckbox] = useState({});
 
@@ -188,8 +160,13 @@ export default function CreateProfile() {
   };
 
   // form submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const email = `${formValues.email}`;
+    const subject = `${formValues.name}, welcome to Rocketship! 🚀`;
+    const message = `Ready to share your brillant ideas with a community of talented and passionate individuals? 🚀`;
+    const html = `<h2>Ready to share your brillant ideas with a community of talented and passionate individuals? 🚀</h2><br></br><p>Enter the Rocketship <a href="http://localhost:3000">here</a>!</p><br></br><p>Launch off,</p></br><p>Rocketship Team 🚀</p>`;
+
     let formData = {
       ...formValues,
       skills: Object.keys(skillsCheckbox).filter((skill) => skillsCheckbox[skill])
@@ -211,6 +188,24 @@ export default function CreateProfile() {
         console.log(error);
         setShowFailure(true);
       });
+
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, subject, message, html })
+      });
+
+      if (response.ok) {
+        console.log('Email sent successfully');
+      } else {
+        console.error('Error sending email');
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleSnackbarClose = (event, reason) => {
@@ -267,6 +262,7 @@ export default function CreateProfile() {
               ))}
             </Stepper>
           </div>
+
           <Box
             display="flex"
             justifyContent="center"
