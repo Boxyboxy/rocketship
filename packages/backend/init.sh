@@ -55,14 +55,6 @@ npx sequelize db:seed --seed 20230328142057-seed-fundings.js
 npx sequelize db:seed --seed 20230411110726-seed-contributions.js
 npm start
 
-npx sequelize-cli  db:seed --seed 20230322142443-seed-categories.js --url 'postgres://postgres:xM2RbROgDZJko0z@[fdaa:1:722d:0:1::5]:5432/rocketship'
-npx sequelize-cli  db:seed --seed 20230322145218-seed-bank-accounts.js --url 'postgres://postgres:xM2RbROgDZJko0z@[fdaa:1:722d:0:1::5]:5432/rocketship'
-npx sequelize-cli  db:seed --seed 20230322151915-seed-users.js --url 'postgres://postgres:xM2RbROgDZJko0z@[fdaa:1:722d:0:1::5]:5432/rocketship'
-npx sequelize-cli  db:seed --seed 20230325073106-seed-skills.js --url 'postgres://postgres:xM2RbROgDZJko0z@[fdaa:1:722d:0:1::5]:5432/rocketship'
-npx sequelize-cli  db:seed --seed 20230325083101-seed-user-skills.js --url 'postgres://postgres:xM2RbROgDZJko0z@[fdaa:1:722d:0:1::5]:5432/rocketship'
-
-npx sequelize-cli  db:seed --seed 20230328142057-seed-fundings.js --url 'postgres://postgres:xM2RbROgDZJko0z@[fdaa:1:722d:0:1::5]:5432/rocketship'
-npx sequelize-cli  db:seed --seed 20230411110726-seed-contributions.js --url 'postgres://postgres:xM2RbROgDZJko0z@[fdaa:1:722d:0:1::5]:5432/rocketship'
 
 
 
