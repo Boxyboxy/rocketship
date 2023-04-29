@@ -1,7 +1,7 @@
 import sgMail from '@sendgrid/mail';
 
 export default async function handler(req, res) {
-  const { email, subject, message } = req.body;
+  const { email, subject, message, html } = req.body;
 
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -10,7 +10,8 @@ export default async function handler(req, res) {
     from: 'oheirelav@gmail.com', // Change to your verified sender
     subject: subject,
     // templateId: 'd-28e9b090264e4fb1951b9b16ea173668'
-    text: message
+    text: message,
+    html: html
   };
 
   try {
